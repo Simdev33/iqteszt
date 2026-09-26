@@ -3,13 +3,13 @@
 import { motion, useScroll, useSpring } from "motion/react";
 import { useRef } from "react";
 import { Reveal, SplitLines } from "@/components/ui/motion";
-import { TOTAL } from "@/lib/questions";
+import { TOTAL } from "@/lib/meta";
 
 const STEPS = [
   {
     n: "01",
     title: "Add meg a korcsoportod",
-    text: "Egyetlen kattintás. Az életkor alapján finomhangoljuk a viszonyítási alapot – más nem kell, se név, se e-mail.",
+    text: "Egyetlen kattintás. Az életkor alapján finomhangoljuk a viszonyítási alapot – regisztráció és felhasználói fiók nem kell.",
     icon: (
       <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     ),
@@ -30,7 +30,7 @@ const STEPS = [
   {
     n: "03",
     title: "Kapd meg az eredményt",
-    text: "Azonnali IQ-becslés percentilissel, területenkénti bontással és minden feladat megoldásával, magyarázattal együtt.",
+    text: "Egyszeri díj után azonnal: IQ-becslés percentilissel, területenkénti bontás és minden feladat megoldása magyarázattal együtt.",
     icon: <path d="M3 19.5h18M4.5 18c2.5 0 3.5-11 7.5-11s5 11 7.5 11M12 7v12.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />,
   },
 ];

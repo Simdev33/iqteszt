@@ -2,7 +2,7 @@ export const brand = {
   name: "Elmeszint",
   domain: "elmeszint.hu",
   url: "https://elmeszint.hu",
-  tagline: "Ingyenes online IQ-teszt, azonnali eredménnyel",
+  tagline: "Online IQ-teszt, azonnali eredménnyel",
   email: "hello@elmeszint.hu",
 };
 
@@ -15,8 +15,8 @@ export const nav = [
 
 export const faq = [
   {
-    q: "Tényleg ingyenes a teszt?",
-    a: "Igen, teljesen. Nincs regisztráció, nem kérünk e-mail-címet, és az eredményt sem kell kifizetni – a kitöltés végén azonnal megkapod az IQ-becslést, a percentilist és a területenkénti bontást.",
+    q: "Mennyibe kerül?",
+    a: "A teszt kitöltése ingyenes, és regisztrációt sem kér. A részletes eredmény – IQ-becslés, percentilis, területenkénti bontás és mind a 30 feladat megoldása – egyszeri 1 990 Ft, amit bankkártyával, Apple Pay-jel vagy Google Pay-jel fizethetsz. Nincs előfizetés, nincs ismétlődő terhelés.",
   },
   {
     q: "Mennyi ideig tart a kitöltés?",
@@ -36,7 +36,7 @@ export const faq = [
   },
   {
     q: "Mi történik a válaszaimmal?",
-    a: "Semmi. A kiértékelés teljes egészében a böngésződben fut, a válaszaid nem kerülnek szerverre. A megosztható link csak a válaszaid rövid kódját tartalmazza, amiből bárki újraszámolhatja ugyanazt az eredményt.",
+    a: "A válaszaidat csak a kiértékeléshez használjuk: a fizetéskor rövid, kódolt formában a fizetési tranzakcióhoz kapcsolódnak, és ebből számoljuk ki az eredményt. Nevet, felhasználói fiókot nem kérünk; a kártyaadataidat a Stripe kezeli, azokat mi nem látjuk. A fizetéshez a Stripe egy e-mail-címet kér a nyugtához.",
   },
   {
     q: "Kitölthetem többször is?",

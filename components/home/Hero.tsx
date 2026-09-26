@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import NeuralField from "./NeuralField";
 import HeroMatrix from "./HeroMatrix";
 import { Magnetic } from "@/components/ui/motion";
-import { POOL_SIZE, TOTAL } from "@/lib/questions";
+import { POOL_SIZE, TOTAL } from "@/lib/meta";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -29,7 +29,7 @@ export default function Hero() {
   const facts = [
     { k: String(TOTAL), v: "feladat" },
     { k: "~12", v: "perc" },
-    { k: "0 Ft", v: "regisztráció nélkül" },
+    { k: "4", v: "képességterület" },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-aqua opacity-70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-aqua" />
             </span>
-            Ingyenes online IQ-teszt · azonnali eredmény
+            Online IQ-teszt · azonnali eredmény
           </motion.p>
 
           <h1 className="mt-7 font-display text-[clamp(2.7rem,7.4vw,5.6rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
@@ -78,7 +78,7 @@ export default function Hero() {
             className="mt-7 max-w-xl text-[1.08rem] leading-relaxed text-haze sm:text-lg"
           >
             Egy {POOL_SIZE} feladatos bankból minden kitöltésnél {TOTAL} új kérdést kapsz mintázatfelismerésből, számsorokból,
-            szavakból és logikából. A végén azonnali IQ-becslés, percentilis és területenkénti bontás – e-mail-cím nélkül.
+            szavakból és logikából. A végén azonnali IQ-becslés, percentilis és területenkénti bontás – regisztráció nélkül.
           </motion.p>
 
           <motion.div

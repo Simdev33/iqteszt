@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { useMemo, useRef, useState } from "react";
-import { normPdf } from "@/lib/scoring";
+import { normPdf } from "@/lib/norms";
 import { SCALE_BANDS } from "@/lib/scale";
 
 const W = 800;

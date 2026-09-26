@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import { TOTAL, type Question } from "@/lib/questions";
-import type { Answers } from "@/lib/scoring";
+import { TOTAL } from "@/lib/meta";
+import type { PublicQuestion as Question } from "@/lib/types";
+import type { Answers } from "@/lib/types";
 import { LETTERS } from "@/components/matrix/OptionButton";
 
 const ease = [0.22, 1, 0.36, 1] as const;

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import BellCurve from "@/components/charts/BellCurve";
-import { bandOf, fmtPct, percentileOf } from "@/lib/scoring";
+import { bandOf, fmtPct, percentileOf } from "@/lib/norms";
 
 /** Csúszkás percentilis-kalkulátor a haranggörbével. */
 export default function PercentileCalc() {

@@ -9,7 +9,7 @@ export default function Footer() {
         <div>
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-mist">
-            {brand.tagline}. 30 saját fejlesztésű feladat négy képességterületen – regisztráció és e-mail-cím nélkül.
+            {brand.tagline}. 90 saját fejlesztésű feladat négy képességterületen – regisztráció nélkül.
           </p>
         </div>
         <div>
@@ -32,8 +32,8 @@ export default function Footer() {
         <div>
           <p className="eyebrow">Fontos</p>
           <p className="mt-4 text-sm leading-relaxed text-mist">
-            Az eredmény tájékoztató jellegű becslés, nem orvosi vagy pszichológiai diagnózis. A kiértékelés a böngésződben fut, adatot nem
-            tárolunk.
+            Az eredmény tájékoztató jellegű becslés, nem orvosi vagy pszichológiai diagnózis. A kártyaadatokat a Stripe kezeli, azokat mi
+            nem látjuk és nem tároljuk.
           </p>
         </div>
       </div>

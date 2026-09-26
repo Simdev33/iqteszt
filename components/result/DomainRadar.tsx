@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-import { DOMAINS } from "@/lib/questions";
+import { DOMAINS } from "@/lib/meta";
 import type { DomainScore } from "@/lib/scoring";
 
 const C = 150;
@@ -60,7 +60,7 @@ export default function DomainRadar({ domains }: { domains: DomainScore[] }) {
             cy={y}
             r={5}
             fill={DOMAINS[d.domain].color}
-            stroke="#0c0e1a"
+            stroke="#1a1f3b"
             strokeWidth={2}
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}

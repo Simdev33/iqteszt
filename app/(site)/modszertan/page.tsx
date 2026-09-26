@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/motion";
-import { DIFFICULTY_COUNTS, DOMAINS, DOMAIN_COUNTS, DOMAIN_POOL_COUNTS, POOL_SIZE, TOTAL, VARIANTS_PER_SLOT, type Domain } from "@/lib/questions";
-import { AGE_GROUPS, IQ_MAX, IQ_MIN, NORM, WEIGHT } from "@/lib/scoring";
+import { PRICE_LABEL, DIFFICULTY_COUNTS, DOMAINS, DOMAIN_COUNTS, DOMAIN_POOL_COUNTS, POOL_SIZE, TOTAL, VARIANTS_PER_SLOT, type Domain } from "@/lib/meta";
+import { AGE_GROUPS, IQ_MAX, IQ_MIN, NORM, WEIGHT } from "@/lib/norms";
 
 export const metadata: Metadata = {
   title: "Módszertan – így számoljuk az IQ-t",
@@ -119,11 +119,15 @@ IQ = 100 + 15 · z        (${IQ_MIN} és ${IQ_MAX} közé szorítva)`}
             </ul>
           </Block>
 
-          <Block n="05" title="Adatvédelem">
+          <Block n="05" title="Fizetés és adatvédelem">
             <p>
-              A kiértékelés teljes egészében a böngésződben fut. A válaszaid nem kerülnek szerverre; a félbehagyott teszt állapotát csak a
-              saját böngésződ tárolja, hogy folytatni tudd. A megosztható link a válaszaid rövid kódját tartalmazza – ebből bárki
-              ugyanazt az eredményt kapja, személyes adat nincs benne.
+              A kitöltés ingyenes; a részletes eredmény egyszeri {PRICE_LABEL}. A pontozás a szerveren történik, a helyes válaszok nem kerülnek
+              a böngésződbe. Fizetéskor a válaszaid rövid, kódolt formában a Stripe fizetési tranzakciójához kapcsolódnak, és az
+              eredményoldal ebből számolja ki az eredményt – külön adatbázisban nem tároljuk őket.
+            </p>
+            <p>
+              A félbehagyott teszt állapotát csak a saját böngésződ őrzi, hogy folytatni tudd. Nevet vagy felhasználói fiókot nem kérünk; a
+              kártyaadatokat a Stripe kezeli, azokat mi nem látjuk.
             </p>
             <Link href="/teszt" className="btn-primary">
               Teszt indítása

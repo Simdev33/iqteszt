@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Magnetic, Reveal } from "@/components/ui/motion";
 import MatrixCell from "@/components/matrix/MatrixCell";
-import { MATRICES } from "@/lib/matrix";
-import { TOTAL } from "@/lib/questions";
+import { DEMOS } from "@/lib/demo-matrices";
+import { PRICE_LABEL, TOTAL } from "@/lib/meta";
 
 export default function FinalCta() {
-  const deco = [...MATRICES.nestedLatin.cells, ...MATRICES.tripleLatin.cells, ...MATRICES.sides.cells];
+  const deco = [...DEMOS.nested.cells, ...DEMOS.sum.cells, ...DEMOS.fill.cells, ...DEMOS.latin.cells];
   return (
     <section className="relative px-5 pb-16 sm:px-8 sm:pb-24">
-      <Reveal className="grain ring-gradient relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-[radial-gradient(120%_120%_at_50%_0%,#2a2170_0%,#141029_45%,#0a0b14_100%)] px-6 py-20 text-center sm:px-12 sm:py-28">
+      <Reveal className="grain ring-gradient relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-[radial-gradient(120%_120%_at_50%_0%,#3a2e92_0%,#211c4a_45%,#161a31_100%)] px-6 py-20 text-center sm:px-12 sm:py-28">
         {/* Dekoratív cellarács a háttérben */}
         <div aria-hidden className="absolute inset-0 grid grid-cols-6 gap-3 p-3 opacity-[0.11] [mask-image:radial-gradient(ellipse_at_center,transparent_25%,black_75%)] sm:grid-cols-12">
           {Array.from({ length: 36 }, (_, i) => (
@@ -25,7 +25,7 @@ export default function FinalCta() {
             Tizenkét perc, és <span className="text-gradient">kiderül.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg text-haze">
-            {TOTAL} feladat, időkorlát nélkül. Azonnali eredmény, regisztráció és e-mail-cím nélkül.
+            {TOTAL} feladat, időkorlát nélkül, regisztráció nélkül. A kitöltés ingyenes, a részletes eredmény egyszeri {PRICE_LABEL}.
           </p>
           <div className="mt-10 flex justify-center">
             <Magnetic strength={0.3}>

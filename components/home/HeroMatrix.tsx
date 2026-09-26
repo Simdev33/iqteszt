@@ -4,13 +4,14 @@ import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from
 import { useEffect, useRef, useState } from "react";
 import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
-import { MATRICES, type MatrixSpec } from "@/lib/matrix";
+import { DEMOS } from "@/lib/demo-matrices";
+import type { MatrixSpec } from "@/lib/shapes";
 
 const SHOWCASE: { spec: MatrixSpec; rule: string }[] = [
-  { spec: MATRICES.nestedLatin, rule: "Két latin négyzet" },
-  { spec: MATRICES.countSum, rule: "1. + 2. = 3." },
-  { spec: MATRICES.rotateFill, rule: "Forgás + kitöltés" },
-  { spec: MATRICES.sides, rule: "+1 oldal lépésenként" },
+  { spec: DEMOS.nested, rule: "Két latin négyzet" },
+  { spec: DEMOS.sum, rule: "1. + 2. = 3." },
+  { spec: DEMOS.rotate, rule: "Forgás +90°" },
+  { spec: DEMOS.fill, rule: "Kitöltés oszloponként" },
 ];
 
 /** A hero lebegő, 3D-ben billenő mátrixa, ami magától „megoldja” a feladatokat. */

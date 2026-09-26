@@ -2,14 +2,17 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Gauge from "@/components/charts/Gauge";
 import BellCurve from "@/components/charts/BellCurve";
 import DomainRadar from "./DomainRadar";
 import AnswerReview from "./AnswerReview";
 import { Reveal, SplitLines } from "@/components/ui/motion";
-import { DOMAINS } from "@/lib/questions";
-import { ageLabel, fmtPct, formatDuration, type Result } from "@/lib/scoring";
+import { DOMAINS } from "@/lib/meta";
+import { encodeAnswers, encodeVariants } from "@/lib/codec";
+import { clearPending, loadPending } from "@/components/test/pending";
+import { ageLabel, fmtPct, formatDuration } from "@/lib/norms";
+import type { Result } from "@/lib/scoring";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -50,6 +53,12 @@ function ShareButton({ iq }: { iq: number }) {
 }
 
 export default function ResultView({ result }: { result: Result }) {
+  // A kifizetett kitöltés már nem „vár” – ha ez az eszköz fizetett érte, töröljük a függő állapotot.
+  useEffect(() => {
+    const p = loadPending();
+    if (p && p.k === encodeVariants(result.variants) && p.v === encodeAnswers(result.perQuestion.map((x) => x.picked))) clearPending();
+  }, [result]);
+
   const { iq, band, percentile } = result;
   const better = fmtPct(percentile);
   const top = fmtPct(100 - percentile);

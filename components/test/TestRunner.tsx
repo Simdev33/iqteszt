@@ -1,26 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import Logo from "@/components/ui/Logo";
-import { TOTAL, buildTest } from "@/lib/questions";
-import { formatDuration, resultHref } from "@/lib/scoring";
+import { TOTAL } from "@/lib/meta";
+import { buildPublicTest } from "@/lib/pick";
+import type { PublicQuestion } from "@/lib/types";
+import { formatDuration } from "@/lib/norms";
 import { useTestState } from "./useTestState";
 import QuestionView from "./QuestionView";
 import Intro from "./Intro";
 import Review from "./Review";
 import Analyzing from "./Analyzing";
+import Paywall from "./Paywall";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export default function TestRunner() {
-  const router = useRouter();
-  const s = useTestState();
+export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
+  const s = useTestState(slots);
   const { phase, index, answers, goTo, answer, setPhase } = s;
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const questions = useMemo(() => buildTest(s.variants), [s.variants]);
+  const questions = useMemo(() => buildPublicTest(slots, s.variants), [slots, s.variants]);
   const q = questions[index];
   const answered = answers.filter((a) => a != null).length;
 
@@ -76,11 +77,6 @@ export default function TestRunner() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [phase, q, pick, next, prev, answers, index]);
-
-  const finish = useCallback(() => {
-    s.clearSaved();
-    router.push(resultHref(answers, s.variants, s.age, s.elapsed));
-  }, [s, router, answers]);
 
   const dir = s.dir.current;
 
@@ -157,6 +153,8 @@ export default function TestRunner() {
                 onStart={s.start}
                 saved={s.saved ? { answered: s.saved.answers.filter((a) => a != null).length } : null}
                 onResume={s.resume}
+                pending={s.pending ? { answered: s.pending.answered } : null}
+                onUnlock={s.openPaywall}
               />
             </motion.div>
           )}
@@ -187,7 +185,13 @@ export default function TestRunner() {
 
           {phase === "analyzing" && (
             <motion.div key="analyzing" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease }}>
-              <Analyzing onDone={finish} />
+              <Analyzing onDone={s.complete} />
+            </motion.div>
+          )}
+
+          {phase === "paywall" && s.pending && (
+            <motion.div key="paywall" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease }}>
+              <Paywall pending={s.pending} cancelled={s.cancelled} onRestart={s.start} />
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import type { Cell, Guide } from "@/lib/matrix";
+import type { Cell, Guide } from "@/lib/shapes";
 import MatrixCell from "./MatrixCell";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -38,7 +38,7 @@ export default function MatrixBoard({
           initial={animateIn ? { opacity: 0, scale: 0.86, filter: "blur(6px)" } : false}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.55, delay: animateIn ? 0.05 + i * 0.045 : 0, ease }}
-          className={`relative aspect-square border border-white/[0.06] bg-[radial-gradient(120%_120%_at_30%_0%,#1b2038_0%,#10131f_70%)] shadow-[inset_0_1px_0_rgb(255_255_255/0.05)] ${tile}`}
+          className={`relative aspect-square border border-white/[0.06] bg-[radial-gradient(120%_120%_at_30%_0%,#2a3156_0%,#1d2340_70%)] shadow-[inset_0_1px_0_rgb(255_255_255/0.05)] ${tile}`}
         >
           <MatrixCell cell={c} guide={guide} className="h-full w-full p-[8%]" />
         </motion.div>

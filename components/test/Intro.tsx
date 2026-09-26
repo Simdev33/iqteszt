@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { AGE_GROUPS } from "@/lib/scoring";
-import { DOMAINS, DOMAIN_COUNTS, POOL_SIZE, TOTAL, type Domain } from "@/lib/questions";
+import { AGE_GROUPS } from "@/lib/norms";
+import { DOMAINS, DOMAIN_COUNTS, POOL_SIZE, TOTAL, type Domain } from "@/lib/meta";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -19,12 +19,16 @@ export default function Intro({
   onStart,
   saved,
   onResume,
+  pending,
+  onUnlock,
 }: {
   age: string;
   setAge: (a: string) => void;
   onStart: () => void;
   saved: { answered: number } | null;
   onResume: () => void;
+  pending: { answered: number } | null;
+  onUnlock: () => void;
 }) {
   return (
     <div className="mx-auto max-w-4xl">
@@ -48,6 +52,25 @@ export default function Intro({
         Kapcsold ki az értesítéseket, és oldd meg a feladatokat segítség nélkül. Papír és ceruza használható – számológép és internetes
         keresés nem.
       </motion.p>
+
+      {pending && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease, delay: 0.2 }}
+          className="mt-8 flex flex-col gap-4 rounded-3xl border border-aqua/30 bg-aqua/[0.07] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+        >
+          <div>
+            <p className="font-medium">Egy befejezett teszted eredménye már vár rád.</p>
+            <p className="mt-1 text-sm text-haze">
+              {pending.answered} / {TOTAL} kérdésre válaszoltál. Az eredményt bármikor feloldhatod.
+            </p>
+          </div>
+          <button type="button" onClick={onUnlock} className="btn-primary shrink-0 !py-3">
+            Eredmény feloldása
+          </button>
+        </motion.div>
+      )}
 
       {saved && saved.answered > 0 && (
         <motion.div

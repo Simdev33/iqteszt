@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import Gauge from "@/components/charts/Gauge";
 import { Reveal, SplitLines, TiltCard } from "@/components/ui/motion";
-import { DOMAINS } from "@/lib/questions";
+import { DOMAINS, PRICE_LABEL } from "@/lib/meta";
 
 const SAMPLE = [
   { d: "matrix", pct: 0.86 },
@@ -79,6 +79,12 @@ export default function ResultPreview() {
               </Reveal>
             ))}
           </ul>
+          <Reveal delay={0.3}>
+            <p className="mt-6 text-sm text-mist">
+              A kitöltés ingyenes. A teljes eredmény egyszeri <span className="font-medium text-paper">{PRICE_LABEL}</span> – nincs előfizetés,
+              nincs ismétlődő terhelés.
+            </p>
+          </Reveal>
         </div>
       </div>
     </section>

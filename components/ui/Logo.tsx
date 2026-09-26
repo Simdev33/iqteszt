@@ -13,7 +13,7 @@ export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
           <stop offset="1" stopColor="#45e3c4" />
         </linearGradient>
       </defs>
-      <rect x="0.5" y="0.5" width="31" height="31" rx="9" fill="#12152a" stroke="rgb(255 255 255 / 0.12)" />
+      <rect x="0.5" y="0.5" width="31" height="31" rx="9" fill="#1d2242" stroke="rgb(255 255 255 / 0.12)" />
       {dots.map((i) => (
         <circle key={i} cx={8 + (i % 3) * 8} cy={8 + Math.floor(i / 3) * 8} r={i === 4 ? 2.3 : 1.7} fill={i === 4 ? "url(#logo-g)" : "#c9cdea"} opacity={i === 4 ? 1 : 0.75} />
       ))}

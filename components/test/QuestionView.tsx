@@ -4,7 +4,8 @@ import { motion } from "motion/react";
 import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import OptionButton from "@/components/matrix/OptionButton";
-import { DOMAINS, TOTAL, difficultyLabel, type Question } from "@/lib/questions";
+import { DOMAINS, TOTAL, difficultyLabel } from "@/lib/meta";
+import type { PublicQuestion as Question } from "@/lib/types";
 
 function Meta({ q, index }: { q: Question; index: number }) {
   const d = DOMAINS[q.domain];

@@ -1,63 +1,20 @@
-import { MATRICES, matrixOptions, seededShuffle, type Cell, type Guide, type MatrixId } from "./matrix";
+import "server-only";
+import { MATRICES, type MatrixId } from "./matrix";
+import { matrixOptions, seededShuffle } from "./shapes";
+import {
+  DIFFICULTY_COUNTS,
+  DOMAIN_COUNTS,
+  DOMAIN_POOL_COUNTS,
+  POOL_SIZE,
+  TOTAL,
+  VARIANTS_PER_SLOT,
+  type Difficulty,
+  type Domain,
+} from "./meta";
+import type { MatrixQuestion, PublicQuestion, Question, TextQuestion } from "./types";
 
-export type Domain = "matrix" | "numeric" | "verbal" | "logic";
-export type Difficulty = 1 | 2 | 3;
-
-type Base = {
-  id: string;
-  domain: Domain;
-  difficulty: Difficulty;
-  prompt: string;
-  explain: string;
-};
-
-export type MatrixQuestion = Base & {
-  kind: "matrix";
-  cells: Cell[];
-  options: Cell[];
-  answer: number;
-  guide?: Guide;
-};
-
-export type TextQuestion = Base & {
-  kind: "text";
-  /** Kiemelt számsor / szópár a kérdés alatt, chipekben. */
-  sequence?: string[];
-  options: string[];
-  answer: number;
-};
-
-export type Question = MatrixQuestion | TextQuestion;
-
-export const DOMAINS: Record<Domain, { name: string; short: string; blurb: string; color: string }> = {
-  matrix: {
-    name: "Mintázatfelismerés",
-    short: "Mátrixok",
-    blurb: "Vizuális szabályok felismerése 3×3-as ábrarácsokban – ez a fluid intelligencia legtisztább mérője.",
-    color: "var(--color-iris)",
-  },
-  numeric: {
-    name: "Számbeli gondolkodás",
-    short: "Számok",
-    blurb: "Számsorok törvényszerűségei, arányok és rövid szöveges feladatok fejszámolással.",
-    color: "var(--color-aqua)",
-  },
-  verbal: {
-    name: "Verbális gondolkodás",
-    short: "Szavak",
-    blurb: "Analógiák, ellentétek és kakukktojások – a fogalmak közti kapcsolatok felismerése.",
-    color: "var(--color-flame)",
-  },
-  logic: {
-    name: "Logikai következtetés",
-    short: "Logika",
-    blurb: "Sorrendek, idő, térlátás és szillogizmusok – a lépésenkénti, szabálykövető gondolkodás.",
-    color: "var(--color-sun)",
-  },
-};
-
-const DIFF_LABEL: Record<Difficulty, string> = { 1: "Könnyű", 2: "Közepes", 3: "Nehéz" };
-export const difficultyLabel = (d: Difficulty) => DIFF_LABEL[d];
+// A teljes feladatbank a helyes válaszokkal és a magyarázatokkal – csak a szerveren fut.
+// A böngésző a publicSlots() megoldás nélküli változatát kapja.
 
 const MATRIX_PROMPT = "Melyik ábra illik a kérdőjel helyére?";
 
@@ -264,63 +221,60 @@ function withMixedOptions(q: Question): Question {
 
 export const SLOTS: Question[][] = RAW_SLOTS.map((slot) => slot.map(withMixedOptions));
 
-/** Egy teszt hossza (helyek száma). */
-export const TOTAL = SLOTS.length;
-/** A teljes feladatbank. */
 export const POOL = SLOTS.flat();
-export const POOL_SIZE = POOL.length;
-export const VARIANTS_PER_SLOT = SLOTS[0].length;
 
-// Szerkezeti ellenőrzés: egy helyen belül azonos terület és nehézség, egyedi azonosítók.
+// Szerkezeti ellenőrzés: helyenként azonos terület és nehézség, egyedi azonosítók,
+// és a böngészőnek szóló lib/meta.ts számai egyeznek a valós bankkal.
 {
+  const fail = (msg: string) => {
+    throw new Error(`Feladatbank: ${msg}`);
+  };
+  if (SLOTS.length !== TOTAL) fail(`${SLOTS.length} hely van, a meta ${TOTAL}-at vár.`);
+  if (POOL.length !== POOL_SIZE) fail(`${POOL.length} kérdés van, a meta ${POOL_SIZE}-at vár.`);
   const ids = new Set<string>();
+  const perTest: Record<string, number> = {};
+  const perPool: Record<string, number> = {};
+  const perDiff: Record<string, number> = {};
   SLOTS.forEach((slot, i) => {
-    if (slot.length !== VARIANTS_PER_SLOT) throw new Error(`A(z) ${i + 1}. helyen ${slot.length} változat van.`);
+    if (slot.length !== VARIANTS_PER_SLOT) fail(`a(z) ${i + 1}. helyen ${slot.length} változat van.`);
+    perTest[slot[0].domain] = (perTest[slot[0].domain] ?? 0) + 1;
+    perDiff[slot[0].difficulty] = (perDiff[slot[0].difficulty] ?? 0) + 1;
     for (const q of slot) {
-      if (q.domain !== slot[0].domain || q.difficulty !== slot[0].difficulty)
-        throw new Error(`A(z) ${q.id} kérdés nem illik a(z) ${i + 1}. helyre.`);
-      if (ids.has(q.id)) throw new Error(`Ismétlődő kérdés-azonosító: ${q.id}`);
+      if (q.domain !== slot[0].domain || q.difficulty !== slot[0].difficulty) fail(`a(z) ${q.id} nem illik a(z) ${i + 1}. helyre.`);
+      if (ids.has(q.id)) fail(`ismétlődő azonosító: ${q.id}`);
       ids.add(q.id);
+      perPool[q.domain] = (perPool[q.domain] ?? 0) + 1;
     }
   });
+  const same = (a: Record<string, number>, b: Record<string, number>) => Object.keys(b).every((k) => a[k] === b[k]);
+  if (!same(perTest, DOMAIN_COUNTS)) fail("a területenkénti darabszám eltér a meta DOMAIN_COUNTS-tól.");
+  if (!same(perPool, DOMAIN_POOL_COUNTS)) fail("a bank területenkénti mérete eltér a meta DOMAIN_POOL_COUNTS-tól.");
+  if (!same(perDiff, DIFFICULTY_COUNTS)) fail("a nehézségi eloszlás eltér a meta DIFFICULTY_COUNTS-tól.");
 }
-
-/** Az alapértelmezett összeállítás (minden helyen az eredeti kérdés). */
-export const DEFAULT_VARIANTS: number[] = Array(TOTAL).fill(0);
 
 /** A kiválasztott változatokból összeálló 30 kérdés. */
 export function buildTest(variants: number[]): Question[] {
   return SLOTS.map((slot, i) => slot[variants[i] ?? 0] ?? slot[0]);
 }
 
-/**
- * Új összeállítás: helyenként a legkevésbé látott változatok közül véletlenszerűen.
- * Így három egymás utáni kitöltésnél egyetlen kérdés sem ismétlődik.
- */
-export function pickVariants(seen: Record<string, number> = {}, rand: () => number = Math.random): number[] {
-  return SLOTS.map((slot) => {
-    const counts = slot.map((q) => seen[q.id] ?? 0);
-    const min = Math.min(...counts);
-    const candidates = counts.flatMap((c, k) => (c === min ? [k] : []));
-    return candidates[Math.floor(rand() * candidates.length)];
-  });
+/** Semleges nyilvános azonosító – a belső név (pl. „m-xorDots”) elárulná a feladat szabályát. */
+function opaqueId(id: string) {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return `q${(h >>> 0).toString(36)}`;
 }
+if (new Set(POOL.map((q) => opaqueId(q.id))).size !== POOL.length) throw new Error("Feladatbank: ütköző nyilvános azonosító.");
 
-/** Egy teszt területenkénti összetétele (minden összeállításnál ugyanaz). */
-export const DOMAIN_COUNTS = SLOTS.reduce(
-  (acc, slot) => ({ ...acc, [slot[0].domain]: (acc[slot[0].domain] ?? 0) + 1 }),
-  {} as Record<Domain, number>,
-);
-/** A feladatbank területenkénti mérete. */
-export const DOMAIN_POOL_COUNTS = POOL.reduce(
-  (acc, q) => ({ ...acc, [q.domain]: (acc[q.domain] ?? 0) + 1 }),
-  {} as Record<Domain, number>,
-);
-/** Egy teszt nehézség szerinti összetétele. */
-export const DIFFICULTY_COUNTS = SLOTS.reduce(
-  (acc, slot) => ({ ...acc, [slot[0].difficulty]: (acc[slot[0].difficulty] ?? 0) + 1 }),
-  {} as Record<Difficulty, number>,
-);
-
-/** Bemutató mátrix a főoldalra. */
-export const DEMO = m("demo", 1, "Soronként azonos az alakzat és a kitöltés, balról jobbra pedig nő a méret: kicsi, közepes, nagy. A hiányzó elem a nagy, üres csillag.");
+/** A bank a böngészőnek: helyes válasz, magyarázat és beszédes azonosító nélkül. */
+export function publicSlots(): PublicQuestion[][] {
+  return SLOTS.map((slot) =>
+    slot.map((q) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { answer, explain, ...pub } = q;
+      return { ...pub, id: opaqueId(q.id) } as PublicQuestion;
+    }),
+  );
+}

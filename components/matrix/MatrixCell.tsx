@@ -1,4 +1,4 @@
-import type { Cell, Guide, Shape, Tone } from "@/lib/matrix";
+import type { Cell, Guide, Shape, Tone } from "@/lib/shapes";
 
 export const TONE: Record<Tone, string> = {
   ink: "#e9ebff",

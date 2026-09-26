@@ -7,7 +7,7 @@ import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import OptionButton from "@/components/matrix/OptionButton";
 import { Reveal, SplitLines } from "@/components/ui/motion";
-import { DEMO } from "@/lib/questions";
+import { DEMO } from "@/lib/demo-matrices";
 
 export default function TryIt() {
   const [picked, setPicked] = useState<number | null>(null);

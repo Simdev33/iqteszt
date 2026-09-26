@@ -5,7 +5,7 @@ import { useState } from "react";
 import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import { LETTERS } from "@/components/matrix/OptionButton";
-import { DOMAINS } from "@/lib/questions";
+import { DOMAINS } from "@/lib/meta";
 import type { Result } from "@/lib/scoring";
 
 type Filter = "all" | "wrong" | "right";

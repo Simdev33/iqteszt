@@ -1,4 +1,4 @@
-import { normCdf } from "./scoring";
+import { normCdf } from "./norms";
 
 /** Az IQ-skála sávjai a haranggörbéhez, népességi arányokkal. */
 export const SCALE_BANDS = [

@@ -3,8 +3,8 @@
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import MatrixBoard from "@/components/matrix/MatrixBoard";
-import { MATRICES } from "@/lib/matrix";
-import { DOMAINS, DOMAIN_COUNTS, type Domain } from "@/lib/questions";
+import { DEMOS } from "@/lib/demo-matrices";
+import { DOMAINS, DOMAIN_COUNTS, type Domain } from "@/lib/meta";
 import { Reveal, SplitLines } from "@/components/ui/motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -24,7 +24,7 @@ function useCycle(length: number, ms: number) {
 
 function MatrixMini() {
   const { ref, i } = useCycle(2, 1900);
-  const spec = MATRICES.latin;
+  const spec = DEMOS.latin;
   return (
     <div ref={ref} className="mx-auto w-full max-w-[300px]">
       <MatrixBoard cells={spec.cells} fill={i === 1 ? spec.answer : null} state={i === 1 ? "correct" : "idle"} animateIn={false} />
@@ -33,7 +33,7 @@ function MatrixMini() {
 }
 
 function NumberMini() {
-  const seq = [2, 3, 5, 9, 17];
+  const seq = [1, 2, 4, 7, 11];
   const { ref, i } = useCycle(7, 700);
   const solved = i >= 5;
   return (
@@ -45,7 +45,7 @@ function NumberMini() {
             animate={{ opacity: k < i ? 1 : 0.12, y: k < i ? 0 : 4 }}
             className="w-10 translate-x-[23px] text-center sm:w-11 sm:translate-x-[26px]"
           >
-            +{2 ** k}
+            +{k + 1}
           </motion.span>
         ))}
       </div>
@@ -67,7 +67,7 @@ function NumberMini() {
                   transition={{ duration: 0.3 }}
                   className={solved ? "text-aqua" : "text-mist"}
                 >
-                  {solved ? 33 : "?"}
+                  {solved ? 16 : "?"}
                 </motion.span>
               </AnimatePresence>
             )}
@@ -79,20 +79,20 @@ function NumberMini() {
 }
 
 function WordMini() {
-  const words = ["karmester", "hangjegy", "tétel"];
+  const words = ["egér", "tej", "cica"];
   const { ref, i } = useCycle(4, 1100);
   const w = words[Math.min(i, 2)];
   const ok = i >= 2;
   return (
     <div ref={ref} className="flex flex-col items-center gap-3 font-display text-[0.95rem] sm:text-lg">
       <div className="flex items-center gap-2.5">
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">könyv</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">kutya</span>
         <span className="text-mist">:</span>
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">fejezet</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">kölyök</span>
       </div>
       <div className="flex items-center gap-2.5">
         <span className="px-1 text-flame">=</span>
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">szimfónia</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">macska</span>
         <span className="text-mist">:</span>
         <span
           className={`relative inline-grid min-w-[7.5rem] place-items-center overflow-hidden rounded-full border px-3.5 py-1.5 transition-colors duration-300 ${
@@ -112,10 +112,10 @@ function WordMini() {
 
 function LogicMini() {
   const people = [
-    { n: "Csaba", age: 1 },
-    { n: "Anna", age: 4 },
-    { n: "Dóri", age: 2 },
-    { n: "Béla", age: 3 },
+    { n: "Olivér", age: 1 },
+    { n: "Lili", age: 4 },
+    { n: "Nóra", age: 2 },
+    { n: "Máté", age: 3 },
   ];
   const { ref, i } = useCycle(2, 2200);
   const list = i === 1 ? [...people].sort((a, b) => b.age - a.age) : people;
