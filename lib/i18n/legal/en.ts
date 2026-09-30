@@ -32,17 +32,16 @@ const en: LegalTexts = {
       {
         h: "3. Packages and prices",
         p: [
-          "After completing the test, the User may choose from the following options:",
-          "- *One-off unlock – {oneTime}:* the detailed result of the attempt concerned. A one-off fee, with no subscription and no recurring charges.",
-          "- *Trial access – {trial} for the {days}-day trial period:* the detailed result of the attempt concerned, plus an unlimited number of further tests and results for the duration of the subscription. When the trial period ends, access *automatically converts into a subscription at {monthly} per month*, payable monthly in advance, which continues until the User cancels it.",
+          "The detailed result is unlocked with *{days}-day full access*, which costs *{trial}* (charged immediately upon payment). Access includes the detailed result of the attempt concerned, plus an unlimited number of further tests and results for the duration of access.",
+          "If the User does not cancel within the first {days} days, access *automatically converts into a subscription at {monthly} per month* once the {days} days have elapsed; the first monthly fee is charged on day {nextDay}, and thereafter monthly in advance until the User cancels.",
           "The prices shown are the final amounts actually payable by the User; there are no additional charges (e.g. delivery or handling fees). When converting prices stated in euros, the User's bank may apply its own exchange rate and fees.",
-          "The Provider reserves the right to change its prices in the future. Such changes do not affect one-off purchases already concluded; in the case of a subscription, the Provider will notify the User by email at least 30 days before the change takes effect, and the User may cancel the subscription free of charge before the new price takes effect.",
+          "The Provider reserves the right to change its prices in the future. Such changes do not affect periods already paid for; the Provider will notify the User by email at least 30 days before the change takes effect, and the User may cancel the subscription free of charge before the new price takes effect.",
         ],
       },
       {
         h: "4. Conclusion of the contract and payment",
         p: [
-          "On the payment screen, the User selects a package, accepts these terms and the declaration concerning immediate performance of the digital content, and is then redirected to Stripe's secure payment page. Until the payment is submitted, the User may go back at any time and change their answers and the data entered.",
+          "On the payment screen, the User accepts these terms and the declaration concerning immediate performance of the digital content, and then enters their payment details in the Stripe payment form displayed on the page. Until the payment is submitted, the User may go back at any time and change their answers and the data entered.",
           "The contract between the Provider and the User is concluded upon successful payment, in the language in which the User uses the website. The Provider does not file the contract separately; Stripe sends a receipt for the payment by email to the address provided by the User. These terms are available on the website at all times and can be saved.",
           "Payments are processed by Stripe Payments Europe, Ltd. Accepted payment methods: bank card, Apple Pay, Google Pay. Card details are handled exclusively by Stripe; the Provider has no access to them.",
           "In the case of a subscription, the User authorises the Provider to charge the monthly fee, via Stripe, to the payment method provided at the end of the trial period and monthly thereafter, until the subscription is cancelled. If a charge fails, Stripe may retry it; in the event of persistent payment failure, the subscription ends.",

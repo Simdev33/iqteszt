@@ -32,17 +32,16 @@ const de: LegalTexts = {
       {
         h: "3. Angebote und Preise",
         p: [
-          "Nach Abschluss des Tests kann der Nutzer zwischen folgenden Möglichkeiten wählen:",
-          "- *Einmalige Freischaltung – {oneTime}:* das ausführliche Ergebnis des jeweiligen Tests. Einmalige Gebühr, kein Abonnement und keine wiederkehrende Abbuchung.",
-          "- *Probezugang – {trial} für die {days}-tägige Probezeit:* das ausführliche Ergebnis des jeweiligen Tests sowie während der Laufzeit des Abonnements beliebig viele weitere Tests und Ergebnisse. Nach Ablauf der Probezeit *geht der Zugang automatisch in ein Abonnement zu {monthly} pro Monat über*, das monatlich im Voraus zu zahlen ist und so lange läuft, bis der Nutzer es kündigt.",
+          "Das ausführliche Ergebnis wird mit dem *{days}-tägigen Vollzugang* freigeschaltet, der *{trial}* kostet (bei der Zahlung sofort abgebucht). Der Zugang umfasst das ausführliche Ergebnis des jeweiligen Tests sowie während seiner Laufzeit beliebig viele weitere Tests und Ergebnisse.",
+          "Kündigt der Nutzer nicht innerhalb der ersten {days} Tage, geht der Zugang nach Ablauf der {days} Tage *automatisch in ein Abonnement zu {monthly} pro Monat über*; die erste Monatsgebühr wird am {nextDay}. Tag abgebucht, danach monatlich im Voraus, bis der Nutzer kündigt.",
           "Die angegebenen Preise sind Endpreise, die der Nutzer tatsächlich zu zahlen hat; weitere Kosten (z. B. Versand- oder Bearbeitungsgebühren) fallen nicht an. Bei der Umrechnung von in Euro angegebenen Preisen kann die Bank des Nutzers eigene Wechselkurse und Gebühren anwenden.",
-          "Der Anbieter behält sich künftige Preisänderungen vor. Bereits abgeschlossene Einmalkäufe sind davon nicht betroffen; bei Abonnements informiert der Anbieter den Nutzer mindestens 30 Tage vor Inkrafttreten per E-Mail, und der Nutzer kann das Abonnement vor Inkrafttreten des neuen Preises kostenlos kündigen.",
+          "Der Anbieter behält sich künftige Preisänderungen vor. Bereits bezahlte Zeiträume sind davon nicht betroffen; der Anbieter informiert den Nutzer mindestens 30 Tage vor Inkrafttreten per E-Mail, und der Nutzer kann das Abonnement vor Inkrafttreten des neuen Preises kostenlos kündigen.",
         ],
       },
       {
         h: "4. Vertragsschluss und Zahlung",
         p: [
-          "Der Nutzer wählt auf der Zahlungsseite ein Angebot, akzeptiert diese Bedingungen sowie die Erklärung zur sofortigen Bereitstellung digitaler Inhalte und wird anschließend auf die sichere Zahlungsseite von Stripe weitergeleitet. Bis zum Absenden der Zahlung kann der Nutzer jederzeit zurückgehen und seine Antworten sowie die eingegebenen Daten ändern.",
+          "Der Nutzer akzeptiert auf der Zahlungsseite diese Bedingungen sowie die Erklärung zur sofortigen Bereitstellung digitaler Inhalte und gibt anschließend seine Zahlungsdaten in das dort angezeigte Zahlungsformular von Stripe ein. Bis zum Absenden der Zahlung kann der Nutzer jederzeit zurückgehen und seine Antworten sowie die eingegebenen Daten ändern.",
           "Der Vertrag zwischen dem Anbieter und dem Nutzer kommt mit der erfolgreichen Zahlung zustande, und zwar in der Sprache, in der der Nutzer die Website verwendet. Der Vertragstext wird vom Anbieter nicht gesondert gespeichert; Stripe sendet eine Zahlungsbestätigung per E-Mail an die vom Nutzer angegebene Adresse. Diese Bedingungen sind auf der Website jederzeit abrufbar und können gespeichert werden.",
           "Die Zahlung wird von Stripe Payments Europe, Ltd. abgewickelt. Akzeptierte Zahlungsmethoden: Kredit- oder Debitkarte, Apple Pay, Google Pay. Die Kartendaten werden ausschließlich von Stripe verarbeitet; der Anbieter hat keinen Zugriff darauf.",
           "Bei einem Abonnement willigt der Nutzer ein, dass der Anbieter über Stripe am Ende der Probezeit und danach monatlich die Monatsgebühr von der angegebenen Zahlungsmethode abbucht, bis das Abonnement gekündigt wird. Schlägt eine Abbuchung fehl, kann Stripe sie erneut versuchen; bei dauerhaftem Zahlungsausfall endet das Abonnement.",

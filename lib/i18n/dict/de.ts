@@ -206,7 +206,7 @@ const de: Dict = {
         { t: "Teilbarer Link", d: "Mit einem Klick an Freunde schicken – so können sie den Test auch ausprobieren." },
       ],
       price:
-        "Der Test ist kostenlos. Das vollständige Ergebnis schaltest du für einmalig *{oneTime}* frei oder mit einem Probezugang für *{trial}*, der nach {days} Tagen als Monatsabo für {monthly} weiterläuft – jederzeit kündbar.",
+        "Der Test ist kostenlos. Das vollständige Ergebnis schaltest du mit dem {days}-tägigen Vollzugang für *{trial}* frei; wenn du nicht kündigst, läuft er ab dem {nextDay}. Tag für {monthly} pro Monat weiter – jederzeit kündbar.",
     },
     faq: {
       eyebrow: "FAQ",
@@ -216,7 +216,7 @@ const de: Dict = {
     final: {
       eyebrow: "Bereit?",
       title: "Zwölf Minuten, und *du weißt es.*",
-      text: "{total} Aufgaben, ohne Zeitlimit und ohne Registrierung. Der Test ist kostenlos; das ausführliche Ergebnis kostet einmalig {oneTime} oder {trial} für die ersten {days} Tage.",
+      text: "{total} Aufgaben, ohne Zeitlimit und ohne Registrierung. Der Test ist kostenlos; das ausführliche Ergebnis erhältst du mit dem {days}-tägigen Vollzugang ({trial}).",
       cta: "Los geht’s!",
     },
   },
@@ -224,7 +224,7 @@ const de: Dict = {
   faq: [
     {
       q: "Was kostet es?",
-      a: "Der Test ist kostenlos und erfordert keine Registrierung. Das ausführliche Ergebnis kannst du auf zwei Arten freischalten: einmalig für {oneTime} (nur dieses Ergebnis, keine wiederkehrende Abbuchung) oder mit einem Probezugang für {trial}, der nach {days} Tagen als Monatsabo für {monthly} weiterläuft, bis du kündigst – während des Abos kannst du unbegrenzt Tests machen und siehst jedes Ergebnis. Du kannst mit Kredit- oder Debitkarte, Apple Pay oder Google Pay bezahlen.",
+      a: "Der Test ist kostenlos und erfordert keine Registrierung. Das ausführliche Ergebnis schaltest du mit dem {days}-tägigen Vollzugang frei, der {trial} kostet; währenddessen kannst du unbegrenzt Tests machen und siehst jedes Ergebnis. Wenn du nicht innerhalb der ersten {days} Tage kündigst, läuft der Zugang ab dem {nextDay}. Tag als Monatsabo für {monthly} weiter, bis du kündigst – kündigen kannst du jederzeit mit einem Klick. Du kannst mit Kredit- oder Debitkarte, Apple Pay oder Google Pay bezahlen.",
     },
     {
       q: "Wie kann ich das Abo kündigen?",
@@ -344,39 +344,25 @@ const de: Dict = {
     summaryTime: ", in {t}",
     preview: "Dein Ergebnis",
     cancelled: "Die Zahlung wurde abgebrochen – es wurde nichts abgebucht. Du kannst es jederzeit erneut versuchen.",
+    includes: "Der {days}-tägige Vollzugang umfasst:",
     perks: [
       { t: "IQ-Schätzung und Perzentil", d: "Wo genau du im Vergleich zur Bevölkerung stehst." },
       { t: "Auswertung nach Bereichen", d: "Muster, Zahlen, Wörter, Logik – wo liegt deine Stärke?" },
       { t: "Lösungen aller {total} Aufgaben", d: "Die richtigen Antworten mit Herleitung, neben deinen eigenen Antworten." },
-      { t: "Teilbarer Ergebnislink", d: "Schick ihn an wen du willst und öffne ihn jederzeit wieder." },
+      { t: "Unbegrenzt neue Tests", d: "Solange dein Zugang läuft, siehst du auch jedes weitere Ergebnis sofort." },
     ],
-    choose: "Wähle, wie du freischalten möchtest:",
-    plans: {
-      sub: {
-        name: "Probezugang",
-        per: "für die ersten {days} Tage",
-        then: "danach {monthly}/Monat, bis du kündigst",
-        includes: "Dieses Ergebnis + unbegrenzt Tests und Ergebnisse während des Abos. Jederzeit kündbar.",
-      },
-      one: {
-        name: "Einmalige Freischaltung",
-        per: "einmalige Gebühr",
-        then: "kein Abo, keine wiederkehrende Abbuchung",
-        includes: "Nur das ausführliche Ergebnis dieses Tests.",
-      },
-    },
-    dueToday: "Heute fällig",
-    renews: "ab {date} {monthly}/Monat, bis du kündigst",
+    accessName: "{days}-tägiger Vollzugang",
     consent:
-      "Ich akzeptiere die [AGB](terms) und habe die [Datenschutzerklärung](privacy) zur Kenntnis genommen. Ich verlange die sofortige Anzeige meines Ergebnisses und nehme zur Kenntnis, dass ich dadurch mein 14-tägiges Widerrufsrecht für diese digitalen Inhalte verliere.",
-    consentSub:
-      " Mir ist bewusst, dass sich das Abo nach der {days}-tägigen Probezeit automatisch zu {monthly} pro Monat verlängert, bis ich kündige; eine Kündigung ist jederzeit möglich.",
-    ctaSub: "Probezeit starten – {trial}",
-    ctaOne: "Ergebnis freischalten – {oneTime}",
-    busy: "Weiterleitung zur Zahlung …",
+      "Ich akzeptiere die [AGB](terms) und die [Datenschutzerklärung](privacy), verlange den sofortigen Beginn der Leistung und nehme zur Kenntnis, dass ich dadurch mein 14-tägiges Widerrufsrecht verliere.",
     consentNeeded: "Bitte bestätige die obige Erklärung, um fortzufahren.",
-    secure: "Sichere Zahlung über Stripe",
-    methods: ["Karte", "Apple Pay", "Google Pay"],
+    methodLabel: "Zahlungsart",
+    card: "Debit- oder Kreditkarte",
+    loading: "Zahlungsformular wird geladen …",
+    close: "Abbrechen",
+    busy: "Weiterleitung …",
+    trust: ["256-Bit-SSL", "Zahlung über Stripe", "Jederzeit kündbar"],
+    renewal:
+      "Wenn du nicht innerhalb der ersten {days} Tage kündigst, läuft dein Abo ab dem {nextDay}. Tag für {monthly} pro Monat weiter, bis du kündigst. Kündigen kannst du jederzeit mit einem Klick auf der Seite [Abo verwalten](subscription).",
     restart: "Lieber einen neuen Test starten",
     unknownError: "Unbekannter Fehler.",
     member: {
@@ -495,7 +481,7 @@ const de: Dict = {
     },
     payment: {
       title: "Zahlung und Datenschutz",
-      p1: "Der Test ist kostenlos; das ausführliche Ergebnis gibt es einmalig für {oneTime} oder mit einem Probezugang für {trial} (nach {days} Tagen {monthly}/Monat, jederzeit kündbar). Die Bewertung erfolgt auf dem Server, die richtigen Antworten gelangen nicht in deinen Browser. Beim Bezahlen werden deine Antworten in kurzer, codierter Form mit der Zahlungstransaktion bei Stripe verknüpft, und die Ergebnisseite berechnet daraus das Ergebnis – in einer separaten Datenbank speichern wir sie nicht.",
+      p1: "Der Test ist kostenlos; das ausführliche Ergebnis gibt es mit dem {days}-tägigen Vollzugang ({trial}; wenn du nicht kündigst, ab dem {nextDay}. Tag {monthly}/Monat, jederzeit kündbar). Die Bewertung erfolgt auf dem Server, die richtigen Antworten gelangen nicht in deinen Browser. Beim Bezahlen werden deine Antworten in kurzer, codierter Form mit der Zahlungstransaktion bei Stripe verknüpft, und die Ergebnisseite berechnet daraus das Ergebnis – in einer separaten Datenbank speichern wir sie nicht.",
       p2: "Den Stand eines unterbrochenen Tests speichert nur dein eigener Browser, damit du weitermachen kannst. Wir fragen weder nach Namen noch nach einem Benutzerkonto; die Kartendaten verarbeitet Stripe, wir sehen sie nicht.",
       cta: "Test starten",
     },
@@ -543,13 +529,11 @@ const de: Dict = {
   },
 
   stripe: {
-    oneTimeName: "IQ-Test-Ergebnis",
-    oneTimeDesc: "IQ-Schätzung mit Perzentil, Auswertung nach Bereichen und Lösungen der Aufgaben. Einmalige Gebühr, kein Abo.",
     subName: "Elmeszint-Abo",
     subDesc: "Unbegrenzt IQ-Tests und ausführliche Ergebnisse. Verlängert sich monatlich, jederzeit kündbar.",
-    trialName: "{days}-tägige Probezeit",
+    trialName: "{days}-tägiger Vollzugang",
     submitNote:
-      "Heute werden {trial} für die {days}-tägige Probezeit abgebucht. Wenn du nicht vorher kündigst, werden danach automatisch monatlich {monthly} abgebucht, bis du kündigst. Kündigen kannst du jederzeit unten auf der Website über den Link „Abo verwalten / kündigen“.",
+      "Heute werden {trial} für den {days}-tägigen Vollzugang abgebucht. Wenn du nicht innerhalb der ersten {days} Tage kündigst, werden ab dem {nextDay}. Tag automatisch monatlich {monthly} abgebucht, bis du kündigst. Kündigen kannst du jederzeit unten auf der Website über den Link „Abo verwalten / kündigen“.",
   },
 
   api: {

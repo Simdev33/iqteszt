@@ -33,7 +33,7 @@ export default async function DemoCheckout({ params, searchParams }: PageProps<"
         <p className="mt-3 text-sm leading-relaxed text-mist">{t.text}</p>
         <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4">
           <span className="text-haze">{t.item}</span>
-          <span className="font-display text-xl font-semibold">{payload.plan === "sub" ? p.trial : p.oneTime}</span>
+          <span className="font-display text-xl font-semibold">{p.trial}</span>
         </div>
         <div className="mt-6 grid gap-3">
           <a href={paidHref} className="btn-primary">

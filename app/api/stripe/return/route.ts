@@ -14,12 +14,12 @@ export async function GET(request: Request) {
   const demo = url.searchParams.get("demo") ?? undefined;
   const origin = siteOrigin(request);
 
-  // Fejlesztői szimuláció: a „pending” tokenből „paid” lesz; előfizetésnél demó-süti.
+  // Fejlesztői szimuláció: a „pending” tokenből „paid” lesz, és demó előfizetői süti.
   if (demo && paymentMode() === "demo") {
     const p = readResultToken(demo, "pending");
     if (!p) return NextResponse.redirect(new URL(path(lang, "result"), origin));
-    const res = NextResponse.redirect(new URL(path(lang, "result", { r: resultToken(p, "paid", p.plan) }), origin), 303);
-    if (p.plan === "sub") res.cookies.set(MEMBER_COOKIE, memberCookieValue("demo"), memberCookieOptions);
+    const res = NextResponse.redirect(new URL(path(lang, "result", { r: resultToken(p, "paid") }), origin), 303);
+    res.cookies.set(MEMBER_COOKIE, memberCookieValue("demo"), memberCookieOptions);
     return res;
   }
 

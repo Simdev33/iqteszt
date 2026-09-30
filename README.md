@@ -30,12 +30,9 @@ folyamat kipróbálható. Éles módban kulcs nélkül a fizetés le van tiltva.
 
 ## Fizetés (Stripe)
 
-Két csomag a kitöltés után:
-
-| Csomag | Ár | Mit ad |
-| --- | --- | --- |
-| Egyszeri feloldás | 1 990 Ft (magyarul) / 4,90 € (többi nyelv) | csak az adott eredmény |
-| Próbaidős előfizetés | 3,90 € most, 7 nap után 9,90 €/hó, amíg le nem mondják | ez + korlátlan teszt és eredmény |
+Egy csomag a kitöltés után: **7 napos teljes hozzáférés 3,90 €-ért** (azonnal terhelve), amely – ha az első
+7 napban nem mondják le – a 8. naptól **9,90 €/hó** előfizetésként folytatódik. A hozzáférés ideje alatt korlátlan
+teszt és eredmény jár. A fizetési űrlap a Stripe beágyazott Checkoutja: az oldalon belül jelenik meg, nincs átirányítás.
 
 Az árak egy helyen: `lib/pricing.ts`.
 
@@ -43,11 +40,13 @@ Az árak egy helyen: `lib/pricing.ts`.
 
 1. Környezeti változók (tárhelyen, pl. Vercel → Environment Variables; helyben `.env.local`):
    - `STRIPE_SECRET_KEY` – `sk_test_…` teszteléshez, `sk_live_…` élesben
+   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` – a hozzá tartozó `pk_test_…` / `pk_live_…` (a beágyazott fizetési űrlaphoz; build előtt kell beállítani)
    - `SITE_URL` – az oldal nyilvános címe (pl. `https://elmeszint.hu`), ide irányít vissza a Stripe
    - `RESULT_SECRET` – hosszú, véletlen szöveg; ezzel írjuk alá az előfizetői sütit és az eredménylinkeket.
      Ha üres, a Stripe-kulcsból származtatjuk – ekkor kulcscserénél a régi előfizetői linkek érvénytelenné válnak.
 2. Stripe Dashboard, élesítés előtt:
-   - *Settings → Public details*: a cégnév / megjelenített név (ez látszik a fizetési oldalon és a számlákon).
+   - *Settings → Public details*: a cégnév / megjelenített név (ez látszik a fizetési űrlapon és a számlákon).
+   - *Settings → Branding*: a fizetési űrlap színei (hogy illeszkedjen az oldalhoz).
    - *Settings → Billing → Subscriptions and emails*: nyugták és a **próbaidő lejárta előtti emlékeztető e-mail** bekapcsolása.
    - *Settings → Emails*: sikeres fizetésről szóló nyugta e-mail.
 3. Az ügyfélportált (lemondás, kártyacsere, számlák, e-mailes belépés) a kód magától létrehozza / frissíti
@@ -57,9 +56,9 @@ Az árak egy helyen: `lib/pricing.ts`.
 
 - A böngésző csak a kérdéseket kapja meg (`publicSlots()`); a helyes válaszok, a magyarázatok és a
   pontozás a szerveren maradnak (`lib/questions.ts`, `lib/matrix.ts`, `lib/scoring.ts` – `server-only`).
-- A kitöltés végén a `/api/checkout` Stripe Checkout munkamenetet nyit (egyszeri vagy előfizetéses módban);
-  a válaszok kódja a munkamenet metaadataiban utazik. Adatbázis nem kell.
-- Fizetés után a `/api/stripe/return` előfizetésnél aláírt, httpOnly sütit (`elm_sub`) tesz a böngészőbe
+- A kitöltés végén a `/api/checkout` beágyazott Stripe Checkout munkamenetet nyit (előfizetés, 7 nap próbaidő +
+  3,90 €-s első tétel); a válaszok kódja a munkamenet metaadataiban utazik. Adatbázis nem kell.
+- Fizetés után a `/api/stripe/return` aláírt, httpOnly sütit (`elm_sub`) tesz a böngészőbe
   a Stripe ügyfél-azonosítóval, majd az eredményoldalra irányít.
 - Az eredményoldal (`/{lang}/…?session_id=…`) a Stripe-tól kérdezi le, hogy a munkamenet ki van-e fizetve,
   és csak akkor számolja ki és mutatja meg az eredményt.

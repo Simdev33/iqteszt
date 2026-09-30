@@ -32,17 +32,16 @@ const hu: LegalTexts = {
       {
         h: "3. Csomagok és árak",
         p: [
-          "A Felhasználó a teszt kitöltése után az alábbi lehetőségek közül választhat:",
-          "- *Egyszeri feloldás – {oneTime}:* az adott kitöltés részletes eredménye. Egyszeri díj, nincs előfizetés és nincs ismétlődő terhelés.",
-          "- *Próbaidős hozzáférés – {trial} a {days} napos próbaidőre:* az adott kitöltés részletes eredménye, valamint az előfizetés ideje alatt korlátlan számú további teszt és eredmény. A próbaidő leteltével a hozzáférés *automatikusan havi {monthly} díjú előfizetéssé alakul*, amely havonta, előre fizetendő, és addig tart, amíg a Felhasználó le nem mondja.",
+          "A részletes eredmény a *{days} napos teljes hozzáféréssel* oldható fel, amelynek díja *{trial}* (a fizetéskor azonnal terhelve). A hozzáférés az adott kitöltés részletes eredményét, valamint a hozzáférés ideje alatt korlátlan számú további tesztet és eredményt tartalmaz.",
+          "Ha a Felhasználó az első {days} napban nem mondja le, a hozzáférés a {days} nap leteltével *automatikusan havi {monthly} díjú előfizetéssé alakul*; az első havidíj a {nextDay}. napon terhelődik, utána havonta, előre, amíg a Felhasználó le nem mondja.",
           "A feltüntetett árak a Felhasználó által ténylegesen fizetendő végösszegek; további díj (pl. szállítási vagy kezelési költség) nincs. Az euróban megadott árak átváltásakor a Felhasználó bankja saját árfolyamot és díjat alkalmazhat.",
-          "A Szolgáltató fenntartja a jogot az árak jövőbeli módosítására. A módosítás a már megkötött egyszeri vásárlást nem érinti; előfizetés esetén a Szolgáltató legalább 30 nappal a hatálybalépés előtt e-mailben értesíti a Felhasználót, aki az új ár hatálybalépése előtt díjmentesen lemondhatja az előfizetést.",
+          "A Szolgáltató fenntartja a jogot az árak jövőbeli módosítására. A módosítás a már kifizetett időszakot nem érinti; a havidíj változásáról a Szolgáltató legalább 30 nappal a hatálybalépés előtt e-mailben értesíti a Felhasználót, aki az új ár hatálybalépése előtt díjmentesen lemondhatja az előfizetést.",
         ],
       },
       {
         h: "4. A szerződés létrejötte és a fizetés",
         p: [
-          "A Felhasználó a fizetési képernyőn kiválasztja a csomagot, elfogadja ezeket a feltételeket és a digitális tartalom azonnali teljesítésére vonatkozó nyilatkozatot, majd átirányítást kap a Stripe biztonságos fizetési oldalára. A fizetés elküldése előtt a Felhasználó bármikor visszaléphet, a válaszait és a megadott adatokat módosíthatja.",
+          "A Felhasználó a fizetési képernyőn elfogadja ezeket a feltételeket és a digitális tartalom azonnali teljesítésére vonatkozó nyilatkozatot, majd a megjelenő Stripe fizetési űrlapon megadja a fizetési adatait. A fizetés elküldése előtt a Felhasználó bármikor visszaléphet, a válaszait és a megadott adatokat módosíthatja.",
           "A szerződés a fizetés sikeres teljesítésével jön létre a Szolgáltató és a Felhasználó között, azon a nyelven, amelyen a Felhasználó a weboldalt használja. A szerződést a Szolgáltató külön nem iktatja; a fizetésről a Stripe e-mailben nyugtát küld a Felhasználó által megadott címre. Ezek a feltételek a weboldalon bármikor elérhetők és elmenthetők.",
           "A fizetést a Stripe Payments Europe, Ltd. dolgozza fel. Elfogadott fizetési módok: bankkártya, Apple Pay, Google Pay. A kártyaadatokat kizárólag a Stripe kezeli, azokhoz a Szolgáltató nem fér hozzá.",
           "Előfizetés esetén a Felhasználó hozzájárul, hogy a Szolgáltató a Stripe-on keresztül a próbaidő végén, majd havonta a megadott fizetési módot terhelje a havidíjjal, amíg az előfizetést le nem mondja. Sikertelen terhelés esetén a Stripe a terhelést újrapróbálhatja; tartós fizetési hiba esetén az előfizetés megszűnik.",

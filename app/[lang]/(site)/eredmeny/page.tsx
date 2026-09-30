@@ -32,7 +32,7 @@ const loadResult = cache(async (lang: Locale, sessionId?: string, token?: string
     const member = readResultToken(token, "member");
     const demo = member ? null : readResultToken(token, "paid");
     payload = member ?? demo;
-    subscribed = !!member || demo?.plan === "sub";
+    subscribed = !!(member ?? demo);
     status = payload ? "paid" : "invalid";
   }
   if (!payload) return { status: status === "paid" ? ("invalid" as const) : status };

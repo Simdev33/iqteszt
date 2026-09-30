@@ -3,15 +3,14 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { fmt, path, type Locale } from "./i18n/config";
 import type { Dict } from "./i18n/dict/hu";
-import { PRICING, eurCents, oneTimeCharge, prices, type Plan } from "./pricing";
+import { PRICING, eurCents, prices } from "./pricing";
 
 // Fizetés: Stripe Checkout, külön npm-csomag nélkül (a Stripe REST API-ja form-kódolt kéréseket vár).
 // Adatbázis nem kell: a kitöltés kódja a Checkout Session metaadataiban utazik, és az eredményoldal
 // a Stripe-tól kérdezi le, hogy a munkamenet tényleg ki van-e fizetve.
 //
-// Két csomag:
-//   „one” – egyszeri díj, csak az adott eredmény;
-//   „sub” – próbaidős előfizetés: ma 3,90 €, 7 nap után 9,90 €/hó, amíg le nem mondják.
+// Egy csomag: 7 napos teljes hozzáférés 3,90 €-ért (azonnal terhelve), a 8. naptól 9,90 €/hó, amíg le nem mondják.
+// A fizetési űrlap a Stripe beágyazott Checkoutja (ui_mode: embedded) – az oldalon belül jelenik meg.
 // Az előfizetőt egy aláírt, httpOnly süti (a Stripe ügyfél-azonosítójával) ismeri fel; a későbbi
 // tesztek eredményét a szerver aláírt linkkel adja ki, ha a Stripe szerint az előfizetés aktív.
 //
@@ -75,14 +74,14 @@ function readToken<T>(token: string | undefined): T | null {
  * „pending”/„paid” = fejlesztői szimuláció (csak demó módban érvényes).
  */
 type Stage = "member" | "pending" | "paid";
-export function resultToken(payload: TestPayload, stage: Stage, plan?: Plan) {
-  return signToken({ k: payload.k, v: payload.v, a: payload.a, t: payload.t, s: stage, p: plan });
+export function resultToken(payload: TestPayload, stage: Stage) {
+  return signToken({ k: payload.k, v: payload.v, a: payload.a, t: payload.t, s: stage });
 }
-export function readResultToken(token: string | undefined, stage: Stage): (TestPayload & { plan?: Plan }) | null {
+export function readResultToken(token: string | undefined, stage: Stage): TestPayload | null {
   if (stage !== "member" && paymentMode() !== "demo") return null;
-  const p = readToken<TestPayload & { s: string; p?: Plan }>(token);
+  const p = readToken<TestPayload & { s: string }>(token);
   if (!p || p.s !== stage || typeof p.k !== "string" || typeof p.v !== "string") return null;
-  return { k: p.k, v: p.v, a: p.a ?? "", t: p.t ?? "0", plan: p.p };
+  return { k: p.k, v: p.v, a: p.a ?? "", t: p.t ?? "0" };
 }
 
 /* ---------------- Előfizetői süti ---------------- */
@@ -110,7 +109,7 @@ export async function memberCustomer(): Promise<string | null> {
 
 type Session = {
   id: string;
-  url: string | null;
+  client_secret: string | null;
   mode: "payment" | "subscription";
   status: "open" | "complete" | "expired";
   payment_status: "paid" | "unpaid" | "no_payment_required";
@@ -118,53 +117,44 @@ type Session = {
   metadata: Partial<TestPayload> | null;
 };
 
-/** Stripe Checkout munkamenet a választott csomaggal. */
-export async function createCheckout(payload: TestPayload, plan: Plan, lang: Locale, t: Dict, origin: string, customer?: string | null) {
+/**
+ * Beágyazott Stripe Checkout munkamenet: a 7 napos hozzáférés díja az első (próbaidős) számlán azonnal
+ * terhelődik, utána havidíj. A böngésző a visszakapott client_secret-tel jeleníti meg az űrlapot.
+ */
+export async function createCheckout(payload: TestPayload, lang: Locale, t: Dict, origin: string, customer?: string | null) {
   const p = prices(lang);
   const body = new URLSearchParams({
+    mode: "subscription",
+    ui_mode: "embedded",
     locale: lang,
     "payment_method_types[0]": "card",
-    success_url: `${origin}/api/stripe/return?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}${path(lang, "test", { canceled: "1" })}`,
+    return_url: `${origin}/api/stripe/return?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
     "metadata[k]": payload.k,
     "metadata[v]": payload.v,
     "metadata[a]": payload.a,
     "metadata[t]": payload.t,
     "metadata[lang]": lang,
-    "metadata[plan]": plan,
+    // Havidíj az első 7 nap után…
+    "line_items[0][quantity]": "1",
+    "line_items[0][price_data][currency]": "eur",
+    "line_items[0][price_data][unit_amount]": String(eurCents(PRICING.monthlyEur)),
+    "line_items[0][price_data][recurring][interval]": "month",
+    "line_items[0][price_data][product_data][name]": t.stripe.subName,
+    "line_items[0][price_data][product_data][description]": t.stripe.subDesc,
+    // …és a 7 napos hozzáférés díja, amit a Stripe az első számlán azonnal terhel.
+    "line_items[1][quantity]": "1",
+    "line_items[1][price_data][currency]": "eur",
+    "line_items[1][price_data][unit_amount]": String(eurCents(PRICING.trialEur)),
+    "line_items[1][price_data][product_data][name]": fmt(t.stripe.trialName, { days: p.days }),
+    "subscription_data[trial_period_days]": String(PRICING.trialDays),
+    "subscription_data[metadata][lang]": lang,
+    "custom_text[submit][message]": fmt(t.stripe.submitNote, p),
   });
-
-  if (plan === "one") {
-    const charge = oneTimeCharge(lang);
-    body.set("mode", "payment");
-    body.set("line_items[0][quantity]", "1");
-    body.set("line_items[0][price_data][currency]", charge.currency);
-    body.set("line_items[0][price_data][unit_amount]", String(charge.unitAmount));
-    body.set("line_items[0][price_data][product_data][name]", t.stripe.oneTimeName);
-    body.set("line_items[0][price_data][product_data][description]", t.stripe.oneTimeDesc);
-  } else {
-    body.set("mode", "subscription");
-    // Havidíj a próbaidő után…
-    body.set("line_items[0][quantity]", "1");
-    body.set("line_items[0][price_data][currency]", "eur");
-    body.set("line_items[0][price_data][unit_amount]", String(eurCents(PRICING.monthlyEur)));
-    body.set("line_items[0][price_data][recurring][interval]", "month");
-    body.set("line_items[0][price_data][product_data][name]", t.stripe.subName);
-    body.set("line_items[0][price_data][product_data][description]", t.stripe.subDesc);
-    // …és a próbaidő díja, amit a Stripe az első (próbaidős) számlán azonnal terhel.
-    body.set("line_items[1][quantity]", "1");
-    body.set("line_items[1][price_data][currency]", "eur");
-    body.set("line_items[1][price_data][unit_amount]", String(eurCents(PRICING.trialEur)));
-    body.set("line_items[1][price_data][product_data][name]", fmt(t.stripe.trialName, { days: p.days }));
-    body.set("subscription_data[trial_period_days]", String(PRICING.trialDays));
-    body.set("subscription_data[metadata][lang]", lang);
-    body.set("custom_text[submit][message]", fmt(t.stripe.submitNote, p));
-    if (customer && customer !== "demo") body.set("customer", customer);
-  }
+  if (customer && customer !== "demo") body.set("customer", customer);
 
   const session = await stripe<Session>("/checkout/sessions", { method: "POST", body });
-  if (!session.url) throw new Error("A Stripe nem adott vissza fizetési oldalt.");
-  return session.url;
+  if (!session.client_secret) throw new Error("A Stripe nem adott vissza fizetési űrlapot.");
+  return session.client_secret;
 }
 
 export async function getSession(sessionId: string): Promise<Session | null> {

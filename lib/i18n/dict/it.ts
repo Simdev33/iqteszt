@@ -197,7 +197,7 @@ const it: Dict = {
         { t: "Link condivisibile", d: "Con un clic puoi inviarlo ai tuoi amici, così possono provarci anche loro." },
       ],
       price:
-        "Il test è gratuito. Puoi sbloccare il risultato completo con un pagamento unico di *{oneTime}*, oppure con un accesso di prova a *{trial}*, che dopo {days} giorni prosegue come abbonamento mensile a {monthly} – disdicibile in qualsiasi momento.",
+        "Il test è gratuito. Puoi sbloccare tutto il risultato con l'accesso completo di {days} giorni a *{trial}*; se non disdici, dal {nextDay}° giorno costa {monthly} al mese – disdicibile in qualsiasi momento.",
     },
     faq: {
       eyebrow: "FAQ",
@@ -207,7 +207,7 @@ const it: Dict = {
     final: {
       eyebrow: "Sei pronto?",
       title: "Dodici minuti e *lo scopri.*",
-      text: "{total} domande, senza limiti di tempo né registrazione. Il test è gratuito; il risultato dettagliato costa {oneTime} una tantum, oppure {trial} per i primi {days} giorni.",
+      text: "{total} domande, senza limiti di tempo né registrazione. Il test è gratuito; il risultato dettagliato è disponibile con l'accesso completo di {days} giorni ({trial}).",
       cta: "Iniziamo!",
     },
   },
@@ -215,7 +215,7 @@ const it: Dict = {
   faq: [
     {
       q: "Quanto costa?",
-      a: "Fare il test è gratuito e non richiede registrazione. Puoi sbloccare il risultato dettagliato in due modi: con un pagamento unico di {oneTime} (solo quel risultato, nessun addebito ricorrente), oppure con un accesso di prova a {trial}, che dopo {days} giorni prosegue come abbonamento mensile a {monthly} fino alla disdetta: per tutta la durata dell'abbonamento puoi fare test illimitati e vedere tutti i risultati. Puoi pagare con carta, Apple Pay o Google Pay.",
+      a: "Fare il test è gratuito e non richiede registrazione. Puoi sbloccare il risultato dettagliato con l'accesso completo di {days} giorni, che costa {trial}; in questo periodo puoi fare test illimitati e vedere tutti i risultati. Se non disdici entro i primi {days} giorni, dal {nextDay}° giorno l'accesso prosegue come abbonamento mensile a {monthly} fino alla disdetta: puoi disdire in qualsiasi momento, con un clic. Puoi pagare con carta, Apple Pay o Google Pay.",
     },
     {
       q: "Come posso disdire l'abbonamento?",
@@ -335,39 +335,25 @@ const it: Dict = {
     summaryTime: " in {t}",
     preview: "Il tuo risultato",
     cancelled: "Il pagamento è stato interrotto: non ti è stato addebitato nulla. Puoi riprovare in qualsiasi momento.",
+    includes: "L'accesso completo di {days} giorni comprende:",
     perks: [
       { t: "Stima del QI e percentile", d: "Esattamente dove ti collochi rispetto alla popolazione." },
       { t: "Analisi per area", d: "Schemi, numeri, parole, logica: qual è il tuo punto di forza." },
       { t: "La soluzione di tutte le {total} domande", d: "Le risposte corrette con il ragionamento, accanto alle tue." },
-      { t: "Link al risultato condivisibile", d: "Puoi inviarlo a chiunque e riaprirlo quando vuoi." },
+      { t: "Nuovi test illimitati", d: "Per tutta la durata dell'accesso vedi subito anche ogni tuo risultato successivo." },
     ],
-    choose: "Scegli come sbloccarlo:",
-    plans: {
-      sub: {
-        name: "Accesso di prova",
-        per: "per i primi {days} giorni",
-        then: "poi {monthly}/mese fino alla disdetta",
-        includes: "Questo risultato + test e risultati illimitati per tutta la durata dell'abbonamento. Disdicibile in qualsiasi momento.",
-      },
-      one: {
-        name: "Sblocco singolo",
-        per: "pagamento unico",
-        then: "nessun abbonamento, nessun addebito ricorrente",
-        includes: "Solo il risultato dettagliato di questo test.",
-      },
-    },
-    dueToday: "Da pagare oggi",
-    renews: "dal {date}: {monthly}/mese fino alla disdetta",
+    accessName: "Accesso completo di {days} giorni",
     consent:
-      "Accetto i [Termini e condizioni](terms) e ho letto l'[Informativa sulla privacy](privacy). Chiedo la visualizzazione immediata del mio risultato e prendo atto che in tal modo perdo il diritto di recesso di 14 giorni per questo contenuto digitale.",
-    consentSub:
-      " Prendo atto che, al termine dei {days} giorni di prova, l'abbonamento si rinnova automaticamente al costo di {monthly} al mese fino alla disdetta; posso disdirlo in qualsiasi momento.",
-    ctaSub: "Inizia la prova – {trial}",
-    ctaOne: "Sblocca il risultato – {oneTime}",
-    busy: "Reindirizzamento al pagamento…",
+      "Accetto i [Termini e condizioni](terms) e l'[Informativa sulla privacy](privacy), chiedo l'avvio immediato del servizio e prendo atto che in tal modo perdo il diritto di recesso di 14 giorni.",
     consentNeeded: "Per continuare, accetta la dichiarazione qui sopra.",
-    secure: "Pagamento sicuro tramite Stripe",
-    methods: ["Carta di pagamento", "Apple Pay", "Google Pay"],
+    methodLabel: "Metodo di pagamento",
+    card: "Carta di debito o di credito",
+    loading: "Caricamento del modulo di pagamento…",
+    close: "Annulla",
+    busy: "Reindirizzamento…",
+    trust: ["SSL a 256 bit", "Pagamento tramite Stripe", "Disdici quando vuoi"],
+    renewal:
+      "Se non disdici entro i primi {days} giorni, dal {nextDay}° giorno il tuo abbonamento prosegue a {monthly} al mese fino alla disdetta. Puoi disdire in qualsiasi momento, con un clic, nella pagina [Gestisci l'abbonamento](subscription).",
     restart: "Preferisco iniziare un nuovo test",
     unknownError: "Errore sconosciuto.",
     member: {
@@ -486,7 +472,7 @@ const it: Dict = {
     },
     payment: {
       title: "Pagamento e protezione dei dati",
-      p1: "Il test è gratuito; il risultato dettagliato è disponibile con un pagamento unico di {oneTime}, oppure con un accesso di prova a {trial} (dopo {days} giorni {monthly}/mese, disdicibile in qualsiasi momento). Il punteggio viene calcolato sul server e le risposte corrette non arrivano mai al tuo browser. Al momento del pagamento le tue risposte vengono associate alla transazione Stripe in forma breve e codificata, e la pagina del risultato calcola il risultato da lì: non le conserviamo in un database separato.",
+      p1: "Il test è gratuito; il risultato dettagliato è disponibile con l'accesso completo di {days} giorni ({trial}; se non disdici, dal {nextDay}° giorno {monthly}/mese, disdicibile in qualsiasi momento). Il punteggio viene calcolato sul server e le risposte corrette non arrivano mai al tuo browser. Al momento del pagamento le tue risposte vengono associate alla transazione Stripe in forma breve e codificata, e la pagina del risultato calcola il risultato da lì: non le conserviamo in un database separato.",
       p2: "Lo stato di un test lasciato a metà viene conservato solo dal tuo browser, così puoi riprenderlo. Non chiediamo nome né account; i dati della carta sono gestiti da Stripe e noi non li vediamo.",
       cta: "Inizia il test",
     },
@@ -534,13 +520,11 @@ const it: Dict = {
   },
 
   stripe: {
-    oneTimeName: "Risultato del test del QI",
-    oneTimeDesc: "Stima del QI con percentile, analisi per area e soluzioni delle domande. Pagamento unico, nessun abbonamento.",
     subName: "Abbonamento Elmeszint",
     subDesc: "Test del QI e risultati dettagliati illimitati. Rinnovo mensile, disdicibile in qualsiasi momento.",
-    trialName: "Periodo di prova di {days} giorni",
+    trialName: "Accesso completo di {days} giorni",
     submitNote:
-      "Oggi ti viene addebitato l'importo di {trial} per il periodo di prova di {days} giorni. Se non disdici prima della fine della prova, in seguito ti verrà addebitato automaticamente l'importo di {monthly} al mese, fino alla disdetta. Puoi disdire in qualsiasi momento tramite il link «Gestisci / disdici l'abbonamento» in fondo al sito.",
+      "Oggi ti viene addebitato l'importo di {trial} per l'accesso completo di {days} giorni. Se non disdici entro i primi {days} giorni, dal {nextDay}° giorno ti verrà addebitato automaticamente l'importo di {monthly} al mese, fino alla disdetta. Puoi disdire in qualsiasi momento tramite il link «Gestisci / disdici l'abbonamento» in fondo al sito.",
   },
 
   api: {

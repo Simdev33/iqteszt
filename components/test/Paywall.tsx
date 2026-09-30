@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Rich from "@/components/i18n/Rich";
 import { useI18n } from "@/components/i18n/I18nProvider";
-import { LOCALE_TAGS, fmt, path } from "@/lib/i18n/config";
+import { fmt, path } from "@/lib/i18n/config";
 import { DOMAINS, DOMAIN_KEYS, TOTAL } from "@/lib/meta";
 import { formatDuration } from "@/lib/norms";
-import type { Plan } from "@/lib/pricing";
 import type { Pending } from "./pending";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
 
 /** Zárolt, elmosott mérőóra – valódi érték nélkül, csak jelzi, hogy az eredmény kész. */
 function LockedGauge() {
@@ -46,21 +47,24 @@ function LockedGauge() {
 
 function Check() {
   return (
-    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-iris/15 text-iris-soft">
-      <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
-        <path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </span>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
-      <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 16 16" className="mt-1 h-4 w-4 shrink-0 text-aqua" aria-hidden>
+      <path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
+
+const TRUST_ICONS = [
+  <svg key="0" viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="1.8" />
+  </svg>,
+  <svg key="1" viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+  </svg>,
+  <svg key="2" viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
+    <path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>,
+];
 
 export default function Paywall({
   pending,
@@ -73,13 +77,14 @@ export default function Paywall({
 }) {
   const { lang, t, prices } = useI18n();
   const s = t.paywall;
-  const [plan, setPlan] = useState<Plan>("sub");
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [member, setMember] = useState(false);
-  // Az első havidíj napja (a próbaidő vége) – egyszer számoljuk, a képernyő megnyitásakor.
-  const [renewAt] = useState(() => new Date(Date.now() + prices.days * 86400000));
+  /** A beágyazott Stripe fizetési űrlap nyitva van. */
+  const [open, setOpen] = useState(false);
+  const mountRef = useRef<HTMLDivElement>(null);
+  const checkoutRef = useRef<StripeEmbeddedCheckout | null>(null);
 
   // Aktív előfizetőnek nem kell újra fizetnie – a szerver a sütije alapján dönt.
   useEffect(() => {
@@ -93,19 +98,54 @@ export default function Paywall({
     };
   }, []);
 
-  const unlock = async (which: Plan | "member") => {
-    if (busy || (which !== "member" && !consent)) return;
+  const closeCheckout = useCallback(() => {
+    checkoutRef.current?.destroy();
+    checkoutRef.current = null;
+    setOpen(false);
+    setBusy(false);
+  }, []);
+  useEffect(() => () => checkoutRef.current?.destroy(), []);
+
+  const request = async (plan: "sub" | "member") => {
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ k: pending.k, v: pending.v, a: pending.a, t: pending.t, lang, plan }),
+    });
+    const json = (await res.json()) as { url?: string; clientSecret?: string; error?: string };
+    if (!res.ok || (!json.url && !json.clientSecret)) throw new Error(json.error ?? s.unknownError);
+    return json;
+  };
+
+  /** Fizetés: a Stripe űrlapja az oldalon belül nyílik meg (fejlesztői módban a szimulált oldalra visz). */
+  const pay = async () => {
+    if (!consent || busy || open) return;
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ k: pending.k, v: pending.v, a: pending.a, t: pending.t, lang, plan: which }),
-      });
-      const json = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !json.url) throw new Error(json.error ?? s.unknownError);
-      window.location.assign(json.url);
+      const json = await request("sub");
+      if (json.url) return window.location.assign(json.url);
+      const stripe = await loadStripe(PUBLISHABLE_KEY, { locale: lang });
+      if (!stripe || !mountRef.current) throw new Error(s.unknownError);
+      setOpen(true);
+      const checkout = await stripe.createEmbeddedCheckoutPage({ clientSecret: json.clientSecret });
+      checkoutRef.current = checkout;
+      checkout.mount(mountRef.current);
+      setBusy(false);
+      mountRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e) {
+      closeCheckout();
+      setError(e instanceof Error ? e.message : s.unknownError);
+    }
+  };
+
+  const openAsMember = async () => {
+    if (busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const json = await request("member");
+      if (json.url) window.location.assign(json.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : s.unknownError);
       setBusy(false);
@@ -113,12 +153,7 @@ export default function Paywall({
   };
 
   const seconds = Number(pending.t) || 0;
-  const renewDate = new Intl.DateTimeFormat(LOCALE_TAGS[lang], { year: "numeric", month: "long", day: "numeric" }).format(renewAt);
-  const links = { terms: path(lang, "terms"), privacy: path(lang, "privacy") };
-  const plans: { id: Plan; price: string }[] = [
-    { id: "sub", price: prices.trial },
-    { id: "one", price: prices.oneTime },
-  ];
+  const links = { terms: path(lang, "terms"), privacy: path(lang, "privacy"), subscription: path(lang, "subscription") };
 
   return (
     <div className="mx-auto grid max-w-5xl items-start gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
@@ -180,14 +215,15 @@ export default function Paywall({
           })}
         </p>
 
-        <ul className="mt-7 space-y-2.5">
+        <p className="mt-7 text-sm font-semibold">{fmt(s.includes, { days: prices.days })}</p>
+        <ul className="mt-3 space-y-2">
           {s.perks.map((p, i) => (
             <motion.li
               key={p.t}
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.25 + i * 0.06, duration: 0.5, ease }}
-              className="flex gap-3"
+              className="flex gap-2.5 text-[0.95rem]"
             >
               <Check />
               <span>
@@ -205,114 +241,80 @@ export default function Paywall({
               {s.member.title}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-haze">{s.member.text}</p>
-            <button type="button" onClick={() => unlock("member")} disabled={busy} className="btn-primary mt-5 w-full text-base">
-              {busy ? (
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
-              ) : (
-                <>
-                  {s.member.cta}
-                  <ArrowIcon />
-                </>
-              )}
+            <button type="button" onClick={openAsMember} disabled={busy} className="btn-primary mt-5 w-full text-base">
+              {busy ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden /> : s.member.cta}
             </button>
             {error && <p className="mt-3 rounded-xl border border-flame/40 bg-flame/10 px-3 py-2 text-sm text-paper">{error}</p>}
-            <Link href={path(lang, "subscription")} className="mt-4 block text-center text-sm text-mist underline decoration-white/20 underline-offset-4 hover:text-paper">
+            <Link href={links.subscription} className="mt-4 block text-center text-sm text-mist underline decoration-white/20 underline-offset-4 hover:text-paper">
               {s.member.manage}
             </Link>
           </div>
         ) : (
-          <div className="panel mt-8 rounded-3xl p-5 sm:p-6">
-            <p className="text-sm font-medium text-haze">{s.choose}</p>
-
-            <div className="mt-3 grid gap-2.5" role="radiogroup" aria-label={s.choose}>
-              {plans.map(({ id, price }) => {
-                const on = plan === id;
-                const info = s.plans[id];
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    role="radio"
-                    aria-checked={on}
-                    onClick={() => setPlan(id)}
-                    className={`relative flex w-full gap-3.5 rounded-2xl border p-4 text-left transition-colors duration-300 sm:p-5 ${
-                      on ? "border-iris/70 bg-iris/[0.1]" : "border-white/[0.08] bg-white/[0.02] hover:border-white/20"
-                    }`}
-                  >
-                    <span
-                      className={`mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-colors ${on ? "border-iris" : "border-white/25"}`}
-                      aria-hidden
-                    >
-                      {on && <motion.span layoutId="plan-dot" className="h-2.5 w-2.5 rounded-full bg-iris" />}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                        <span className="font-medium">{info.name}</span>
-                        <span className="font-display text-2xl font-semibold tracking-tight whitespace-nowrap">{price}</span>
-                      </span>
-                      <span className="mt-0.5 block text-sm text-haze">
-                        {fmt(info.per, { days: prices.days })} · {fmt(info.then, prices)}
-                      </span>
-                      <span className="mt-1.5 block text-xs leading-relaxed text-mist">{info.includes}</span>
-                    </span>
-                  </button>
-                );
-              })}
+          <div className="mt-6">
+            <div className="flex items-center justify-between gap-4 border-y border-white/[0.08] py-5">
+              <span className="font-semibold">{fmt(s.accessName, { days: prices.days })}</span>
+              <span className="font-display text-3xl font-semibold tracking-tight whitespace-nowrap">{prices.trial}</span>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-sm">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-haze">{s.dueToday}</span>
-                <span className="font-display text-lg font-semibold whitespace-nowrap">{plan === "sub" ? prices.trial : prices.oneTime}</span>
-              </div>
-              {plan === "sub" && <p className="mt-1 text-xs text-mist">{fmt(s.renews, { date: renewDate, monthly: prices.monthly })}</p>}
-            </div>
-
-            <label className="mt-5 flex cursor-pointer gap-3 text-sm leading-snug text-haze">
+            <label
+              className={`mt-5 flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 text-sm leading-snug text-haze ${
+                open ? "opacity-70" : "cursor-pointer"
+              }`}
+            >
               <input
                 type="checkbox"
                 checked={consent}
+                disabled={open}
                 onChange={(e) => setConsent(e.target.checked)}
-                className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-[var(--color-iris)]"
+                className="mt-0.5 h-4.5 w-4.5 shrink-0 cursor-pointer accent-[var(--color-iris)]"
               />
               <span>
                 <Rich text={s.consent} links={links} />
-                {plan === "sub" && fmt(s.consentSub, prices)}
               </span>
             </label>
 
-            <button type="button" onClick={() => unlock(plan)} disabled={!consent || busy} className="btn-primary mt-5 w-full text-base">
-              {busy ? (
-                <>
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
-                  {s.busy}
-                </>
-              ) : (
-                <>
-                  {fmt(plan === "sub" ? s.ctaSub : s.ctaOne, prices)}
-                  <ArrowIcon />
-                </>
-              )}
-            </button>
-            {!consent && <p className="mt-2 text-center text-xs text-mist">{s.consentNeeded}</p>}
+            <p className="mt-6 font-mono text-[0.7rem] tracking-[0.18em] text-mist uppercase">{s.methodLabel}</p>
+            {!open && (
+              <button type="button" onClick={pay} disabled={!consent || busy} className="btn-primary mt-3 w-full text-base">
+                {busy ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
+                    {s.loading}
+                  </>
+                ) : (
+                  <>
+                    <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" aria-hidden>
+                      <rect x="3" y="5.5" width="18" height="13" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                      <path d="M3 10h18" stroke="currentColor" strokeWidth="1.7" />
+                    </svg>
+                    {s.card}
+                  </>
+                )}
+              </button>
+            )}
+            {!open && !consent && <p className="mt-2 text-center text-xs text-mist">{s.consentNeeded}</p>}
+
+            {/* A beágyazott Stripe fizetési űrlap helye */}
+            <div className={open ? "mt-3" : "hidden"}>
+              <div ref={mountRef} className="min-h-[24rem] scroll-mt-24 overflow-hidden rounded-2xl bg-white" />
+              <button type="button" onClick={closeCheckout} className="mt-3 w-full text-center text-sm text-mist underline decoration-white/20 underline-offset-4 hover:text-paper">
+                {s.close}
+              </button>
+            </div>
             {error && <p className="mt-3 rounded-xl border border-flame/40 bg-flame/10 px-3 py-2 text-sm text-paper">{error}</p>}
 
-            <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-white/[0.06] pt-4 text-xs text-mist">
-              <span className="flex items-center gap-1.5">
-                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
-                  <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-                  <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="1.8" />
-                </svg>
-                {s.secure}
-              </span>
-              <span className="flex flex-wrap gap-1.5">
-                {s.methods.map((m) => (
-                  <span key={m} className="rounded-md border border-white/10 px-1.5 py-0.5 font-mono text-[0.65rem] text-haze">
-                    {m}
-                  </span>
-                ))}
-              </span>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/[0.08] pt-5 text-xs text-mist">
+              {s.trust.map((x, i) => (
+                <span key={x} className="flex items-center gap-1.5">
+                  {TRUST_ICONS[i]}
+                  {x}
+                </span>
+              ))}
             </div>
+
+            <p className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 text-[0.8rem] leading-relaxed text-haze">
+              <Rich text={fmt(s.renewal, prices)} links={links} />
+            </p>
           </div>
         )}
 

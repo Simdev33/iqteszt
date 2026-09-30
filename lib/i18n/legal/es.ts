@@ -30,17 +30,16 @@ const es: LegalTexts = {
       {
         h: "3. Planes y precios",
         p: [
-          "Una vez completado el test, el Usuario puede elegir entre las siguientes opciones:",
-          "- *Desbloqueo único – {oneTime}:* el resultado detallado de ese intento. Pago único, sin suscripción ni cargos recurrentes.",
-          "- *Acceso de prueba – {trial} por el periodo de prueba de {days} días:* el resultado detallado de ese intento y, mientras dure la suscripción, un número ilimitado de tests y resultados adicionales. Al finalizar el periodo de prueba, el acceso *se convierte automáticamente en una suscripción mensual de {monthly}*, que se paga por adelantado cada mes y se mantiene hasta que el Usuario la cancele.",
+          "El resultado detallado se desbloquea con el *acceso completo de {days} días*, cuyo precio es de *{trial}* (se cobra de inmediato al realizar el pago). El acceso incluye el resultado detallado de ese intento y, mientras dure, un número ilimitado de tests y resultados adicionales.",
+          "Si el Usuario no lo cancela durante los primeros {days} días, al finalizar esos {days} días el acceso *se convierte automáticamente en una suscripción mensual de {monthly}*; la primera cuota mensual se cobra el día {nextDay} y, a partir de entonces, cada mes por adelantado hasta que el Usuario la cancele.",
           "Los precios indicados son los importes finales que el Usuario paga efectivamente; no existen gastos adicionales (p. ej., de envío o de gestión). En la conversión de los precios expresados en euros, el banco del Usuario puede aplicar su propio tipo de cambio y sus propias comisiones.",
-          "El Proveedor se reserva el derecho de modificar los precios en el futuro. La modificación no afecta a las compras únicas ya realizadas; en el caso de la suscripción, el Proveedor informará al Usuario por correo electrónico con al menos 30 días de antelación a su entrada en vigor, y el Usuario podrá cancelar la suscripción sin coste antes de que se aplique el nuevo precio.",
+          "El Proveedor se reserva el derecho de modificar los precios en el futuro. La modificación no afecta a los periodos ya pagados; el Proveedor informará al Usuario por correo electrónico con al menos 30 días de antelación a su entrada en vigor, y el Usuario podrá cancelar la suscripción sin coste antes de que se aplique el nuevo precio.",
         ],
       },
       {
         h: "4. Celebración del contrato y pago",
         p: [
-          "En la pantalla de pago, el Usuario elige el plan, acepta estas condiciones y la declaración relativa a la ejecución inmediata del contenido digital, y a continuación es redirigido a la página de pago segura de Stripe. Antes de enviar el pago, el Usuario puede volver atrás en cualquier momento y modificar sus respuestas y los datos introducidos.",
+          "En la pantalla de pago, el Usuario acepta estas condiciones y la declaración relativa a la ejecución inmediata del contenido digital, y a continuación introduce sus datos de pago en el formulario de pago de Stripe que aparece en la página. Antes de enviar el pago, el Usuario puede volver atrás en cualquier momento y modificar sus respuestas y los datos introducidos.",
           "El contrato entre el Proveedor y el Usuario se celebra al completarse correctamente el pago, en el idioma en que el Usuario utiliza el sitio web. El Proveedor no archiva el contrato por separado; Stripe envía por correo electrónico un recibo del pago a la dirección indicada por el Usuario. Estas condiciones pueden consultarse y guardarse en cualquier momento en el sitio web.",
           "El pago lo procesa Stripe Payments Europe, Ltd. Métodos de pago aceptados: tarjeta bancaria, Apple Pay y Google Pay. Los datos de la tarjeta los gestiona exclusivamente Stripe; el Proveedor no tiene acceso a ellos.",
           "En el caso de la suscripción, el Usuario autoriza al Proveedor a cargar, a través de Stripe, la cuota mensual en el método de pago indicado al final del periodo de prueba y, después, cada mes, hasta que cancele la suscripción. Si un cargo falla, Stripe puede reintentarlo; si el fallo de pago persiste, la suscripción se extingue.",

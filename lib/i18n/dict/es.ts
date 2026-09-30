@@ -193,7 +193,7 @@ const es: Dict = {
         { t: "Enlace para compartir", d: "Envíaselo a tus amigos con un clic: ellos también pueden probar." },
       ],
       price:
-        "Hacer el test es gratis. Puedes desbloquear el resultado completo con un pago único de *{oneTime}* o con un acceso de prueba por *{trial}*, que tras {days} días continúa como suscripción mensual de {monthly}; puedes cancelarla cuando quieras.",
+        "Hacer el test es gratis. Puedes desbloquear todo tu resultado con el acceso completo de {days} días por *{trial}*; si no cancelas, a partir del día {nextDay} cuesta {monthly} al mes. Puedes cancelarlo cuando quieras.",
     },
     faq: {
       eyebrow: "Preguntas frecuentes",
@@ -203,7 +203,7 @@ const es: Dict = {
     final: {
       eyebrow: "¿Preparado?",
       title: "Doce minutos y *lo sabrás.*",
-      text: "{total} preguntas, sin límite de tiempo y sin registro. Hacer el test es gratis; el resultado detallado cuesta {oneTime} en un pago único, o {trial} los primeros {days} días.",
+      text: "{total} preguntas, sin límite de tiempo y sin registro. Hacer el test es gratis; el resultado detallado está disponible con el acceso completo de {days} días ({trial}).",
       cta: "¡Empecemos!",
     },
   },
@@ -211,7 +211,7 @@ const es: Dict = {
   faq: [
     {
       q: "¿Cuánto cuesta?",
-      a: "Hacer el test es gratis y no requiere registro. Puedes desbloquear el resultado detallado de dos maneras: con un pago único de {oneTime} (solo ese resultado, sin cargos recurrentes) o con un acceso de prueba por {trial}, que tras {days} días continúa como suscripción mensual de {monthly} hasta que la canceles; mientras dure la suscripción puedes hacer tests ilimitados y ver todos sus resultados. Puedes pagar con tarjeta bancaria, Apple Pay o Google Pay.",
+      a: "Hacer el test es gratis y no requiere registro. Puedes desbloquear el resultado detallado con el acceso completo de {days} días, que cuesta {trial}; durante ese tiempo puedes hacer tests ilimitados y ver todos sus resultados. Si no lo cancelas durante los primeros {days} días, a partir del día {nextDay} el acceso continúa como suscripción mensual de {monthly} hasta que la canceles; puedes cancelarla en cualquier momento, con un clic. Puedes pagar con tarjeta bancaria, Apple Pay o Google Pay.",
     },
     {
       q: "¿Cómo cancelo la suscripción?",
@@ -331,39 +331,25 @@ const es: Dict = {
     summaryTime: " en {t}",
     preview: "Tu resultado",
     cancelled: "El pago se ha interrumpido y no se te ha cobrado nada. Puedes volver a intentarlo cuando quieras.",
+    includes: "El acceso completo de {days} días incluye:",
     perks: [
       { t: "Estimación del CI y percentil", d: "Dónde te sitúas exactamente respecto a la población." },
       { t: "Desglose por áreas", d: "Patrones, números, palabras, lógica: cuál es tu punto fuerte." },
       { t: "La solución de las {total} preguntas", d: "Las respuestas correctas con su razonamiento, junto a tus propias respuestas." },
-      { t: "Enlace al resultado para compartir", d: "Puedes enviarlo a quien quieras y volver a abrirlo en cualquier momento." },
+      { t: "Tests nuevos ilimitados", d: "Mientras dure el acceso, también verás al instante todos tus resultados siguientes." },
     ],
-    choose: "Elige cómo quieres desbloquearlo:",
-    plans: {
-      sub: {
-        name: "Acceso de prueba",
-        per: "los primeros {days} días",
-        then: "después, {monthly}/mes hasta que canceles",
-        includes: "Este resultado + tests y resultados ilimitados mientras dure la suscripción. Puedes cancelarla en cualquier momento.",
-      },
-      one: {
-        name: "Desbloqueo único",
-        per: "pago único",
-        then: "sin suscripción ni cargos recurrentes",
-        includes: "Solo el resultado detallado de este test.",
-      },
-    },
-    dueToday: "A pagar hoy",
-    renews: "A partir del {date}, {monthly}/mes hasta que canceles",
+    accessName: "Acceso completo de {days} días",
     consent:
-      "Acepto los [Términos y condiciones](terms) y he leído la [Política de privacidad](privacy). Solicito el acceso inmediato a mi resultado y acepto que con ello pierdo mi derecho de desistimiento de 14 días para este contenido digital.",
-    consentSub:
-      " Entiendo que, tras el periodo de prueba de {days} días, la suscripción se renueva automáticamente por {monthly} al mes hasta que la cancele; puedo cancelarla en cualquier momento.",
-    ctaSub: "Empezar la prueba – {trial}",
-    ctaOne: "Desbloquear resultado – {oneTime}",
-    busy: "Redirigiendo al pago…",
+      "Acepto los [Términos y condiciones](terms) y la [Política de privacidad](privacy), solicito el inicio inmediato del servicio y acepto que con ello pierdo mi derecho de desistimiento de 14 días.",
     consentNeeded: "Para continuar, acepta la declaración anterior.",
-    secure: "Pago seguro a través de Stripe",
-    methods: ["Tarjeta bancaria", "Apple Pay", "Google Pay"],
+    methodLabel: "Método de pago",
+    card: "Tarjeta de débito o crédito",
+    loading: "Cargando el formulario de pago…",
+    close: "Cancelar",
+    busy: "Redirigiendo…",
+    trust: ["SSL de 256 bits", "Pago a través de Stripe", "Cancela cuando quieras"],
+    renewal:
+      "Si no cancelas durante los primeros {days} días, tu suscripción continúa a partir del día {nextDay} por {monthly} al mes hasta que la canceles. Puedes cancelarla en cualquier momento, con un clic, en la página [Gestionar suscripción](subscription).",
     restart: "Prefiero empezar un test nuevo",
     unknownError: "Error desconocido.",
     member: {
@@ -482,7 +468,7 @@ const es: Dict = {
     },
     payment: {
       title: "Pago y protección de datos",
-      p1: "Hacer el test es gratis; el resultado detallado está disponible con un pago único de {oneTime} o con un acceso de prueba por {trial} (tras {days} días, {monthly}/mes; se puede cancelar en cualquier momento). La puntuación se calcula en el servidor y las respuestas correctas nunca llegan a tu navegador. Al pagar, tus respuestas se asocian en forma breve y codificada a la transacción de pago de Stripe, y la página de resultados calcula el resultado a partir de ellas; no las guardamos en ninguna base de datos aparte.",
+      p1: "Hacer el test es gratis; el resultado detallado está disponible con el acceso completo de {days} días ({trial}; si no cancelas, {monthly}/mes a partir del día {nextDay}; se puede cancelar en cualquier momento). La puntuación se calcula en el servidor y las respuestas correctas nunca llegan a tu navegador. Al pagar, tus respuestas se asocian en forma breve y codificada a la transacción de pago de Stripe, y la página de resultados calcula el resultado a partir de ellas; no las guardamos en ninguna base de datos aparte.",
       p2: "El estado de un test a medias solo lo guarda tu propio navegador, para que puedas continuarlo. No pedimos tu nombre ni una cuenta de usuario; los datos de la tarjeta los gestiona Stripe y nosotros no los vemos.",
       cta: "Empezar el test",
     },
@@ -530,13 +516,11 @@ const es: Dict = {
   },
 
   stripe: {
-    oneTimeName: "Resultado del test de CI",
-    oneTimeDesc: "Estimación del CI con percentil, desglose por áreas y la solución de las preguntas. Pago único, sin suscripción.",
     subName: "Suscripción a Elmeszint",
     subDesc: "Tests de CI y resultados detallados ilimitados. Se renueva cada mes; puedes cancelarla en cualquier momento.",
-    trialName: "Periodo de prueba de {days} días",
+    trialName: "Acceso completo de {days} días",
     submitNote:
-      "Hoy se te cobrará {trial} por el periodo de prueba de {days} días. Si no cancelas antes, después se te cobrarán automáticamente {monthly} al mes hasta que canceles. Puedes cancelar en cualquier momento desde el enlace «Gestionar / cancelar suscripción», al final de la página web.",
+      "Hoy se te cobrará {trial} por el acceso completo de {days} días. Si no cancelas durante los primeros {days} días, a partir del día {nextDay} se te cobrarán automáticamente {monthly} al mes hasta que canceles. Puedes cancelar en cualquier momento desde el enlace «Gestionar / cancelar suscripción», al final de la página web.",
   },
 
   api: {

@@ -205,7 +205,7 @@ const hu = {
         { t: "Megosztható link", d: "Egy kattintással elküldheted a barátaidnak – ők is kipróbálhatják." },
       ],
       price:
-        "A kitöltés ingyenes. A teljes eredményt egyszeri *{oneTime}* díjért oldhatod fel, vagy *{trial}* próbaidős hozzáféréssel, amely {days} nap után havi {monthly} előfizetésként folytatódik – bármikor lemondható.",
+        "A kitöltés ingyenes. A teljes eredményt a *{trial}* díjú, {days} napos teljes hozzáféréssel oldhatod fel; ha nem mondod le, a {nextDay}. naptól havi {monthly} – bármikor lemondható.",
     },
     faq: {
       eyebrow: "GYIK",
@@ -215,7 +215,7 @@ const hu = {
     final: {
       eyebrow: "Készen állsz?",
       title: "Tizenkét perc, és *kiderül.*",
-      text: "{total} feladat, időkorlát és regisztráció nélkül. A kitöltés ingyenes; a részletes eredmény egyszeri {oneTime}, vagy {trial} az első {days} napra.",
+      text: "{total} feladat, időkorlát és regisztráció nélkül. A kitöltés ingyenes; a részletes eredmény a {days} napos teljes hozzáféréssel érhető el ({trial}).",
       cta: "Kezdjük!",
     },
   },
@@ -223,7 +223,7 @@ const hu = {
   faq: [
     {
       q: "Mennyibe kerül?",
-      a: "A teszt kitöltése ingyenes, és regisztrációt sem kér. A részletes eredményt kétféleképpen oldhatod fel: egyszeri {oneTime} díjért (csak az adott eredmény, nincs ismétlődő terhelés), vagy {trial} próbaidős hozzáféréssel, amely {days} nap után havi {monthly} előfizetésként folytatódik, amíg le nem mondod – az előfizetés ideje alatt korlátlanul tölthetsz ki teszteket, és mindegyik eredményét látod. Bankkártyával, Apple Pay-jel vagy Google Pay-jel fizethetsz.",
+      a: "A teszt kitöltése ingyenes, és regisztrációt sem kér. A részletes eredményt a {days} napos teljes hozzáféréssel oldhatod fel, amelynek díja {trial}; ez alatt korlátlanul tölthetsz ki teszteket, és mindegyik eredményét látod. Ha az első {days} napban nem mondod le, a hozzáférés a {nextDay}. naptól havi {monthly} díjú előfizetésként folytatódik, amíg le nem mondod – lemondani bármikor lehet, egy kattintással. Bankkártyával, Apple Pay-jel vagy Google Pay-jel fizethetsz.",
     },
     {
       q: "Hogyan mondhatom le az előfizetést?",
@@ -343,39 +343,25 @@ const hu = {
     summaryTime: ", {t} alatt",
     preview: "Az eredményed",
     cancelled: "A fizetés megszakadt – nem terheltünk semmit. Bármikor újrapróbálhatod.",
+    includes: "A {days} napos teljes hozzáférés tartalmazza:",
     perks: [
       { t: "IQ-becslés és percentilis", d: "Pontosan hol állsz a népességhez képest." },
       { t: "Területenkénti bontás", d: "Mintázat, számok, szavak, logika – melyik az erősséged." },
       { t: "Mind a {total} feladat megoldása", d: "A helyes válaszok levezetéssel, a saját válaszaid mellett." },
-      { t: "Megosztható eredménylink", d: "Elküldheted bárkinek, bármikor újra megnyithatod." },
+      { t: "Korlátlan új teszt", d: "A hozzáférés ideje alatt minden további eredményed is azonnal látod." },
     ],
-    choose: "Válaszd ki, hogyan oldod fel:",
-    plans: {
-      sub: {
-        name: "Próbaidős hozzáférés",
-        per: "az első {days} napra",
-        then: "utána {monthly}/hó, amíg le nem mondod",
-        includes: "Ez az eredmény + korlátlan teszt és eredmény az előfizetés ideje alatt. Bármikor lemondható.",
-      },
-      one: {
-        name: "Egyszeri feloldás",
-        per: "egyszeri díj",
-        then: "nincs előfizetés, nincs ismétlődő terhelés",
-        includes: "Csak ennek a tesztnek a részletes eredménye.",
-      },
-    },
-    dueToday: "Ma fizetendő",
-    renews: "{date} után {monthly}/hó, amíg le nem mondod",
+    accessName: "{days} napos teljes hozzáférés",
     consent:
-      "Elfogadom az [ÁSZF](terms)-et, és tudomásul veszem az [Adatkezelési tájékoztató](privacy)t. Kérem az eredmény azonnali megjelenítését, és tudomásul veszem, hogy ezzel a digitális tartalomra vonatkozó 14 napos elállási jogomat elveszítem.",
-    consentSub:
-      " Tudomásul veszem, hogy a {days} napos próbaidő után az előfizetés havi {monthly} díjjal automatikusan megújul, amíg le nem mondom; lemondani bármikor lehet.",
-    ctaSub: "Próbaidő indítása – {trial}",
-    ctaOne: "Eredmény feloldása – {oneTime}",
-    busy: "Átirányítás a fizetéshez…",
+      "Elfogadom az [ÁSZF](terms)-et és az [Adatkezelési tájékoztató](privacy)t, kérem a szolgáltatás azonnali megkezdését, és tudomásul veszem, hogy ezzel elveszítem a 14 napos elállási jogomat.",
     consentNeeded: "A folytatáshoz fogadd el a fenti nyilatkozatot.",
-    secure: "Biztonságos fizetés a Stripe-on keresztül",
-    methods: ["Bankkártya", "Apple Pay", "Google Pay"],
+    methodLabel: "Fizetési mód",
+    card: "Bankkártya",
+    loading: "A fizetési űrlap betöltése…",
+    close: "Mégse",
+    busy: "Átirányítás…",
+    trust: ["256 bites SSL", "Fizetés a Stripe-on", "Bármikor lemondható"],
+    renewal:
+      "Ha az első {days} napban nem mondod le, az előfizetésed a {nextDay}. naptól havi {monthly} díjjal folytatódik, amíg le nem mondod. Lemondani bármikor lehet, egy kattintással, az [Előfizetés kezelése](subscription) oldalon.",
     restart: "Inkább új tesztet kezdek",
     unknownError: "Ismeretlen hiba.",
     member: {
@@ -494,7 +480,7 @@ const hu = {
     },
     payment: {
       title: "Fizetés és adatvédelem",
-      p1: "A kitöltés ingyenes; a részletes eredmény egyszeri {oneTime}, vagy {trial} próbaidős hozzáféréssel érhető el ({days} nap után {monthly}/hó, bármikor lemondható). A pontozás a szerveren történik, a helyes válaszok nem kerülnek a böngésződbe. Fizetéskor a válaszaid rövid, kódolt formában a Stripe fizetési tranzakciójához kapcsolódnak, és az eredményoldal ebből számolja ki az eredményt – külön adatbázisban nem tároljuk őket.",
+      p1: "A kitöltés ingyenes; a részletes eredmény a {days} napos teljes hozzáféréssel érhető el ({trial}; ha nem mondod le, a {nextDay}. naptól {monthly}/hó, bármikor lemondható). A pontozás a szerveren történik, a helyes válaszok nem kerülnek a böngésződbe. Fizetéskor a válaszaid rövid, kódolt formában a Stripe fizetési tranzakciójához kapcsolódnak, és az eredményoldal ebből számolja ki az eredményt – külön adatbázisban nem tároljuk őket.",
       p2: "A félbehagyott teszt állapotát csak a saját böngésződ őrzi, hogy folytatni tudd. Nevet vagy felhasználói fiókot nem kérünk; a kártyaadatokat a Stripe kezeli, azokat mi nem látjuk.",
       cta: "Teszt indítása",
     },
@@ -543,13 +529,11 @@ const hu = {
 
   /** A fizetési oldalon (Stripe) megjelenő szövegek. */
   stripe: {
-    oneTimeName: "IQ-teszt eredmény",
-    oneTimeDesc: "IQ-becslés percentilissel, területenkénti bontással és a feladatok megoldásával. Egyszeri díj, nincs előfizetés.",
     subName: "Elmeszint előfizetés",
     subDesc: "Korlátlan IQ-teszt és részletes eredmény. Havonta megújul, bármikor lemondható.",
-    trialName: "{days} napos próbaidőszak",
+    trialName: "{days} napos teljes hozzáférés",
     submitNote:
-      "Ma {trial} kerül terhelésre a {days} napos próbaidőért. Ha addig nem mondod le, utána havi {monthly} automatikusan terhelődik, amíg le nem mondod. Lemondani bármikor lehet a weboldal alján, az „Előfizetés kezelése” linknél.",
+      "Ma {trial} kerül terhelésre a {days} napos teljes hozzáférésért. Ha az első {days} napban nem mondod le, a {nextDay}. naptól havi {monthly} automatikusan terhelődik, amíg le nem mondod. Lemondani bármikor lehet a weboldal alján, az „Előfizetés kezelése / lemondása” linknél.",
   },
 
   api: {

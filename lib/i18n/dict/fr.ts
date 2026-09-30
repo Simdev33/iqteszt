@@ -194,7 +194,7 @@ const fr: Dict = {
         { t: "Lien à partager", d: "Envoie-le à tes amis en un clic – ils pourront essayer à leur tour." },
       ],
       price:
-        "Le test est gratuit. Tu peux débloquer le résultat complet pour un paiement unique de *{oneTime}*, ou avec un accès d'essai à *{trial}* qui se poursuit après {days} jours sous forme d'abonnement à {monthly} par mois – résiliable à tout moment.",
+        "Le test est gratuit. Tu peux débloquer tout ton résultat avec l'accès complet de {days} jours à *{trial}* ; si tu ne résilies pas, c'est ensuite {monthly} par mois à partir du {nextDay}e jour – résiliable à tout moment.",
     },
     faq: {
       eyebrow: "FAQ",
@@ -204,7 +204,7 @@ const fr: Dict = {
     final: {
       eyebrow: "Prêt ?",
       title: "Douze minutes, et *tu sauras.*",
-      text: "{total} questions, sans limite de temps ni inscription. Le test est gratuit ; le résultat détaillé coûte {oneTime} en paiement unique, ou {trial} pour les {days} premiers jours.",
+      text: "{total} questions, sans limite de temps ni inscription. Le test est gratuit ; le résultat détaillé est disponible avec l'accès complet de {days} jours ({trial}).",
       cta: "C'est parti !",
     },
   },
@@ -212,7 +212,7 @@ const fr: Dict = {
   faq: [
     {
       q: "Combien ça coûte ?",
-      a: "Passer le test est gratuit et ne demande aucune inscription. Tu peux débloquer le résultat détaillé de deux façons : par un paiement unique de {oneTime} (uniquement ce résultat, sans prélèvement récurrent), ou avec un accès d'essai à {trial} qui se poursuit après {days} jours sous forme d'abonnement à {monthly} par mois jusqu'à ce que tu le résilies – pendant l'abonnement, tu peux passer autant de tests que tu veux et voir tous leurs résultats. Tu peux payer par carte bancaire, Apple Pay ou Google Pay.",
+      a: "Passer le test est gratuit et ne demande aucune inscription. Tu peux débloquer le résultat détaillé avec l'accès complet de {days} jours, au prix de {trial} ; pendant cette période, tu peux passer autant de tests que tu veux et voir tous leurs résultats. Si tu ne résilies pas au cours des {days} premiers jours, l'accès se poursuit à partir du {nextDay}e jour sous forme d'abonnement à {monthly} par mois jusqu'à ce que tu le résilies – tu peux résilier à tout moment, en un clic. Tu peux payer par carte bancaire, Apple Pay ou Google Pay.",
     },
     {
       q: "Comment résilier l'abonnement ?",
@@ -332,39 +332,25 @@ const fr: Dict = {
     summaryTime: " en {t}",
     preview: "Ton résultat",
     cancelled: "Le paiement a été interrompu – rien n'a été débité. Tu peux réessayer à tout moment.",
+    includes: "L'accès complet de {days} jours comprend :",
     perks: [
       { t: "Estimation du QI et centile", d: "Où tu te situes exactement par rapport à la population." },
       { t: "Détail par domaine", d: "Motifs, nombres, mots, logique – lequel est ton point fort." },
       { t: "La solution des {total} questions", d: "Les bonnes réponses avec le raisonnement, à côté de tes propres réponses." },
-      { t: "Lien de résultat à partager", d: "Envoie-le à qui tu veux et rouvre-le quand tu veux." },
+      { t: "Nouveaux tests illimités", d: "Pendant toute la durée de l'accès, tu vois aussi immédiatement chacun de tes résultats suivants." },
     ],
-    choose: "Choisis comment débloquer ton résultat :",
-    plans: {
-      sub: {
-        name: "Accès d'essai",
-        per: "pour les {days} premiers jours",
-        then: "puis {monthly}/mois jusqu'à résiliation",
-        includes: "Ce résultat + tests et résultats illimités pendant l'abonnement. Résiliable à tout moment.",
-      },
-      one: {
-        name: "Déblocage unique",
-        per: "paiement unique",
-        then: "pas d'abonnement, pas de prélèvement récurrent",
-        includes: "Uniquement le résultat détaillé de ce test.",
-      },
-    },
-    dueToday: "À payer aujourd'hui",
-    renews: "après le {date}, {monthly}/mois jusqu'à résiliation",
+    accessName: "Accès complet de {days} jours",
     consent:
-      "J'accepte les [CGV](terms) et j'ai pris connaissance de la [politique de confidentialité](privacy). Je demande l'affichage immédiat de mon résultat et reconnais perdre ainsi mon droit de rétractation de 14 jours pour ce contenu numérique.",
-    consentSub:
-      " Je reconnais qu'après la période d'essai de {days} jours, l'abonnement est renouvelé automatiquement au tarif de {monthly} par mois jusqu'à ce que je le résilie ; la résiliation est possible à tout moment.",
-    ctaSub: "Démarrer l'essai – {trial}",
-    ctaOne: "Débloquer le résultat – {oneTime}",
-    busy: "Redirection vers le paiement…",
+      "J'accepte les [CGV](terms) et la [politique de confidentialité](privacy), je demande le démarrage immédiat du service et je reconnais perdre ainsi mon droit de rétractation de 14 jours.",
     consentNeeded: "Pour continuer, accepte la déclaration ci-dessus.",
-    secure: "Paiement sécurisé via Stripe",
-    methods: ["Carte bancaire", "Apple Pay", "Google Pay"],
+    methodLabel: "Moyen de paiement",
+    card: "Carte bancaire",
+    loading: "Chargement du formulaire de paiement…",
+    close: "Annuler",
+    busy: "Redirection…",
+    trust: ["SSL 256 bits", "Paiement via Stripe", "Résiliable à tout moment"],
+    renewal:
+      "Si tu ne résilies pas au cours des {days} premiers jours, ton abonnement se poursuit à partir du {nextDay}e jour au tarif de {monthly} par mois, jusqu'à ce que tu le résilies. Tu peux résilier à tout moment, en un clic, sur la page [Gérer l'abonnement](subscription).",
     restart: "Je préfère commencer un nouveau test",
     unknownError: "Erreur inconnue.",
     member: {
@@ -483,7 +469,7 @@ const fr: Dict = {
     },
     payment: {
       title: "Paiement et protection des données",
-      p1: "Le test est gratuit ; le résultat détaillé est disponible pour {oneTime} en paiement unique, ou avec un accès d'essai à {trial} (après {days} jours, {monthly}/mois, résiliable à tout moment). La notation se fait sur le serveur : les bonnes réponses ne sont jamais envoyées à ton navigateur. Lors du paiement, tes réponses sont associées à la transaction Stripe sous une forme courte et codée, et la page de résultat calcule le résultat à partir de là – nous ne les conservons pas dans une base de données séparée.",
+      p1: "Le test est gratuit ; le résultat détaillé est disponible avec l'accès complet de {days} jours ({trial} ; si tu ne résilies pas, {monthly}/mois à partir du {nextDay}e jour, résiliable à tout moment). La notation se fait sur le serveur : les bonnes réponses ne sont jamais envoyées à ton navigateur. Lors du paiement, tes réponses sont associées à la transaction Stripe sous une forme courte et codée, et la page de résultat calcule le résultat à partir de là – nous ne les conservons pas dans une base de données séparée.",
       p2: "L'état d'un test inachevé est conservé uniquement par ton propre navigateur, pour que tu puisses le reprendre. Nous ne demandons ni nom ni compte utilisateur ; les données de carte sont gérées par Stripe, nous ne les voyons pas.",
       cta: "Commencer le test",
     },
@@ -531,13 +517,11 @@ const fr: Dict = {
   },
 
   stripe: {
-    oneTimeName: "Résultat du test de QI",
-    oneTimeDesc: "Estimation du QI avec centile, détail par domaine et solutions des questions. Paiement unique, sans abonnement.",
     subName: "Abonnement Elmeszint",
     subDesc: "Tests de QI et résultats détaillés illimités. Renouvellement mensuel, résiliable à tout moment.",
-    trialName: "Période d'essai de {days} jours",
+    trialName: "Accès complet de {days} jours",
     submitNote:
-      "Aujourd'hui, {trial} est débité pour la période d'essai de {days} jours. Si tu ne résilies pas d'ici là, {monthly} par mois sera ensuite prélevé automatiquement jusqu'à ce que tu résilies. Tu peux résilier à tout moment via le lien « Gérer / résilier l'abonnement » en bas du site.",
+      "Aujourd'hui, {trial} est débité pour l'accès complet de {days} jours. Si tu ne résilies pas au cours des {days} premiers jours, {monthly} par mois sera prélevé automatiquement à partir du {nextDay}e jour, jusqu'à ce que tu résilies. Tu peux résilier à tout moment via le lien « Gérer / résilier l'abonnement » en bas du site.",
   },
 
   api: {

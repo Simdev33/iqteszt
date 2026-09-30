@@ -23,7 +23,7 @@ function statusText(lang: Locale, s: SubInfo | null) {
   if (s.canceling) return { text: fmt(t.canceling, { date: end }), tone: "bg-sun" };
   if (s.status === "past_due") return { text: t.pastDue, tone: "bg-flame" };
   if (s.status === "trialing") return { text: fmt(t.trialing, { date: end, monthly: prices(lang).monthly }), tone: "bg-aqua" };
-  const amount = s.amount != null ? money(lang, s.amount / 100, "EUR") : prices(lang).monthly;
+  const amount = s.amount != null ? money(lang, s.amount / 100) : prices(lang).monthly;
   return { text: fmt(t.active, { date: end, amount }), tone: "bg-aqua" };
 }
 

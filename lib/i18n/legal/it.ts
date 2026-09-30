@@ -32,17 +32,16 @@ const it: LegalTexts = {
       {
         h: "3. Pacchetti e prezzi",
         p: [
-          "Dopo aver completato il test, l'Utente può scegliere tra le seguenti opzioni:",
-          "- *Sblocco singolo – {oneTime}:* il risultato dettagliato del test svolto. Pagamento unico, nessun abbonamento e nessun addebito ricorrente.",
-          "- *Accesso di prova – {trial} per il periodo di prova di {days} giorni:* il risultato dettagliato del test svolto e, per tutta la durata dell'abbonamento, un numero illimitato di ulteriori test e risultati. Al termine del periodo di prova, l'accesso *si trasforma automaticamente in un abbonamento mensile al prezzo di {monthly}*, pagabile mensilmente in anticipo, che resta in vigore finché l'Utente non lo disdice.",
+          "Il risultato dettagliato si sblocca con l'*accesso completo di {days} giorni*, al prezzo di *{trial}* (addebitato immediatamente al momento del pagamento). L'accesso comprende il risultato dettagliato del test svolto e, per tutta la sua durata, un numero illimitato di ulteriori test e risultati.",
+          "Se l'Utente non disdice entro i primi {days} giorni, allo scadere dei {days} giorni l'accesso *si trasforma automaticamente in un abbonamento mensile al prezzo di {monthly}*; il primo canone mensile viene addebitato il {nextDay}° giorno e successivamente ogni mese in anticipo, finché l'Utente non lo disdice.",
           "I prezzi indicati sono gli importi finali effettivamente dovuti dall'Utente; non sono previsti costi aggiuntivi (per es. spese di spedizione o di gestione). In caso di conversione dei prezzi espressi in euro, la banca dell'Utente può applicare un proprio tasso di cambio e proprie commissioni.",
-          "Il Fornitore si riserva il diritto di modificare i prezzi in futuro. La modifica non incide sugli acquisti singoli già conclusi; in caso di abbonamento, il Fornitore informa l'Utente via e-mail almeno 30 giorni prima dell'entrata in vigore, e l'Utente può disdire l'abbonamento gratuitamente prima che il nuovo prezzo diventi efficace.",
+          "Il Fornitore si riserva il diritto di modificare i prezzi in futuro. La modifica non incide sui periodi già pagati; il Fornitore informa l'Utente via e-mail almeno 30 giorni prima dell'entrata in vigore, e l'Utente può disdire l'abbonamento gratuitamente prima che il nuovo prezzo diventi efficace.",
         ],
       },
       {
         h: "4. Conclusione del contratto e pagamento",
         p: [
-          "Nella schermata di pagamento l'Utente sceglie il pacchetto, accetta i presenti termini e la dichiarazione relativa all'esecuzione immediata del contenuto digitale, quindi viene reindirizzato alla pagina di pagamento sicura di Stripe. Prima di inviare il pagamento, l'Utente può tornare indietro in qualsiasi momento e modificare le proprie risposte e i dati inseriti.",
+          "Nella schermata di pagamento l'Utente accetta i presenti termini e la dichiarazione relativa all'esecuzione immediata del contenuto digitale, quindi inserisce i propri dati di pagamento nel modulo di pagamento Stripe visualizzato nella pagina. Prima di inviare il pagamento, l'Utente può tornare indietro in qualsiasi momento e modificare le proprie risposte e i dati inseriti.",
           "Il contratto tra il Fornitore e l'Utente si conclude con il buon esito del pagamento, nella lingua in cui l'Utente utilizza il sito web. Il Fornitore non archivia separatamente il contratto; Stripe invia via e-mail una ricevuta del pagamento all'indirizzo indicato dall'Utente. I presenti termini sono consultabili e salvabili in qualsiasi momento sul sito web.",
           "Il pagamento è elaborato da Stripe Payments Europe, Ltd. Metodi di pagamento accettati: carta di pagamento, Apple Pay, Google Pay. I dati della carta sono gestiti esclusivamente da Stripe; il Fornitore non vi ha accesso.",
           "In caso di abbonamento, l'Utente acconsente a che il Fornitore, tramite Stripe, addebiti il canone mensile sul metodo di pagamento indicato al termine del periodo di prova e successivamente ogni mese, finché l'abbonamento non viene disdetto. In caso di addebito non riuscito, Stripe può ritentare l'addebito; in caso di persistente mancato pagamento, l'abbonamento cessa.",

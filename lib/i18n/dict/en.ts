@@ -194,7 +194,7 @@ const en: Dict = {
         { t: "Shareable link", d: "Send it to your friends in one click – they can try it too." },
       ],
       price:
-        "Taking the test is free. You can unlock the full result for a one-off fee of *{oneTime}*, or with *{trial}* trial access, which continues as a monthly subscription at {monthly} after {days} days – cancel anytime.",
+        "Taking the test is free. You can unlock the full result with {days}-day full access for *{trial}*; unless you cancel, it's {monthly} per month from day {nextDay} – cancel anytime.",
     },
     faq: {
       eyebrow: "FAQ",
@@ -204,7 +204,7 @@ const en: Dict = {
     final: {
       eyebrow: "Ready?",
       title: "Twelve minutes, and *you'll know.*",
-      text: "{total} questions, no time limit, no sign-up. Taking the test is free; the detailed result costs a one-off {oneTime}, or {trial} for the first {days} days.",
+      text: "{total} questions, no time limit, no sign-up. Taking the test is free; the detailed result is available with {days}-day full access ({trial}).",
       cta: "Let's go!",
     },
   },
@@ -212,7 +212,7 @@ const en: Dict = {
   faq: [
     {
       q: "How much does it cost?",
-      a: "Taking the test is free and doesn't require sign-up. You can unlock the detailed result in two ways: for a one-off fee of {oneTime} (just that result, no recurring charges), or with {trial} trial access, which continues as a monthly subscription at {monthly} after {days} days until you cancel – while subscribed, you can take unlimited tests and see every result. You can pay by card, Apple Pay or Google Pay.",
+      a: "Taking the test is free and doesn't require sign-up. You can unlock the detailed result with {days}-day full access, which costs {trial}; during this time you can take unlimited tests and see every result. If you don't cancel within the first {days} days, access continues from day {nextDay} as a monthly subscription at {monthly} until you cancel – you can cancel at any time, in one click. You can pay by card, Apple Pay or Google Pay.",
     },
     {
       q: "How do I cancel my subscription?",
@@ -332,39 +332,25 @@ const en: Dict = {
     summaryTime: " in {t}",
     preview: "Your result",
     cancelled: "The payment was cancelled – you haven't been charged. You can try again anytime.",
+    includes: "The {days}-day full access includes:",
     perks: [
       { t: "IQ estimate and percentile", d: "Exactly where you stand compared with the population." },
       { t: "Breakdown by area", d: "Patterns, numbers, words, logic – which one is your strength." },
       { t: "Solutions to all {total} questions", d: "The correct answers with the reasoning, next to your own answers." },
-      { t: "Shareable result link", d: "Send it to anyone and reopen it anytime." },
+      { t: "Unlimited new tests", d: "While your access is active, you'll see every further result right away too." },
     ],
-    choose: "Choose how to unlock:",
-    plans: {
-      sub: {
-        name: "Trial access",
-        per: "for the first {days} days",
-        then: "then {monthly}/month until you cancel",
-        includes: "This result + unlimited tests and results while subscribed. Cancel anytime.",
-      },
-      one: {
-        name: "One-off unlock",
-        per: "one-off fee",
-        then: "no subscription, no recurring charges",
-        includes: "Only the detailed result of this test.",
-      },
-    },
-    dueToday: "Due today",
-    renews: "{monthly}/month after {date} until you cancel",
+    accessName: "{days}-day full access",
     consent:
-      "I accept the [Terms and Conditions](terms) and have read the [Privacy Policy](privacy). I request immediate access to my result and acknowledge that I thereby lose my 14-day right of withdrawal for this digital content.",
-    consentSub:
-      " I acknowledge that after the {days}-day trial the subscription renews automatically at {monthly} per month until I cancel; I can cancel at any time.",
-    ctaSub: "Start trial – {trial}",
-    ctaOne: "Unlock result – {oneTime}",
-    busy: "Redirecting to payment…",
+      "I accept the [Terms and Conditions](terms) and the [Privacy Policy](privacy), request that the service start immediately, and acknowledge that I thereby lose my 14-day right of withdrawal.",
     consentNeeded: "Please accept the statement above to continue.",
-    secure: "Secure payment via Stripe",
-    methods: ["Card", "Apple Pay", "Google Pay"],
+    methodLabel: "Payment method",
+    card: "Debit or credit card",
+    loading: "Loading the payment form…",
+    close: "Cancel",
+    busy: "Redirecting…",
+    trust: ["256-bit SSL", "Payment via Stripe", "Cancel anytime"],
+    renewal:
+      "If you don't cancel within the first {days} days, your subscription continues from day {nextDay} at {monthly} per month until you cancel. You can cancel at any time, in one click, on the [Manage subscription](subscription) page.",
     restart: "I'd rather start a new test",
     unknownError: "Unknown error.",
     member: {
@@ -483,7 +469,7 @@ const en: Dict = {
     },
     payment: {
       title: "Payment and privacy",
-      p1: "Taking the test is free; the detailed result is available for a one-off {oneTime}, or with {trial} trial access ({monthly}/month after {days} days, cancel anytime). Scoring happens on the server; the correct answers never reach your browser. When you pay, your answers are attached to the Stripe payment transaction in a short, encoded form, and the result page calculates your result from that – we don't store them in a separate database.",
+      p1: "Taking the test is free; the detailed result is available with {days}-day full access ({trial}; unless you cancel, {monthly}/month from day {nextDay}, cancel anytime). Scoring happens on the server; the correct answers never reach your browser. When you pay, your answers are attached to the Stripe payment transaction in a short, encoded form, and the result page calculates your result from that – we don't store them in a separate database.",
       p2: "The state of an unfinished test is kept only by your own browser, so that you can continue. We don't ask for your name or a user account; card details are handled by Stripe and we never see them.",
       cta: "Start the test",
     },
@@ -531,13 +517,11 @@ const en: Dict = {
   },
 
   stripe: {
-    oneTimeName: "IQ test result",
-    oneTimeDesc: "IQ estimate with percentile, breakdown by area and the solutions to the questions. One-off fee, no subscription.",
     subName: "Elmeszint subscription",
     subDesc: "Unlimited IQ tests and detailed results. Renews monthly, cancel anytime.",
-    trialName: "{days}-day trial period",
+    trialName: "{days}-day full access",
     submitNote:
-      "Today you'll be charged {trial} for the {days}-day trial. Unless you cancel by then, {monthly} per month will be charged automatically afterwards until you cancel. You can cancel anytime via the “Manage / cancel subscription” link at the bottom of the website.",
+      "Today you'll be charged {trial} for the {days}-day full access. If you don't cancel within the first {days} days, {monthly} per month will be charged automatically from day {nextDay} until you cancel. You can cancel anytime via the “Manage / cancel subscription” link at the bottom of the website.",
   },
 
   api: {

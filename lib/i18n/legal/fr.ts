@@ -32,17 +32,16 @@ const fr: LegalTexts = {
       {
         h: "3. Formules et prix",
         p: [
-          "Après avoir passé le test, l'Utilisateur peut choisir entre les options suivantes :",
-          "- *Déblocage unique – {oneTime} :* le résultat détaillé du test concerné. Paiement unique, sans abonnement ni prélèvement récurrent.",
-          "- *Accès d'essai – {trial} pour la période d'essai de {days} jours :* le résultat détaillé du test concerné, ainsi qu'un nombre illimité d'autres tests et résultats pendant la durée de l'abonnement. À l'issue de la période d'essai, l'accès *se transforme automatiquement en abonnement mensuel de {monthly}*, payable mensuellement et d'avance, qui se poursuit jusqu'à sa résiliation par l'Utilisateur.",
+          "Le résultat détaillé se débloque avec l'*accès complet de {days} jours*, au prix de *{trial}* (débité immédiatement lors du paiement). L'accès comprend le résultat détaillé du test concerné, ainsi qu'un nombre illimité d'autres tests et résultats pendant toute sa durée.",
+          "Si l'Utilisateur ne résilie pas au cours des {days} premiers jours, l'accès *se transforme automatiquement en abonnement mensuel de {monthly}* à l'issue des {days} jours ; la première mensualité est prélevée le {nextDay}e jour, puis chaque mois et d'avance, jusqu'à la résiliation par l'Utilisateur.",
           "Les prix indiqués sont les montants totaux effectivement dus par l'Utilisateur ; aucun autre frais (par exemple de livraison ou de gestion) ne s'applique. En cas de conversion des prix exprimés en euros, la banque de l'Utilisateur peut appliquer son propre taux de change et ses propres frais.",
-          "Le Prestataire se réserve le droit de modifier ses prix à l'avenir. Une modification n'affecte pas un achat unique déjà conclu ; pour un abonnement, le Prestataire en informe l'Utilisateur par e-mail au moins 30 jours avant son entrée en vigueur, et l'Utilisateur peut résilier l'abonnement sans frais avant l'application du nouveau prix.",
+          "Le Prestataire se réserve le droit de modifier ses prix à l'avenir. Une modification n'affecte pas une période déjà payée ; le Prestataire en informe l'Utilisateur par e-mail au moins 30 jours avant son entrée en vigueur, et l'Utilisateur peut résilier l'abonnement sans frais avant l'application du nouveau prix.",
         ],
       },
       {
         h: "4. Conclusion du contrat et paiement",
         p: [
-          "Sur l'écran de paiement, l'Utilisateur choisit la formule, accepte les présentes conditions ainsi que la déclaration relative à l'exécution immédiate du contenu numérique, puis il est redirigé vers la page de paiement sécurisée de Stripe. Avant de valider le paiement, l'Utilisateur peut à tout moment revenir en arrière et modifier ses réponses et les données saisies.",
+          "Sur l'écran de paiement, l'Utilisateur accepte les présentes conditions ainsi que la déclaration relative à l'exécution immédiate du contenu numérique, puis saisit ses données de paiement dans le formulaire de paiement Stripe qui s'affiche sur la page. Avant de valider le paiement, l'Utilisateur peut à tout moment revenir en arrière et modifier ses réponses et les données saisies.",
           "Le contrat entre le Prestataire et l'Utilisateur est conclu au moment où le paiement est effectué avec succès, dans la langue dans laquelle l'Utilisateur utilise le site. Le Prestataire n'archive pas séparément le contrat ; Stripe envoie un reçu de paiement par e-mail à l'adresse indiquée par l'Utilisateur. Les présentes conditions sont accessibles et enregistrables à tout moment sur le site.",
           "Le paiement est traité par Stripe Payments Europe, Ltd. Moyens de paiement acceptés : carte bancaire, Apple Pay, Google Pay. Les données de carte sont traitées exclusivement par Stripe ; le Prestataire n'y a pas accès.",
           "En cas d'abonnement, l'Utilisateur autorise le Prestataire à débiter, via Stripe, le moyen de paiement indiqué du montant de l'abonnement à la fin de la période d'essai, puis chaque mois, jusqu'à la résiliation de l'abonnement. En cas d'échec d'un prélèvement, Stripe peut le tenter à nouveau ; en cas d'échec de paiement persistant, l'abonnement prend fin.",
