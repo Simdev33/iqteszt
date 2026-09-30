@@ -4,6 +4,8 @@ import { AnimatePresence, motion, useInView } from "motion/react";
 import { useMemo, useRef, useState } from "react";
 import { normPdf } from "@/lib/norms";
 import { SCALE_BANDS } from "@/lib/scale";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, fmtNum } from "@/lib/i18n/config";
 
 const W = 800;
 const H = 300;
@@ -33,6 +35,7 @@ export default function BellCurve({
   interactive?: boolean;
   className?: string;
 }) {
+  const { lang, t } = useI18n();
   const ref = useRef<SVGSVGElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15% 0px" });
   const [hover, setHover] = useState<number | null>(null);
@@ -54,7 +57,7 @@ export default function BellCurve({
           <AnimatePresence mode="wait">
             {active ? (
               <motion.div
-                key={active.label}
+                key={active.id}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
@@ -62,19 +65,19 @@ export default function BellCurve({
                 className="glass flex items-center gap-3 rounded-full px-4 py-2 text-sm"
               >
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: active.color }} />
-                <span className="font-medium">{active.label}</span>
+                <span className="font-medium">{t.scaleBands[active.id].label}</span>
                 <span className="font-mono text-mist">{active.range}</span>
-                <span className="text-haze">· a népesség ~{active.share < 1 ? active.share.toFixed(1).replace(".", ",") : Math.round(active.share)}%-a</span>
+                <span className="text-haze">{fmt(t.charts.bellShare, { share: active.share < 1 ? fmtNum(lang, active.share) : Math.round(active.share) })}</span>
               </motion.div>
             ) : (
               <motion.p key="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="chip">
-                Vidd az egeret (vagy koppints) egy sávra
+                {t.charts.bellHint}
               </motion.p>
             )}
           </AnimatePresence>
         </div>
       )}
-      <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" role="img" aria-label="Az IQ-értékek normáleloszlása">
+      <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="h-auto w-full overflow-visible" role="img" aria-label={t.charts.bellAria}>
         <defs>
           <linearGradient id="bell-fill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#8b7bff" stopOpacity="0.55" />
@@ -102,7 +105,7 @@ export default function BellCurve({
         {/* Sávok */}
         {bands.map((b, i) => (
           <motion.path
-            key={b.label}
+            key={b.id}
             d={b.d}
             fill={b.color}
             initial={{ opacity: 0 }}
@@ -151,7 +154,7 @@ export default function BellCurve({
             <g transform={`translate(${Math.min(W - 60, Math.max(60, xOf(v)))} ${Math.max(18, yOf(v) - 34)})`}>
               <rect x={-44} y={-18} width={88} height={30} rx={15} fill="#fff" />
               <text x={0} y={2} textAnchor="middle" className="fill-ink-950 font-display text-[14px] font-semibold">
-                Te: {value}
+                {fmt(t.charts.bellYou, { iq: value ?? "" })}
               </text>
             </g>
           </motion.g>

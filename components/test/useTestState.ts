@@ -73,7 +73,7 @@ export function useTestState(slots: PublicQuestion[][]) {
   // egyből a fizetési képernyő jön.
   useEffect(() => {
     const p = loadPending();
-    const back = new URLSearchParams(window.location.search).get("fizetes") === "megszakitva";
+    const back = new URLSearchParams(window.location.search).get("canceled") === "1";
     /* eslint-disable react-hooks/set-state-in-effect */
     setSaved(load());
     setPending(p);

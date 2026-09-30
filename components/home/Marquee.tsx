@@ -1,7 +1,9 @@
-const WORDS = ["Mintázatok", "Számsorok", "Analógiák", "Forgatás", "Latin négyzetek", "Szillogizmusok", "Térlátás", "Kakukktojás", "Arányok", "Sorrendek"];
+import type { Locale } from "@/lib/i18n/config";
+import { getDict } from "@/lib/i18n/server";
 
-export default function Marquee() {
-  const row = [...WORDS, ...WORDS];
+export default function Marquee({ lang }: { lang: Locale }) {
+  const words = getDict(lang).home.marquee;
+  const row = [...words, ...words];
   return (
     <div className="relative overflow-hidden border-y border-white/[0.06] bg-ink-950 py-5 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
       <div className="flex w-max animate-marquee items-center gap-10 whitespace-nowrap">

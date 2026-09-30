@@ -1,0 +1,293 @@
+// Textes des questions en français. La structure (domaine, difficulté, index de la bonne réponse, suites) est dans lib/questions.ts :
+// dans chaque tableau options, la bonne réponse doit rester au même index que dans hu.ts !
+import type { QuestionTexts } from "./types";
+
+const fr: QuestionTexts = {
+  matrixPrompt: "Quelle figure remplace le point d'interrogation ?",
+  items: {
+    "m-count": { explain: "Dans chaque ligne, la forme reste la même et, de gauche à droite, le nombre augmente d'un : 1, 2, 3. La troisième ligne se termine donc par trois triangles." },
+    "m-countDown": { explain: "Dans chaque ligne, la forme est identique et, de gauche à droite, le nombre diminue d'un : 3, 2, 1. La dernière ligne se termine donc par un seul hexagone." },
+    "m-countRows": { explain: "Chaque colonne a sa propre forme et, de haut en bas, le nombre augmente d'un : 2, 3, 4. La colonne des losanges reçoit donc quatre losanges." },
+    "n-squares": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["30", "34", "36", "49"],
+      explain: "Ce sont les carrés parfaits : 1², 2², 3², 4², 5² – le suivant est 6² = 36.",
+    },
+    "n-add": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["17", "18", "19", "21"],
+      explain: "À chaque étape, le nombre augmente de 3 : 14 + 3 = 17.",
+    },
+    "n-halve": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["2", "3", "4", "6"],
+      explain: "Chaque terme est la moitié du précédent : 12 : 2 = 6.",
+    },
+    "v-nest": {
+      prompt: "Oiseau : nid = abeille : ?",
+      options: ["miel", "fleur", "ruche", "dard"],
+      explain: "L'oiseau vit dans un nid, l'abeille dans une ruche. La relation : être vivant → son habitat.",
+    },
+    "v-fish": {
+      prompt: "Poisson : nager = oiseau : ?",
+      options: ["nid", "voler", "plume", "œuf"],
+      explain: "Le poisson se déplace en nageant, l'oiseau en volant. La relation : être vivant → son mode de déplacement typique.",
+    },
+    "v-doctor": {
+      prompt: "Médecin : hôpital = enseignant : ?",
+      options: ["élève", "école", "manuel", "cours"],
+      explain: "Le médecin travaille à l'hôpital, l'enseignant à l'école. La relation : métier → lieu de travail.",
+    },
+    "m-fillColumns": { explain: "Chaque ligne a sa propre forme, et les colonnes déterminent le remplissage : vide, hachuré, plein. Le troisième élément de la ligne des étoiles est donc une étoile pleine." },
+    "m-fillRows": { explain: "Les colonnes déterminent la forme (triangle, hexagone, signe plus), les lignes le remplissage : vide, à moitié rempli, plein. L'élément manquant est le signe plus plein." },
+    "m-fillReverse": { explain: "Chaque ligne a sa propre forme, et le remplissage des colonnes va, de gauche à droite : plein, hachuré, vide. La ligne des carrés se termine donc par un carré vide." },
+    "l-days": {
+      prompt: "Si après-demain est vendredi, quel jour était-ce avant-hier ?",
+      options: ["dimanche", "lundi", "mardi", "mercredi"],
+      explain: "Si après-demain est vendredi, aujourd'hui est mercredi. Deux jours avant mercredi, c'était lundi.",
+    },
+    "l-days2": {
+      prompt: "Si avant-hier était jeudi, quel jour sera-t-on après-demain ?",
+      options: ["dimanche", "lundi", "mardi", "vendredi"],
+      explain: "Si avant-hier était jeudi, aujourd'hui est samedi. Deux jours après samedi, ce sera lundi.",
+    },
+    "l-bell": {
+      prompt: "Une cloche sonne un coup toutes les 20 minutes, y compris au moment du départ. Combien de coups sonne-t-elle en tout en 2 heures, si l'on compte aussi le coup de la fin de la 2ᵉ heure ?",
+      options: ["6", "7", "8", "12"],
+      explain: "Les coups sonnent à 0, 20, 40, 60, 80, 100 et 120 minutes – soit 7 coups. La réponse 6 est l'erreur classique « des piquets de clôture » : on oublie le coup du départ.",
+    },
+    "m-rotation": { explain: "À chaque étape, la flèche tourne de 45° dans le sens des aiguilles d'une montre, et chaque ligne commence décalée de 90°. La dernière ligne, après 180° et 225°, se termine à 270°, c'est-à-dire avec la flèche pointée vers la gauche." },
+    "m-rotationBack": { explain: "À chaque étape, la flèche tourne de 45° vers la gauche (dans le sens inverse des aiguilles d'une montre), et les lignes commencent à 0°, 90° et 180°. La dernière ligne : vers le bas, en bas à droite, puis vers la droite." },
+    "m-rotationHand": { explain: "À chaque étape, l'aiguille tourne de 90° vers la droite, et les lignes commencent décalées de 45°. La dernière ligne : l'aiguille pointe vers 6 heures, 9 heures, puis 12 heures – c'est-à-dire vers le haut." },
+    "n-double": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["47", "62", "63", "64"],
+      explain: "Chaque terme est le double du précédent plus un : 31 × 2 + 1 = 63.",
+    },
+    "n-triangular": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["18", "20", "21", "25"],
+      explain: "Les écarts augmentent d'un à chaque fois : +2, +3, +4, +5, donc vient maintenant +6 : 15 + 6 = 21.",
+    },
+    "n-primes": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["12", "13", "15", "17"],
+      explain: "Ce sont les nombres premiers (divisibles uniquement par 1 et par eux-mêmes). Le nombre premier qui suit 11 est 13.",
+    },
+    "v-opposite": {
+      prompt: "Quel mot est le plus proche du contraire de GÉNÉREUX ?",
+      options: ["riche", "avare", "modeste", "envieux"],
+      explain: "Une personne généreuse donne volontiers et beaucoup. Son contraire est l'avare, qui regrette même la moindre dépense.",
+    },
+    "v-brave": {
+      prompt: "Quel mot est le plus proche du contraire de COURAGEUX ?",
+      options: ["fort", "lâche", "silencieux", "paresseux"],
+      explain: "Une personne courageuse affronte le danger, une personne lâche le fuit. Les autres mots décrivent des qualités tout à fait différentes.",
+    },
+    "v-diligent": {
+      prompt: "Quel mot a le sens le plus proche du mot ASSIDU ?",
+      options: ["intelligent", "travailleur", "rapide", "précis"],
+      explain: "Une personne assidue, comme une personne travailleuse, travaille beaucoup et avec constance. Intelligent, rapide et précis désignent d'autres qualités.",
+    },
+    "m-latin": { explain: "Dans chaque ligne et chaque colonne, le cercle, le carré et le triangle apparaissent exactement une fois, et le remplissage est le même au sein d'une ligne. Il manque le carré plein dans la dernière ligne." },
+    "m-latinFill": { explain: "Dans chaque ligne, la forme est identique, et chaque remplissage (plein, hachuré, vide) apparaît exactement une fois par ligne et par colonne. Il manque le losange hachuré dans la ligne des losanges." },
+    "m-latinCount": { explain: "Dans chaque ligne, la forme est identique, et chaque nombre (1, 2, 3) apparaît exactement une fois par ligne et par colonne. Il manque les trois étoiles dans la dernière ligne." },
+    "l-painters": {
+      prompt: "Si 3 peintres peignent 3 murs en 3 jours, en combien de jours 6 peintres peignent-ils 6 murs ?",
+      options: ["1 jour", "3 jours", "6 jours", "12 jours"],
+      explain: "Un peintre peint un mur en 3 jours. Six peintres travaillent en parallèle : les 6 murs sont donc terminés en 3 jours aussi.",
+    },
+    "l-hens": {
+      prompt: "Si 4 poules pondent 4 œufs en 4 jours, combien d'œufs 8 poules pondent-elles en 8 jours ?",
+      options: ["8", "16", "32", "64"],
+      explain: "Une poule pond 1 œuf en 4 jours, donc 2 en 8 jours. 8 poules pondent ainsi 8 × 2 = 16 œufs.",
+    },
+    "l-snail": {
+      prompt: "Un escargot part du fond d'un puits de 10 mètres de profondeur. Le jour, il monte de 3 mètres ; la nuit, il redescend de 2 mètres. Quel jour sort-il du puits ?",
+      options: ["le 5e", "le 7e", "le 8e", "le 10e"],
+      explain: "Après sept jours et sept nuits, il est à 7 mètres. Le 8e jour, il monte de 3 mètres et atteint les 10 mètres – il ne peut donc plus redescendre.",
+    },
+    "m-walker": { explain: "Le point orange avance de coin en coin dans le sens des aiguilles d'une montre, tandis que l'anneau violet se déplace dans le sens inverse sur les milieux des côtés. Le motif se répète toutes les quatre étapes : la neuvième case est donc identique à la première." },
+    "m-orbit": { explain: "Le cadre compte huit positions. À chaque étape, le point orange avance d'une position dans le sens des aiguilles d'une montre, et l'anneau violet d'une position dans le sens inverse. Après huit étapes, tous deux reviennent à leur point de départ : le point en haut au milieu, l'anneau dans le coin inférieur droit." },
+    "m-quadrants": { explain: "Le carré violet passe d'un quart à l'autre dans le sens des aiguilles d'une montre, le carré orange dans le sens inverse. Le motif se répète toutes les quatre étapes : la neuvième case est donc identique à la première." },
+    "n-alternate": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["12", "24", "28", "30"],
+      explain: "Deux opérations alternent : ×2, puis −2. 5 → 10 → 8 → 16 → 14 → 28.",
+    },
+    "n-interleave": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["4", "5", "6", "7"],
+      explain: "Deux suites sont entrelacées : un terme sur deux donne 1, 3, 5 (+2), les autres 12, 10, 8 (−2). Le septième terme appartient à la première suite : 5 + 2 = 7.",
+    },
+    "n-fibo": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["36", "42", "48", "52"],
+      explain: "Chaque terme est la somme des deux précédents : 16 + 26 = 42.",
+    },
+    "v-odd": {
+      prompt: "Quel est l'intrus ?",
+      options: ["violon", "violoncelle", "flûte", "contrebasse"],
+      explain: "Le violon, le violoncelle et la contrebasse sont des instruments à cordes, alors que la flûte est un instrument à vent.",
+    },
+    "v-planet": {
+      prompt: "Quel est l'intrus ?",
+      options: ["Mercure", "Vénus", "Lune", "Mars"],
+      explain: "Mercure, Vénus et Mars sont des planètes, alors que la Lune est le satellite de la Terre, pas une planète.",
+    },
+    "v-polygon": {
+      prompt: "Quel est l'intrus ?",
+      options: ["triangle", "carré", "cercle", "pentagone"],
+      explain: "Le triangle, le carré et le pentagone sont des polygones à côtés droits. Le cercle n'est pas un polygone.",
+    },
+    "m-union": { explain: "Dans chaque ligne, la troisième figure est la superposition des deux premières : tout trait présent dans l'une ou l'autre est conservé. Dans la dernière ligne, la réponse réunit donc la ligne médiane verticale, le bord supérieur et la ligne médiane horizontale." },
+    "m-unionLines": { explain: "Dans chaque ligne, la troisième figure est la superposition des deux premières. Dans la dernière ligne, le bord gauche, le bord droit et la ligne médiane horizontale forment ensemble la lettre H." },
+    "m-unionDots": { explain: "Dans chaque ligne, la troisième figure contient tous les points présents dans l'une ou l'autre des deux premières. Dans la dernière ligne : les points en bas à gauche, au centre, en haut à droite et en bas à droite." },
+    "l-ages": {
+      prompt: "Anne est plus âgée que Bruno. Bruno est plus âgé que Diane. Cyril est plus jeune que Diane. Qui est le plus jeune ?",
+      options: ["Anne", "Bruno", "Cyril", "Diane"],
+      explain: "Du plus âgé au plus jeune : Anne > Bruno > Diane > Cyril. Cyril est le plus jeune.",
+    },
+    "l-queue": {
+      prompt: "Cinq personnes font la queue. Hélène est devant Emma, Inès se trouve entre Hélène et Emma, Emma est devant François, et Gabriel est en dernier. Qui est en tête de la file ?",
+      options: ["Emma", "Hélène", "Inès", "François"],
+      explain: "L'ordre est : Hélène, Inès, Emma, François, Gabriel. C'est Hélène qui est en tête de la file.",
+    },
+    "l-heights": {
+      prompt: "Pierre est plus grand que Zoé, mais plus petit que Rémi. Rémi est plus petit que Thomas. Qui est le deuxième plus grand ?",
+      options: ["Pierre", "Rémi", "Thomas", "Zoé"],
+      explain: "Par ordre de taille décroissante : Thomas, Rémi, Pierre, Zoé. Le deuxième plus grand est Rémi.",
+    },
+    "m-countSum": { explain: "Dans chaque ligne, la somme des éléments des deux premières cases donne la troisième : 1 + 3 = 4, 2 + 1 = 3, donc 3 + 2 = 5 triangles hachurés." },
+    "m-countDiff": { explain: "Dans chaque ligne, on soustrait le nombre d'éléments de la deuxième case de celui de la première : 5 − 1 = 4, 6 − 4 = 2, donc 4 − 1 = 3 étoiles." },
+    "m-countColumns": { explain: "Ici, l'addition se fait par colonne : les nombres d'éléments des deux premières lignes donnent la troisième (1 + 1 = 2, 2 + 3 = 5). Pour les losanges : 1 + 3 = 4." },
+    "n-bat": {
+      prompt: "Une batte et une balle coûtent ensemble 1,10 €. La batte coûte 1,00 € de plus que la balle. Combien coûte la balle ?",
+      options: ["0,05 €", "0,10 €", "0,15 €", "1,00 €"],
+      explain: "Si la balle coûte x, la batte coûte x + 1,00 € ; ensemble 2x + 1,00 € = 1,10 €, donc x = 0,05 €. La réponse évidente de 0,10 € est un piège : la batte coûterait alors 1,10 € et le total 1,20 €.",
+    },
+    "n-lily": {
+      prompt: "Sur un étang, la surface couverte par les nénuphars double chaque jour. Il leur faut 48 jours pour couvrir tout l'étang. En combien de jours ont-ils couvert la moitié de l'étang ?",
+      options: ["24 jours", "36 jours", "46 jours", "47 jours"],
+      explain: "Si la surface double chaque jour, la veille de la couverture complète, seule la moitié de l'étang était couverte : 48 − 1 = 47. La réponse de 24 jours est un piège – elle ne serait vraie que pour une croissance régulière.",
+    },
+    "n-taps": {
+      prompt: "Une baignoire se remplit en 6 minutes avec un robinet et en 3 minutes avec l'autre. En combien de minutes se remplit-elle si l'on ouvre les deux robinets en même temps ?",
+      options: ["2 minutes", "3 minutes", "4,5 minutes", "9 minutes"],
+      explain: "Le premier robinet remplit 1/6 de la baignoire par minute, le second 1/3 ; ensemble 1/6 + 2/6 = 1/2. Elle se remplit donc en 2 minutes.",
+    },
+    "m-sides": { explain: "De gauche à droite, le polygone gagne un côté à chaque étape, et chaque ligne commence avec un côté de plus. Avec le remplissage identique au sein de chaque ligne, la réponse est un heptagone plein." },
+    "m-sidesDots": { explain: "Les colonnes déterminent le polygone (3, 4, 5 côtés), les lignes le nombre de points à l'intérieur (1, 2, 3). La case en bas à droite : un pentagone avec trois points." },
+    "m-sidesDown": { explain: "De gauche à droite, le polygone perd un côté à chaque étape, et chaque ligne commence avec un côté de moins (7, 6, 5). Les colonnes déterminent le remplissage. L'élément manquant : un triangle plein." },
+    "v-homonym": {
+      prompt: "Quel mot désigne à la fois une partie d'un arbre et un morceau de papier sur lequel on écrit ?",
+      options: ["branche", "feuille", "écorce", "enveloppe"],
+      explain: "La feuille pousse sur les branches de l'arbre, et c'est aussi le nom du morceau de papier sur lequel on écrit (une feuille de papier).",
+    },
+    "v-feather": {
+      prompt: "Quel mot désigne à la fois un élément qui recouvre le corps des oiseaux et un instrument pour écrire ?",
+      options: ["aile", "plume", "crayon", "bec"],
+      explain: "La plume fait partie du plumage de l'oiseau, et c'est aussi le nom d'un instrument pour écrire (la plume du stylo, la plume d'oie).",
+    },
+    "v-pear": {
+      prompt: "Quel mot désigne à la fois un fruit et un métier ?",
+      options: ["mangue", "avocat", "juge", "notaire"],
+      explain: "L'avocat est un fruit, et c'est aussi le nom du juriste qui défend ses clients en justice. La mangue n'est qu'un fruit, juge et notaire ne sont que des métiers.",
+    },
+    "m-nestedLatin": { explain: "Deux règles s'appliquent indépendamment : la forme extérieure (cercle, carré, hexagone) et la forme intérieure orange (triangle, cercle, carré) apparaissent chacune une fois par ligne et par colonne. La case manquante : un triangle pointant vers le haut dans un carré." },
+    "m-nestedLatin2": { explain: "La forme extérieure (carré, triangle, cercle) et la forme intérieure orange (signe plus, étoile, losange) forment deux carrés latins indépendants. La case manquante : un signe plus dans un triangle." },
+    "m-nestedCount": { explain: "La forme extérieure (hexagone, losange, cercle) et le nombre de points (1, 2, 3) apparaissent chacun exactement une fois par ligne et par colonne. La case manquante : un losange avec un point." },
+    "l-cube": {
+      prompt: "On peint l'extérieur d'un cube de 3×3×3, puis on le découpe en 27 petits cubes identiques. Combien de petits cubes ont exactement deux faces peintes ?",
+      options: ["6", "8", "12", "24"],
+      explain: "Ce sont les petits cubes situés sur les arêtes, mais pas dans les coins, qui ont deux faces peintes. Le cube a 12 arêtes, avec 1 tel petit cube sur chacune : 12.",
+    },
+    "l-cube4": {
+      prompt: "On peint l'extérieur d'un cube de 4×4×4, puis on le découpe en 64 petits cubes identiques. Combien de petits cubes ont exactement une face peinte ?",
+      options: ["16", "24", "32", "36"],
+      explain: "Ce sont les petits cubes situés au centre des faces du grand cube qui ont une seule face peinte : 2 × 2 = 4 par face, soit 24 sur les 6 faces.",
+    },
+    "l-clock": {
+      prompt: "Quel angle forment la petite et la grande aiguille d'une horloge à 3 h 30 précises ?",
+      options: ["60°", "75°", "90°", "105°"],
+      explain: "La grande aiguille est sur le 6 (180°). La petite aiguille est à mi-chemin entre le 3 et le 4 : 90° + 15° = 105°. L'écart entre les deux est de 180° − 105° = 75°.",
+    },
+    "n-power": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["31", "32", "33", "34"],
+      explain: "Les écarts doublent : +1, +2, +4, +8, donc l'étape suivante est +16 : 17 + 16 = 33. (Autrement dit : 2ⁿ + 1.)",
+    },
+    "n-squareMinus": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["46", "48", "49", "50"],
+      explain: "Les écarts sont des nombres impairs consécutifs : +5, +7, +9, +11, maintenant +13 : 35 + 13 = 48. (Autrement dit : n² − 1, ici 7² − 1.)",
+    },
+    "n-factorial": {
+      prompt: "Quel nombre continue la suite ?",
+      options: ["240", "360", "600", "720"],
+      explain: "Chaque terme est multiplié par un nombre qui augmente d'un à chaque fois : ×2, ×3, ×4, ×5, maintenant ×6 : 120 × 6 = 720.",
+    },
+    "m-xor": { explain: "Dans chaque ligne, la troisième figure ne conserve que les traits présents dans exactement une des deux premières figures – les traits communs disparaissent. Dans la dernière ligne, le bord droit est commun : il disparaît donc." },
+    "m-xorDots": { explain: "Dans chaque ligne, la troisième figure ne conserve que les points présents dans exactement une des deux premières. Dans la dernière ligne, le point en bas à gauche est commun : il disparaît donc." },
+    "m-xorDiag": { explain: "Dans chaque ligne, la troisième figure ne conserve que les traits présents dans exactement une des deux premières figures. Dans la dernière ligne, la ligne médiane verticale est commune : elle disparaît donc." },
+    "v-symphony": {
+      prompt: "Livre : chapitre = symphonie : ?",
+      options: ["chef d'orchestre", "mouvement", "note", "orchestre"],
+      explain: "Un livre se compose de chapitres, une symphonie de mouvements. La relation : œuvre → ses grandes parties.",
+    },
+    "v-tadpole": {
+      prompt: "Chenille : papillon = têtard : ?",
+      options: ["poisson", "grenouille", "lézard", "nénuphar"],
+      explain: "La chenille devient papillon, le têtard devient grenouille. La relation : stade de développement → animal adulte.",
+    },
+    "v-map": {
+      prompt: "Carte : paysage = partition : ?",
+      options: ["instrument", "musique", "musicien", "papier"],
+      explain: "La carte représente le paysage par des signes, la partition représente la musique. La relation : système de signes → ce qu'il décrit.",
+    },
+    "m-rotateFill": { explain: "Dans chaque ligne, le triangle tourne de 90° à chaque étape dans le sens des aiguilles d'une montre, et chacun des trois remplissages apparaît une fois par ligne et par colonne. La dernière case : un triangle vide pointant vers le haut." },
+    "m-rotateFillArrow": { explain: "Dans chaque ligne, la flèche tourne de 90° vers la gauche à chaque étape, et chacun des trois remplissages (hachuré, plein, vide) apparaît une fois par ligne et par colonne. La case manquante : une flèche pleine pointant vers le haut." },
+    "m-rotateSize": { explain: "Dans chaque ligne, la moitié remplie du cercle tourne de 90° à chaque étape dans le sens des aiguilles d'une montre, et la taille (petit, moyen, grand) forme un carré latin. L'élément manquant : un petit cercle dont la moitié gauche est remplie." },
+    "l-syllogism": {
+      prompt: "Tous les zorgs sont des blips. Certains blips sont rouges. Que peut-on en conclure avec certitude ?",
+      options: ["Certains zorgs sont rouges.", "Aucun zorg n'est rouge.", "Tout ce qui est rouge est un zorg.", "Aucune de ces conclusions n'est certaine."],
+      explain: "Il se peut que les blips rouges soient justement ceux qui ne sont pas des zorgs. Aucune des possibilités ne découle nécessairement des deux affirmations.",
+    },
+    "l-violin": {
+      prompt: "Aucun violoniste n'est pilote. Certains pilotes jouent aux échecs. Que peut-on en conclure avec certitude ?",
+      options: ["Certains joueurs d'échecs ne sont pas violonistes.", "Aucun joueur d'échecs n'est violoniste.", "Certains violonistes jouent aux échecs.", "Aucune de ces conclusions n'est certaine."],
+      explain: "Les joueurs d'échecs qui sont pilotes ne sont certainement pas violonistes – donc certains joueurs d'échecs ne sont pas violonistes. Quant aux autres joueurs d'échecs, on ne sait pas s'ils jouent du violon.",
+    },
+    "l-boxes": {
+      prompt: "Parmi trois boîtes, une seule contient un trésor. Sur la boîte A, on lit : « Le trésor est ici. » Sur la B : « Le trésor n'est pas ici. » Sur la C : « Le trésor n'est pas dans la A. » Une seule inscription est vraie. Où est le trésor ?",
+      options: ["dans la A", "dans la B", "dans la C", "impossible à déterminer"],
+      explain: "S'il était dans la A, les inscriptions de la A et de la B seraient vraies. S'il était dans la C, celles de la B et de la C seraient vraies. Une seule inscription (celle de la C) n'est vraie que si le trésor est dans la B.",
+    },
+    "n-percent": {
+      prompt: "On augmente le prix d'un produit de 20 %, puis on baisse le nouveau prix de 20 %. Comment le prix final se compare-t-il au prix d'origine ?",
+      options: ["identique", "4 % de moins", "4 % de plus", "2 % de moins"],
+      explain: "1,2 × 0,8 = 0,96 : le prix final vaut 96 % du prix d'origine, soit 4 % de moins. La baisse s'applique déjà au prix plus élevé.",
+    },
+    "n-average": {
+      prompt: "La moyenne d'un élève sur quatre contrôles est de 7,5 points. Combien de points doit-il obtenir au cinquième pour que sa moyenne soit exactement de 8 ?",
+      options: ["8,5", "9", "10", "12"],
+      explain: "Le total actuel est de 4 × 7,5 = 30. Sur cinq contrôles, une moyenne de 8 exige 5 × 8 = 40 points, donc il faut 40 − 30 = 10 points au cinquième.",
+    },
+    "n-speed": {
+      prompt: "Une voiture va de A à B à 60 km/h et revient par la même route à 40 km/h. Quelle est sa vitesse moyenne sur l'ensemble de l'aller-retour ?",
+      options: ["48 km/h", "50 km/h", "52 km/h", "55 km/h"],
+      explain: "Si le trajet fait 120 km, il faut 2 heures à l'aller et 3 heures au retour : 240 km en 5 heures, soit 48 km/h. 50 km/h est faux, car la voiture passe plus de temps sur la partie la plus lente.",
+    },
+    "m-combine": { explain: "Dans chaque ligne, la troisième figure reprend la forme extérieure de la première case et la forme intérieure orange de la deuxième. Dans la dernière ligne, il faut donc un carré à l'extérieur et un losange à l'intérieur." },
+    "m-combineFill": { explain: "La troisième colonne reprend le remplissage de la première case et la forme de la deuxième. Dans la dernière ligne : un carré vide (vide comme la première case, carré comme la deuxième)." },
+    "m-combineCount": { explain: "La troisième colonne reprend le nombre d'éléments de la première case et la forme de la deuxième. Dans la dernière ligne : un seul hexagone (un élément, comme pour le losange)." },
+    "m-clock": { explain: "Deux aiguilles tournent dans l'ordre de lecture (en continuant d'une ligne à l'autre) : la longue tourne de 90° vers la droite à chaque étape, la courte orange de 45° vers la gauche. Après huit étapes, la longue pointe vers le haut et la courte vers la droite." },
+    "m-clockBack": { explain: "Dans l'ordre de lecture, la longue aiguille tourne de 90° vers la gauche à chaque étape, la courte orange de 45° vers la droite. Après huit étapes, la longue pointe vers le haut et la courte vers le bas." },
+    "m-clockMixed": { explain: "Dans l'ordre de lecture, la longue aiguille tourne de 45° vers la droite, la courte orange de 90° vers la gauche. Après huit étapes, toutes deux reviennent à leur position de départ : la longue pointe vers le bas, la courte vers la droite." },
+    "m-tripleLatin": { explain: "La forme (avec son remplissage) et le nombre d'éléments forment deux carrés latins distincts : chaque valeur apparaît une fois par ligne et par colonne. La case manquante : trois triangles hachurés." },
+    "m-tripleLatin2": { explain: "La forme (avec le remplissage qui lui correspond) et le nombre d'éléments forment deux carrés latins indépendants. La case manquante : deux losanges hachurés." },
+    "m-tripleColumns": { explain: "La forme et le remplissage apparaissent chacun une fois par ligne et par colonne, et la colonne détermine le nombre d'éléments (1, 2, 3). La case manquante : trois carrés vides." },
+  },
+};
+
+export default fr;

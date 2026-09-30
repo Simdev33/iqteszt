@@ -3,6 +3,7 @@
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { DOMAINS } from "@/lib/meta";
+import { useI18n } from "@/components/i18n/I18nProvider";
 import type { DomainScore } from "@/lib/scoring";
 
 const C = 150;
@@ -11,6 +12,7 @@ const r2 = (n: number) => Math.round(n * 100) / 100;
 
 /** Négytengelyű pókháló-diagram a területenkénti eredményhez. */
 export default function DomainRadar({ domains }: { domains: DomainScore[] }) {
+  const { t } = useI18n();
   const ref = useRef<SVGSVGElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const n = domains.length;
@@ -19,7 +21,7 @@ export default function DomainRadar({ domains }: { domains: DomainScore[] }) {
   const poly = domains.map((d, i) => point(i, Math.max(0.06, d.pct)).join(",")).join(" ");
 
   return (
-    <svg ref={ref} viewBox="0 0 300 300" className="h-auto w-full overflow-visible" role="img" aria-label="Területenkénti eredmény">
+    <svg ref={ref} viewBox="0 0 300 300" className="h-auto w-full overflow-visible" role="img" aria-label={t.charts.radarAria}>
       <defs>
         <radialGradient id="radar-fill">
           <stop offset="0" stopColor="#8b7bff" stopOpacity="0.15" />
@@ -74,7 +76,7 @@ export default function DomainRadar({ domains }: { domains: DomainScore[] }) {
         return (
           <g key={`l-${d.domain}`}>
             <text x={x} y={y - 4} textAnchor={anchor} className="fill-haze text-[11px]">
-              {DOMAINS[d.domain].short}
+              {t.domains[d.domain].short}
             </text>
             <text x={x} y={y + 11} textAnchor={anchor} className="fill-paper font-mono text-[11px] font-semibold">
               {Math.round(d.pct * 100)}%

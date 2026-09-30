@@ -1,10 +1,19 @@
 import "server-only";
-import { createHmac, timingSafeEqual } from "node:crypto";
-import { PRICE_HUF } from "./meta";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { cookies, headers } from "next/headers";
+import { fmt, path, type Locale } from "./i18n/config";
+import type { Dict } from "./i18n/dict/hu";
+import { PRICING, eurCents, oneTimeCharge, prices, type Plan } from "./pricing";
 
 // Fizetés: Stripe Checkout, külön npm-csomag nélkül (a Stripe REST API-ja form-kódolt kéréseket vár).
 // Adatbázis nem kell: a kitöltés kódja a Checkout Session metaadataiban utazik, és az eredményoldal
 // a Stripe-tól kérdezi le, hogy a munkamenet tényleg ki van-e fizetve.
+//
+// Két csomag:
+//   „one” – egyszeri díj, csak az adott eredmény;
+//   „sub” – próbaidős előfizetés: ma 3,90 €, 7 nap után 9,90 €/hó, amíg le nem mondják.
+// Az előfizetőt egy aláírt, httpOnly süti (a Stripe ügyfél-azonosítójával) ismeri fel; a későbbi
+// tesztek eredményét a szerver aláírt linkkel adja ki, ha a Stripe szerint az előfizetés aktív.
 //
 // Stripe-kulcs nélkül, fejlesztői módban egy aláírt „demó” token helyettesíti a fizetést,
 // hogy a teljes folyamat kipróbálható legyen. Éles módban kulcs nélkül a fizetés le van tiltva.
@@ -17,8 +26,8 @@ const secretKey = () => process.env.STRIPE_SECRET_KEY?.trim() || "";
 export const paymentMode = (): "stripe" | "demo" | "off" =>
   secretKey() ? "stripe" : process.env.NODE_ENV !== "production" ? "demo" : "off";
 
-async function stripe<T>(path: string, init?: { method?: string; body?: URLSearchParams }): Promise<T> {
-  const res = await fetch(`${STRIPE_API}${path}`, {
+async function stripe<T>(p: string, init?: { method?: string; body?: URLSearchParams }): Promise<T> {
+  const res = await fetch(`${STRIPE_API}${p}`, {
     method: init?.method ?? "GET",
     headers: {
       Authorization: `Bearer ${secretKey()}`,
@@ -32,75 +41,283 @@ async function stripe<T>(path: string, init?: { method?: string; body?: URLSearc
   return json;
 }
 
-type Session = {
-  id: string;
-  url: string | null;
-  payment_status: "paid" | "unpaid" | "no_payment_required";
-  metadata: Partial<TestPayload> | null;
-};
+/* ---------------- Aláírt tokenek (eredménylink, süti, demó) ---------------- */
 
-/** Stripe Checkout munkamenet az eredmény egyszeri díjával. */
-export async function createCheckout(payload: TestPayload, origin: string) {
-  const body = new URLSearchParams({
-    mode: "payment",
-    locale: "hu",
-    "payment_method_types[0]": "card",
-    "line_items[0][quantity]": "1",
-    "line_items[0][price_data][currency]": "huf",
-    // A Stripe a forintot kétjegyű tizedes pénznemként kezeli: 1 990 Ft = 199000.
-    "line_items[0][price_data][unit_amount]": String(PRICE_HUF * 100),
-    "line_items[0][price_data][product_data][name]": "IQ-teszt eredmény",
-    "line_items[0][price_data][product_data][description]":
-      "IQ-becslés percentilissel, területenkénti bontással és a feladatok megoldásával. Egyszeri díj, nincs előfizetés.",
-    success_url: `${origin}/eredmeny?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/teszt?fizetes=megszakitva`,
-    "metadata[k]": payload.k,
-    "metadata[v]": payload.v,
-    "metadata[a]": payload.a,
-    "metadata[t]": payload.t,
-  });
-  const session = await stripe<Session>("/checkout/sessions", { method: "POST", body });
-  if (!session.url) throw new Error("A Stripe nem adott vissza fizetési oldalt.");
-  return session.url;
+/** Aláíró kulcs: RESULT_SECRET, vagy a Stripe-kulcsból származtatva, vagy fejlesztői alapérték. */
+function signingSecret() {
+  if (process.env.RESULT_SECRET) return process.env.RESULT_SECRET;
+  if (secretKey()) return createHash("sha256").update(`elmeszint-result:${secretKey()}`).digest("hex");
+  return process.env.PAYMENT_DEMO_SECRET || "elmeszint-fejlesztoi-demo";
 }
-
-/** A kifizetett munkamenet kitöltés-adatai; nem fizetett vagy ismeretlen munkamenetnél null. */
-export async function paidPayload(sessionId: string): Promise<{ status: "paid"; payload: TestPayload } | { status: "unpaid" | "invalid" }> {
-  if (paymentMode() !== "stripe" || !/^cs_[A-Za-z0-9_]+$/.test(sessionId)) return { status: "invalid" };
-  try {
-    const s = await stripe<Session>(`/checkout/sessions/${encodeURIComponent(sessionId)}`);
-    if (s.payment_status !== "paid") return { status: "unpaid" };
-    const m = s.metadata ?? {};
-    return { status: "paid", payload: { k: m.k ?? "", v: m.v ?? "", a: m.a ?? "", t: m.t ?? "0" } };
-  } catch {
-    return { status: "invalid" };
-  }
-}
-
-/* ---------------- Fejlesztői szimuláció (csak Stripe-kulcs nélkül, nem éles módban) ---------------- */
-
-const demoSecret = () => process.env.PAYMENT_DEMO_SECRET || "elmeszint-fejlesztoi-demo";
 const b64 = (s: string) => Buffer.from(s).toString("base64url");
-const sign = (data: string) => createHmac("sha256", demoSecret()).update(data).digest("base64url");
+const sign = (data: string) => createHmac("sha256", signingSecret()).update(data).digest("base64url");
 
-/** Aláírt token a demó fizetéshez (stage: „pending” = fizetésre vár, „paid” = kifizetve). */
-export function demoToken(payload: TestPayload, stage: "pending" | "paid") {
-  const data = b64(JSON.stringify({ ...payload, s: stage }));
+function signToken(obj: object) {
+  const data = b64(JSON.stringify(obj));
   return `${data}.${sign(data)}`;
 }
-
-export function readDemoToken(token: string | undefined, stage: "pending" | "paid"): TestPayload | null {
-  if (paymentMode() !== "demo" || !token) return null;
+function readToken<T>(token: string | undefined): T | null {
+  if (!token) return null;
   const [data, sig] = token.split(".");
   if (!data || !sig) return null;
   const expected = Buffer.from(sign(data));
   const given = Buffer.from(sig);
   if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
   try {
-    const p = JSON.parse(Buffer.from(data, "base64url").toString()) as TestPayload & { s: string };
-    if (p.s !== stage) return null;
-    return { k: p.k, v: p.v, a: p.a, t: p.t };
+    return JSON.parse(Buffer.from(data, "base64url").toString()) as T;
   } catch {
     return null;
   }
+}
+
+/**
+ * Eredmény-token: „member” = aktív előfizető kapta (bármely módban érvényes),
+ * „pending”/„paid” = fejlesztői szimuláció (csak demó módban érvényes).
+ */
+type Stage = "member" | "pending" | "paid";
+export function resultToken(payload: TestPayload, stage: Stage, plan?: Plan) {
+  return signToken({ k: payload.k, v: payload.v, a: payload.a, t: payload.t, s: stage, p: plan });
+}
+export function readResultToken(token: string | undefined, stage: Stage): (TestPayload & { plan?: Plan }) | null {
+  if (stage !== "member" && paymentMode() !== "demo") return null;
+  const p = readToken<TestPayload & { s: string; p?: Plan }>(token);
+  if (!p || p.s !== stage || typeof p.k !== "string" || typeof p.v !== "string") return null;
+  return { k: p.k, v: p.v, a: p.a ?? "", t: p.t ?? "0", plan: p.p };
+}
+
+/* ---------------- Előfizetői süti ---------------- */
+
+export const MEMBER_COOKIE = "elm_sub";
+export const memberCookieValue = (customer: string) => signToken({ c: customer });
+export const memberCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: 60 * 60 * 24 * 400,
+};
+
+/** A böngésző sütijéből a Stripe ügyfél-azonosító (demó módban „demo”); ha nincs vagy hamis, null. */
+export async function memberCustomer(): Promise<string | null> {
+  const raw = (await cookies()).get(MEMBER_COOKIE)?.value;
+  const c = readToken<{ c: string }>(raw)?.c;
+  if (!c) return null;
+  if (c === "demo") return paymentMode() === "demo" ? c : null;
+  return /^cus_[A-Za-z0-9]+$/.test(c) ? c : null;
+}
+
+/* ---------------- Checkout ---------------- */
+
+type Session = {
+  id: string;
+  url: string | null;
+  mode: "payment" | "subscription";
+  status: "open" | "complete" | "expired";
+  payment_status: "paid" | "unpaid" | "no_payment_required";
+  customer: string | null;
+  metadata: Partial<TestPayload> | null;
+};
+
+/** Stripe Checkout munkamenet a választott csomaggal. */
+export async function createCheckout(payload: TestPayload, plan: Plan, lang: Locale, t: Dict, origin: string, customer?: string | null) {
+  const p = prices(lang);
+  const body = new URLSearchParams({
+    locale: lang,
+    "payment_method_types[0]": "card",
+    success_url: `${origin}/api/stripe/return?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}${path(lang, "test", { canceled: "1" })}`,
+    "metadata[k]": payload.k,
+    "metadata[v]": payload.v,
+    "metadata[a]": payload.a,
+    "metadata[t]": payload.t,
+    "metadata[lang]": lang,
+    "metadata[plan]": plan,
+  });
+
+  if (plan === "one") {
+    const charge = oneTimeCharge(lang);
+    body.set("mode", "payment");
+    body.set("line_items[0][quantity]", "1");
+    body.set("line_items[0][price_data][currency]", charge.currency);
+    body.set("line_items[0][price_data][unit_amount]", String(charge.unitAmount));
+    body.set("line_items[0][price_data][product_data][name]", t.stripe.oneTimeName);
+    body.set("line_items[0][price_data][product_data][description]", t.stripe.oneTimeDesc);
+  } else {
+    body.set("mode", "subscription");
+    // Havidíj a próbaidő után…
+    body.set("line_items[0][quantity]", "1");
+    body.set("line_items[0][price_data][currency]", "eur");
+    body.set("line_items[0][price_data][unit_amount]", String(eurCents(PRICING.monthlyEur)));
+    body.set("line_items[0][price_data][recurring][interval]", "month");
+    body.set("line_items[0][price_data][product_data][name]", t.stripe.subName);
+    body.set("line_items[0][price_data][product_data][description]", t.stripe.subDesc);
+    // …és a próbaidő díja, amit a Stripe az első (próbaidős) számlán azonnal terhel.
+    body.set("line_items[1][quantity]", "1");
+    body.set("line_items[1][price_data][currency]", "eur");
+    body.set("line_items[1][price_data][unit_amount]", String(eurCents(PRICING.trialEur)));
+    body.set("line_items[1][price_data][product_data][name]", fmt(t.stripe.trialName, { days: p.days }));
+    body.set("subscription_data[trial_period_days]", String(PRICING.trialDays));
+    body.set("subscription_data[metadata][lang]", lang);
+    body.set("custom_text[submit][message]", fmt(t.stripe.submitNote, p));
+    if (customer && customer !== "demo") body.set("customer", customer);
+  }
+
+  const session = await stripe<Session>("/checkout/sessions", { method: "POST", body });
+  if (!session.url) throw new Error("A Stripe nem adott vissza fizetési oldalt.");
+  return session.url;
+}
+
+export async function getSession(sessionId: string): Promise<Session | null> {
+  if (paymentMode() !== "stripe" || !/^cs_[A-Za-z0-9_]+$/.test(sessionId)) return null;
+  try {
+    return await stripe<Session>(`/checkout/sessions/${encodeURIComponent(sessionId)}`);
+  } catch {
+    return null;
+  }
+}
+
+/** A kifizetett munkamenet kitöltés-adatai. */
+export async function paidPayload(
+  sessionId: string,
+): Promise<{ status: "paid"; payload: TestPayload; subscription: boolean } | { status: "unpaid" | "invalid" }> {
+  const s = await getSession(sessionId);
+  if (!s) return { status: "invalid" };
+  const paid =
+    s.status === "complete" && (s.payment_status === "paid" || (s.mode === "subscription" && s.payment_status === "no_payment_required"));
+  if (!paid) return { status: "unpaid" };
+  const m = s.metadata ?? {};
+  return { status: "paid", payload: { k: m.k ?? "", v: m.v ?? "", a: m.a ?? "", t: m.t ?? "0" }, subscription: s.mode === "subscription" };
+}
+
+/* ---------------- Előfizetés állapota ---------------- */
+
+type StripeSub = {
+  id: string;
+  status: "trialing" | "active" | "past_due" | "canceled" | "unpaid" | "incomplete" | "incomplete_expired" | "paused";
+  created: number;
+  trial_end: number | null;
+  cancel_at_period_end: boolean;
+  cancel_at: number | null;
+  current_period_end?: number;
+  items: { data: { current_period_end?: number; price?: { unit_amount: number | null; currency: string } }[] };
+};
+
+export type SubInfo = {
+  status: StripeSub["status"];
+  /** Az aktuális (próba)időszak vége, másodpercben. */
+  periodEnd: number | null;
+  trialEnd: number | null;
+  /** Lemondva: a periódus végén megszűnik. */
+  canceling: boolean;
+  /** Havidíj a legkisebb egységben. */
+  amount: number | null;
+  currency: string | null;
+};
+
+const LIVE: StripeSub["status"][] = ["trialing", "active", "past_due"];
+
+/** Az ügyfél legfontosabb (élő, különben a legutóbbi) előfizetése. */
+export async function subscriptionOf(customer: string): Promise<SubInfo | null> {
+  if (customer === "demo") {
+    return { status: "trialing", periodEnd: null, trialEnd: null, canceling: false, amount: eurCents(PRICING.monthlyEur), currency: "eur" };
+  }
+  if (paymentMode() !== "stripe") return null;
+  const list = await stripe<{ data: StripeSub[] }>(`/subscriptions?customer=${encodeURIComponent(customer)}&status=all&limit=20`);
+  const subs = [...list.data].sort((a, b) => Number(LIVE.includes(b.status)) - Number(LIVE.includes(a.status)) || b.created - a.created);
+  const s = subs[0];
+  if (!s) return null;
+  const item = s.items?.data?.[0];
+  return {
+    status: s.status,
+    periodEnd: s.current_period_end ?? item?.current_period_end ?? null,
+    trialEnd: s.trial_end,
+    canceling: s.cancel_at_period_end || s.cancel_at != null,
+    amount: item?.price?.unit_amount ?? null,
+    currency: item?.price?.currency ?? null,
+  };
+}
+
+/** Jár-e most hozzáférés (próbaidőben vagy fizetve; lemondva is a periódus végéig). */
+export const isActive = (s: SubInfo | null) => !!s && (s.status === "trialing" || s.status === "active");
+
+/* ---------------- Ügyfélportál ---------------- */
+
+type PortalConfig = {
+  id: string;
+  metadata: Record<string, string> | null;
+  default_return_url: string | null;
+  login_page: { enabled: boolean; url: string | null } | null;
+};
+let portalConfig: Promise<PortalConfig> | null = null;
+
+/** A saját portál-beállítás (lemondás a periódus végén, kártyacsere, számlák, e-mailes belépés); ha nincs, létrehozzuk. */
+function ensurePortalConfig(origin: string): Promise<PortalConfig> {
+  portalConfig ??= (async () => {
+    const list = await stripe<{ data: PortalConfig[] }>("/billing_portal/configurations?active=true&limit=100");
+    const found = list.data.find((c) => c.metadata?.app === "elmeszint");
+    if (found && found.default_return_url === `${origin}/` && found.login_page?.enabled) return found;
+    const body = new URLSearchParams({
+      "business_profile[headline]": "Elmeszint",
+      default_return_url: `${origin}/`,
+      "features[invoice_history][enabled]": "true",
+      "features[payment_method_update][enabled]": "true",
+      "features[subscription_cancel][enabled]": "true",
+      "features[subscription_cancel][mode]": "at_period_end",
+      "features[subscription_cancel][cancellation_reason][enabled]": "true",
+      "features[subscription_cancel][cancellation_reason][options][0]": "too_expensive",
+      "features[subscription_cancel][cancellation_reason][options][1]": "unused",
+      "features[subscription_cancel][cancellation_reason][options][2]": "other",
+      "login_page[enabled]": "true",
+      "metadata[app]": "elmeszint",
+    });
+    if (origin.startsWith("https://")) {
+      body.set("business_profile[privacy_policy_url]", `${origin}${path("en", "privacy")}`);
+      body.set("business_profile[terms_of_service_url]", `${origin}${path("en", "terms")}`);
+    }
+    return stripe<PortalConfig>(found ? `/billing_portal/configurations/${found.id}` : "/billing_portal/configurations", { method: "POST", body });
+  })().catch((e) => {
+    portalConfig = null;
+    throw e;
+  });
+  return portalConfig;
+}
+
+/** Az ügyfélportál egy ügyfélnek (lemondás, kártyacsere, számlák). */
+export async function portalUrl(customer: string, lang: Locale, origin: string) {
+  const config = await ensurePortalConfig(origin);
+  const body = new URLSearchParams({
+    customer,
+    configuration: config.id,
+    locale: lang,
+    return_url: `${origin}${path(lang, "subscription")}`,
+  });
+  return (await stripe<{ url: string }>("/billing_portal/sessions", { method: "POST", body })).url;
+}
+
+/** Az ügyfélportál e-mailes belépőoldala (más eszközön vásárolt előfizetéshez). */
+export async function portalLoginUrl(origin: string): Promise<string | null> {
+  if (paymentMode() !== "stripe") return null;
+  try {
+    return (await ensurePortalConfig(origin)).login_page?.url ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Az oldal nyilvános címe (a Stripe ide irányít vissza). Élesben a SITE_URL a mérvadó; enélkül a kérés
+ * Host-fejléceiből számoljuk (proxy mögött a request.url belső címet mutathat).
+ */
+function originFrom(h: Headers, fallback: string) {
+  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, "");
+  const host = h.get("x-forwarded-host")?.split(",")[0].trim() || h.get("host");
+  if (!host) return fallback;
+  const proto = h.get("x-forwarded-proto")?.split(",")[0].trim() || (/^(localhost|127\.|\[::1\])/.test(host) ? "http" : "https");
+  return `${proto}://${host}`;
+}
+export const siteOrigin = (request: Request) => originFrom(request.headers, new URL(request.url).origin);
+
+/** Ugyanez szerverkomponensből. */
+export async function requestOrigin() {
+  return originFrom(await headers(), "http://localhost");
 }

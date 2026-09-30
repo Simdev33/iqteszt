@@ -4,11 +4,15 @@ import { motion } from "motion/react";
 import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import OptionButton from "@/components/matrix/OptionButton";
-import { DOMAINS, TOTAL, difficultyLabel } from "@/lib/meta";
+import { DIFF_KEY, DOMAINS, TOTAL } from "@/lib/meta";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt } from "@/lib/i18n/config";
 import type { PublicQuestion as Question } from "@/lib/types";
 
 function Meta({ q, index }: { q: Question; index: number }) {
-  const d = DOMAINS[q.domain];
+  const { t } = useI18n();
+  const d = { ...DOMAINS[q.domain], ...t.domains[q.domain] };
+  const diff = t.difficulty[DIFF_KEY[q.difficulty]];
   return (
     <div className="flex flex-wrap items-center gap-2.5">
       <span className="font-mono text-sm text-mist">
@@ -18,13 +22,13 @@ function Meta({ q, index }: { q: Question; index: number }) {
         <span className="h-1.5 w-1.5 rounded-full" style={{ background: d.color }} />
         {d.name}
       </span>
-      <span className="chip !py-1 text-xs" title={`Nehézség: ${difficultyLabel(q.difficulty)}`}>
+      <span className="chip !py-1 text-xs" title={fmt(t.test.question.difficulty, { d: diff })}>
         <span className="flex gap-0.5" aria-hidden>
           {[1, 2, 3].map((k) => (
             <span key={k} className={`h-2.5 w-1 rounded-full ${k <= q.difficulty ? "bg-haze" : "bg-white/15"}`} />
           ))}
         </span>
-        {difficultyLabel(q.difficulty)}
+        {diff}
       </span>
     </div>
   );
@@ -41,6 +45,7 @@ export default function QuestionView({
   picked: number | null;
   onPick: (i: number) => void;
 }) {
+  const { t } = useI18n();
   if (q.kind === "matrix") {
     return (
       <div className="grid items-center gap-5 sm:gap-7 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
@@ -52,7 +57,7 @@ export default function QuestionView({
           </div>
         </div>
         <div>
-          <p className="mb-3 hidden text-sm text-mist sm:block lg:mb-4">Válaszd ki a hiányzó elemet:</p>
+          <p className="mb-3 hidden text-sm text-mist sm:block lg:mb-4">{t.test.question.pickMissing}</p>
           <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
             {q.options.map((c, i) => (
               <OptionButton key={i} index={i} layoutGroup={q.id} selected={picked === i} onSelect={() => onPick(i)}>

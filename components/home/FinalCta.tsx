@@ -2,9 +2,14 @@ import Link from "next/link";
 import { Magnetic, Reveal } from "@/components/ui/motion";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import { DEMOS } from "@/lib/demo-matrices";
-import { PRICE_LABEL, TOTAL } from "@/lib/meta";
+import Rich from "@/components/i18n/Rich";
+import { fmt, path, type Locale } from "@/lib/i18n/config";
+import { getDict } from "@/lib/i18n/server";
+import { TOTAL } from "@/lib/meta";
+import { prices } from "@/lib/pricing";
 
-export default function FinalCta() {
+export default function FinalCta({ lang }: { lang: Locale }) {
+  const s = getDict(lang).home.final;
   const deco = [...DEMOS.nested.cells, ...DEMOS.sum.cells, ...DEMOS.fill.cells, ...DEMOS.latin.cells];
   return (
     <section className="relative px-5 pb-16 sm:px-8 sm:pb-24">
@@ -20,17 +25,15 @@ export default function FinalCta() {
         <div aria-hidden className="absolute -bottom-40 left-1/2 h-80 w-[700px] -translate-x-1/2 rounded-full bg-iris/40 blur-[120px]" />
 
         <div className="relative">
-          <p className="eyebrow justify-center">Készen állsz?</p>
+          <p className="eyebrow justify-center">{s.eyebrow}</p>
           <h2 className="mx-auto mt-6 max-w-3xl font-display text-[clamp(2.3rem,6vw,4.6rem)] leading-[1.02] font-semibold tracking-[-0.045em]">
-            Tizenkét perc, és <span className="text-gradient">kiderül.</span>
+            <Rich text={s.title} />
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-haze">
-            {TOTAL} feladat, időkorlát nélkül, regisztráció nélkül. A kitöltés ingyenes, a részletes eredmény egyszeri {PRICE_LABEL}.
-          </p>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-haze">{fmt(s.text, { total: TOTAL, ...prices(lang) })}</p>
           <div className="mt-10 flex justify-center">
             <Magnetic strength={0.3}>
-              <Link href="/teszt" className="btn-primary px-9 py-5 text-lg">
-                Kezdjük!
+              <Link href={path(lang, "test")} className="btn-primary px-9 py-5 text-lg">
+                {s.cta}
                 <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
                   <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

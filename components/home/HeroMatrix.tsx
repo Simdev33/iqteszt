@@ -5,17 +5,19 @@ import { useEffect, useRef, useState } from "react";
 import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import { DEMOS } from "@/lib/demo-matrices";
+import { useI18n } from "@/components/i18n/I18nProvider";
 import type { MatrixSpec } from "@/lib/shapes";
 
-const SHOWCASE: { spec: MatrixSpec; rule: string }[] = [
-  { spec: DEMOS.nested, rule: "Két latin négyzet" },
-  { spec: DEMOS.sum, rule: "1. + 2. = 3." },
-  { spec: DEMOS.rotate, rule: "Forgás +90°" },
-  { spec: DEMOS.fill, rule: "Kitöltés oszloponként" },
+const SHOWCASE: { spec: MatrixSpec; rule: "nested" | "sum" | "rotate" | "fill" }[] = [
+  { spec: DEMOS.nested, rule: "nested" },
+  { spec: DEMOS.sum, rule: "sum" },
+  { spec: DEMOS.rotate, rule: "rotate" },
+  { spec: DEMOS.fill, rule: "fill" },
 ];
 
 /** A hero lebegő, 3D-ben billenő mátrixa, ami magától „megoldja” a feladatokat. */
 export default function HeroMatrix() {
+  const { t } = useI18n();
   const [idx, setIdx] = useState(0);
   const [probe, setProbe] = useState(-1); // melyik jelöltet próbálja épp; 5 = helyes
   const [solved, setSolved] = useState(false);
@@ -124,7 +126,7 @@ export default function HeroMatrix() {
                   </svg>
                 </span>
                 <span className="text-haze">
-                  Szabály: <span className="font-medium text-paper">{rule}</span>
+                  {t.home.hero.ruleLabel} <span className="font-medium text-paper">{t.home.hero.rules[rule]}</span>
                 </span>
               </motion.div>
             )}

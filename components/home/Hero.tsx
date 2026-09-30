@@ -6,11 +6,16 @@ import { useEffect, useRef, useState } from "react";
 import NeuralField from "./NeuralField";
 import HeroMatrix from "./HeroMatrix";
 import { Magnetic } from "@/components/ui/motion";
+import Rich from "@/components/i18n/Rich";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, path } from "@/lib/i18n/config";
 import { POOL_SIZE, TOTAL } from "@/lib/meta";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Hero() {
+  const { lang, t } = useI18n();
+  const h = t.home.hero;
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yText = useTransform(scrollYProgress, [0, 1], [0, 120]);
@@ -27,9 +32,9 @@ export default function Hero() {
   }, []);
 
   const facts = [
-    { k: String(TOTAL), v: "feladat" },
-    { k: "~12", v: "perc" },
-    { k: "4", v: "képességterület" },
+    { k: String(TOTAL), v: h.facts.tasks },
+    { k: "~12", v: h.facts.minutes },
+    { k: "4", v: h.facts.areas },
   ];
 
   return (
@@ -48,16 +53,11 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-aqua opacity-70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-aqua" />
             </span>
-            Online IQ-teszt · azonnali eredmény
+            {h.chip}
           </motion.p>
 
           <h1 className="mt-7 font-display text-[clamp(2.7rem,7.4vw,5.6rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
-            {[
-              <>Mennyi</>,
-              <>
-                az <span className="text-gradient text-gradient-anim">IQ-d?</span>
-              </>,
-            ].map((line, i) => (
+            {h.title.map((l, i) => <Rich key={i} text={l} em="text-gradient text-gradient-anim" />).map((line, i) => (
               <span key={i} className="-mt-[0.2em] -mb-[0.08em] block overflow-hidden pt-[0.2em] pb-[0.08em]">
                 <motion.span
                   className="block"
@@ -77,8 +77,7 @@ export default function Hero() {
             transition={{ duration: 0.9, ease, delay: 0.65 }}
             className="mt-7 max-w-xl text-[1.08rem] leading-relaxed text-haze sm:text-lg"
           >
-            Egy {POOL_SIZE} feladatos bankból minden kitöltésnél {TOTAL} új kérdést kapsz mintázatfelismerésből, számsorokból,
-            szavakból és logikából. A végén azonnali IQ-becslés, percentilis és területenkénti bontás – regisztráció nélkül.
+            {fmt(h.lead, { pool: POOL_SIZE, total: TOTAL })}
           </motion.p>
 
           <motion.div
@@ -88,15 +87,15 @@ export default function Hero() {
             className="mt-9 flex flex-wrap items-center gap-3"
           >
             <Magnetic strength={0.25}>
-              <Link href="/teszt" className="btn-primary text-base">
-                Teszt indítása
+              <Link href={path(lang, "test")} className="btn-primary text-base">
+                {h.cta}
                 <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
                   <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
             </Magnetic>
-            <Link href="/#probafeladat" className="btn-ghost">
-              Próbáld ki egy feladaton
+            <Link href={`${path(lang, "home")}#probafeladat`} className="btn-ghost">
+              {h.try}
             </Link>
           </motion.div>
 
@@ -138,7 +137,7 @@ export default function Hero() {
         transition={{ delay: 1.6 }}
         className="absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[0.65rem] tracking-[0.25em] text-mist uppercase lg:flex"
       >
-        Görgess
+        {h.scroll}
         <span className="relative h-9 w-[1px] overflow-hidden bg-white/10">
           <motion.span
             className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-transparent to-iris"

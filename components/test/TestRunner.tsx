@@ -14,10 +14,15 @@ import Intro from "./Intro";
 import Review from "./Review";
 import Analyzing from "./Analyzing";
 import Paywall from "./Paywall";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, path } from "@/lib/i18n/config";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
+  const { lang, t } = useI18n();
+  const r = t.test.runner;
   const s = useTestState(slots);
   const { phase, index, answers, goTo, answer, setPhase } = s;
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -93,7 +98,7 @@ export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
           <Logo />
           <div className="flex items-center gap-2 sm:gap-3">
             {(phase === "quiz" || phase === "review") && (
-              <span className="chip font-mono tabular-nums" title="Eltelt idő">
+              <span className="chip font-mono tabular-nums" title={r.elapsed}>
                 <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-mist" aria-hidden>
                   <circle cx="8" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
                   <path d="M8 5.5v3l2 1.2M6.5 1.8h3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
@@ -101,8 +106,9 @@ export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
                 {formatDuration(s.elapsed)}
               </span>
             )}
-            <Link href="/" className="btn-ghost !px-4 !py-2 text-sm">
-              Kilépés
+            {phase === "intro" && <LanguageSwitcher />}
+            <Link href={path(lang, "home")} className="btn-ghost !px-4 !py-2 text-sm">
+              {r.exit}
             </Link>
           </div>
         </div>
@@ -110,7 +116,7 @@ export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
         {/* Szegmentált haladásjelző – bármelyik kérdésre rá lehet ugrani */}
         {(phase === "quiz" || phase === "review") && (
           <div className="mx-auto max-w-6xl px-4 pb-3 sm:px-8">
-            <div className="flex gap-[3px]" role="navigation" aria-label="Kérdések">
+            <div className="flex gap-[3px]" role="navigation" aria-label={r.questions}>
               {questions.map((qq, i) => {
                 const cur = phase === "quiz" && i === index;
                 const done = answers[i] != null;
@@ -119,7 +125,7 @@ export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
                     key={qq.id}
                     type="button"
                     onClick={() => goTo(i)}
-                    aria-label={`${i + 1}. kérdés${done ? " (megválaszolva)" : ""}`}
+                    aria-label={`${fmt(r.questionN, { n: i + 1 })}${done ? r.answeredMark : ""}`}
                     aria-current={cur ? "step" : undefined}
                     className="group relative h-4 flex-1"
                   >
@@ -134,9 +140,7 @@ export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
               })}
             </div>
             <div className="mt-1.5 flex justify-between font-mono text-[0.68rem] text-mist">
-              <span>
-                {answered} / {TOTAL} megválaszolva
-              </span>
+              <span>{fmt(r.answeredCount, { a: answered, total: TOTAL })}</span>
               <span>{Math.round((answered / TOTAL) * 100)}%</span>
             </div>
           </div>
@@ -206,22 +210,22 @@ export default function TestRunner({ slots }: { slots: PublicQuestion[][] }) {
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.5, ease }}
             className="fixed inset-x-0 bottom-0 z-40 px-3 pb-3 sm:px-6 sm:pb-5"
-            aria-label="Lapozás"
+            aria-label={r.paging}
           >
             <div className="glass mx-auto flex max-w-3xl items-center justify-between gap-3 rounded-full p-2">
               <button type="button" onClick={prev} disabled={index === 0} className="btn-ghost !px-4 !py-2.5 text-sm disabled:opacity-30">
                 <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
                   <path d="M13 8H4M7.5 4.5 4 8l3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Vissza
+                {r.back}
               </button>
               <p className="hidden items-center gap-1.5 text-xs text-mist md:flex">
-                <span className="kbd">A</span>–<span className="kbd">{String.fromCharCode(64 + q.options.length)}</span> válasz ·
+                <span className="kbd">A</span>–<span className="kbd">{String.fromCharCode(64 + q.options.length)}</span> {r.keysAnswer}
                 <span className="kbd">←</span>
-                <span className="kbd">→</span> lapozás
+                <span className="kbd">→</span> {r.keysPage}
               </p>
               <button type="button" onClick={next} className={answers[index] != null ? "btn-primary !px-5 !py-2.5 text-sm" : "btn-ghost !px-5 !py-2.5 text-sm"}>
-                {index === TOTAL - 1 ? "Összesítő" : answers[index] != null ? "Tovább" : "Kihagyom"}
+                {index === TOTAL - 1 ? r.summary : answers[index] != null ? r.next : r.skip}
                 <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
                   <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

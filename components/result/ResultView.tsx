@@ -9,6 +9,9 @@ import DomainRadar from "./DomainRadar";
 import AnswerReview from "./AnswerReview";
 import { Reveal, SplitLines } from "@/components/ui/motion";
 import { DOMAINS } from "@/lib/meta";
+import Rich from "@/components/i18n/Rich";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, path } from "@/lib/i18n/config";
 import { encodeAnswers, encodeVariants } from "@/lib/codec";
 import { clearPending, loadPending } from "@/components/test/pending";
 import { ageLabel, fmtPct, formatDuration } from "@/lib/norms";
@@ -17,20 +20,21 @@ import type { Result } from "@/lib/scoring";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 function verdict(pct: number) {
-  if (pct >= 0.85) return "Kiemelkedő";
-  if (pct >= 0.65) return "Erős";
-  if (pct >= 0.4) return "Átlagos";
-  return "Fejleszthető";
+  if (pct >= 0.85) return "top" as const;
+  if (pct >= 0.65) return "strong" as const;
+  if (pct >= 0.4) return "avg" as const;
+  return "grow" as const;
 }
 
 function ShareButton({ iq }: { iq: number }) {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
   const share = async () => {
     const url = window.location.href;
-    const text = `${iq} lett az IQ-becslésem az Elmeszint tesztjén. Neked mennyi?`;
+    const text = fmt(t.result.shareText, { iq });
     if (navigator.share) {
       try {
-        await navigator.share({ title: "Az IQ-eredményem", text, url });
+        await navigator.share({ title: t.result.shareTitle, text, url });
         return;
       } catch {
         /* a felhasználó bezárta – vágólapra másolunk */
@@ -47,12 +51,14 @@ function ShareButton({ iq }: { iq: number }) {
       <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
         <path d="M8 10V2.5M5 5l3-3 3 3M3 9v4h10V9" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      {copied ? "Link másolva!" : "Eredmény megosztása"}
+      {copied ? t.result.copied : t.result.share}
     </button>
   );
 }
 
-export default function ResultView({ result }: { result: Result }) {
+export default function ResultView({ result, subscribed = false }: { result: Result; subscribed?: boolean }) {
+  const { lang, t } = useI18n();
+  const s = t.result;
   // A kifizetett kitöltés már nem „vár” – ha ez az eszköz fizetett érte, töröljük a függő állapotot.
   useEffect(() => {
     const p = loadPending();
@@ -64,11 +70,13 @@ export default function ResultView({ result }: { result: Result }) {
   const top = fmtPct(100 - percentile);
   const strongest = [...result.domains].sort((a, b) => b.pct - a.pct)[0];
 
+  const bandText = t.bands[band.id];
+  const strongestName = t.domains[strongest.domain].name;
   const stats = [
-    { k: `${result.correct}/${result.total}`, v: "helyes válasz" },
-    { k: formatDuration(result.seconds), v: "kitöltési idő" },
-    { k: `${better}%`, v: "percentilis" },
-    { k: result.age ? ageLabel(result.age) : "–", v: "korcsoport" },
+    { k: `${result.correct}/${result.total}`, v: s.stats.correct },
+    { k: formatDuration(result.seconds), v: s.stats.time },
+    { k: `${better}%`, v: s.stats.percentile },
+    { k: result.age ? ageLabel(result.age, t.ages) : "–", v: s.stats.age },
   ];
 
   return (
@@ -86,7 +94,7 @@ export default function ResultView({ result }: { result: Result }) {
             className="glass ring-gradient relative mx-auto w-full max-w-md rounded-[2.2rem] p-6 sm:p-9"
           >
             <div aria-hidden className="absolute inset-x-10 top-10 -z-10 h-40 rounded-full blur-3xl" style={{ background: band.tone, opacity: 0.25 }} />
-            <Gauge value={iq} label="IQ-becslés" sub={`Jobb, mint a népesség ${better}%-a`} className="mx-auto max-w-[330px]" delay={0.5} />
+            <Gauge value={iq} label={t.charts.gaugeLabel} sub={fmt(t.charts.betterThan, { p: better })} className="mx-auto max-w-[330px]" delay={0.5} />
             <div className="mt-2 flex justify-center">
               <motion.span
                 initial={{ opacity: 0, y: 10 }}
@@ -95,20 +103,20 @@ export default function ResultView({ result }: { result: Result }) {
                 className="chip !px-4 !py-1.5 text-sm"
               >
                 <span className="h-2 w-2 rounded-full" style={{ background: band.tone }} />
-                {band.label}
+                {bandText.label}
               </motion.span>
             </div>
           </motion.div>
 
           <div>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="eyebrow">
-              Az eredményed
+              {s.eyebrow}
             </motion.p>
             <h1 className="mt-5 font-display text-[clamp(2.3rem,5.6vw,4.2rem)] leading-[1.02] font-semibold tracking-[-0.045em]">
               {[
                 <span key="a">IQ {iq} –</span>,
                 <span key="b" className="text-gradient">
-                  {band.label.toLowerCase()}.
+                  {bandText.label.toLowerCase()}.
                 </span>,
               ].map((l, i) => (
                 <span key={i} className="-mt-[0.2em] -mb-[0.08em] block overflow-hidden pt-[0.2em] pb-[0.08em]">
@@ -124,8 +132,17 @@ export default function ResultView({ result }: { result: Result }) {
               transition={{ duration: 0.8, ease, delay: 0.7 }}
               className="mt-6 max-w-xl text-lg leading-relaxed text-haze"
             >
-              {band.text} {percentile >= 50 ? `Nagyjából a legjobb ${top}%-ba tartozol.` : ""} A legerősebb területed:{" "}
-              <span className="text-paper">{strongest.name.toLowerCase()}</span>.
+              {bandText.text} {percentile >= 50 ? fmt(s.topShare, { top }) : ""}{" "}
+              {s.strongest.split("{domain}").map((part, i) =>
+                i === 0 ? (
+                  part
+                ) : (
+                  <span key={i}>
+                    <span className="text-paper">{t.lowerNames ? strongestName.toLowerCase() : strongestName}</span>
+                    {part}
+                  </span>
+                ),
+              )}
             </motion.p>
 
             <motion.dl
@@ -148,10 +165,20 @@ export default function ResultView({ result }: { result: Result }) {
 
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="mt-8 flex flex-wrap gap-3">
               <ShareButton iq={iq} />
-              <Link href="/teszt" className="btn-ghost">
-                Újra kitöltöm
+              <Link href={path(lang, "test")} className="btn-ghost">
+                {s.again}
               </Link>
             </motion.div>
+            {subscribed && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.4 }}
+                className="mt-6 rounded-2xl border border-aqua/25 bg-aqua/[0.06] px-4 py-3 text-sm leading-relaxed text-haze"
+              >
+                <Rich text={s.subBanner} links={{ sub: path(lang, "subscription") }} />
+              </motion.p>
+            )}
           </div>
         </div>
       </section>
@@ -162,17 +189,15 @@ export default function ResultView({ result }: { result: Result }) {
           <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
               <Reveal>
-                <p className="eyebrow">Hol helyezkedsz el?</p>
+                <p className="eyebrow">{s.bell.eyebrow}</p>
               </Reveal>
               <SplitLines
                 className="mt-5 font-display text-[clamp(2rem,4.6vw,3.4rem)] leading-[1.04] font-semibold tracking-[-0.04em]"
-                lines={[<span key="1">A népesség</span>, <span key="2">eloszlásában.</span>]}
+                lines={s.bell.title.map((l, i) => <span key={i}>{l}</span>)}
               />
             </div>
             <Reveal delay={0.1}>
-              <p className="text-lg leading-relaxed text-haze">
-                A satírozott terület azt mutatja, a népesség mekkora része ér el nálad alacsonyabb pontszámot: kb. {better}%.
-              </p>
+              <p className="text-lg leading-relaxed text-haze">{fmt(s.bell.lead, { p: better })}</p>
             </Reveal>
           </div>
           <Reveal delay={0.1} className="panel mt-12 rounded-[2rem] p-4 pt-10 sm:p-10 sm:pt-14">
@@ -185,11 +210,15 @@ export default function ResultView({ result }: { result: Result }) {
       <section className="relative py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <Reveal>
-            <p className="eyebrow">Területenkénti bontás</p>
+            <p className="eyebrow">{s.domains.eyebrow}</p>
           </Reveal>
           <SplitLines
             className="mt-5 font-display text-[clamp(2rem,4.6vw,3.4rem)] leading-[1.04] font-semibold tracking-[-0.04em]"
-            lines={[<span key="1">Ebben vagy</span>, <span key="2" className="text-gradient">a legerősebb.</span>]}
+            lines={s.domains.title.map((l, i) => (
+              <span key={i}>
+                <Rich text={l} />
+              </span>
+            ))}
           />
 
           <div className="mt-12 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
@@ -205,15 +234,15 @@ export default function ResultView({ result }: { result: Result }) {
                   <div className="relative flex items-center justify-between">
                     <span className="flex items-center gap-2 text-sm text-haze">
                       <span className="h-2 w-2 rounded-full" style={{ background: DOMAINS[d.domain].color }} />
-                      {DOMAINS[d.domain].short}
+                      {t.domains[d.domain].short}
                     </span>
-                    <span className="chip !py-0.5 text-xs">{verdict(d.pct)}</span>
+                    <span className="chip !py-0.5 text-xs">{s.verdict[verdict(d.pct)]}</span>
                   </div>
                   <p className="relative mt-5 font-display text-4xl font-semibold tracking-tight">
                     {d.correct}
                     <span className="text-xl text-mist">/{d.total}</span>
                   </p>
-                  <p className="relative mt-1 text-sm text-mist">{d.name}</p>
+                  <p className="relative mt-1 text-sm text-mist">{t.domains[d.domain].name}</p>
                   <div className="relative mt-5 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                     <motion.div
                       className="h-full rounded-full"
@@ -235,24 +264,18 @@ export default function ResultView({ result }: { result: Result }) {
       <section className="relative py-20 sm:py-28">
         <div className="mx-auto max-w-4xl px-5 sm:px-8">
           <Reveal>
-            <p className="eyebrow">Megoldások</p>
+            <p className="eyebrow">{s.solutions.eyebrow}</p>
           </Reveal>
           <SplitLines
             className="mt-5 font-display text-[clamp(2rem,4.6vw,3.4rem)] leading-[1.04] font-semibold tracking-[-0.04em]"
-            lines={[<span key="1">Minden feladat,</span>, <span key="2">levezetéssel.</span>]}
+            lines={s.solutions.title.map((l, i) => <span key={i}>{l}</span>)}
           />
           <Reveal delay={0.1} className="mt-10">
             <AnswerReview result={result} />
           </Reveal>
 
           <Reveal className="mt-14 rounded-3xl border border-white/[0.07] bg-white/[0.02] p-6 text-sm leading-relaxed text-mist">
-            <strong className="font-medium text-haze">Fontos:</strong> ez egy rövid, online feladatsoron alapuló becslés. Nem helyettesíti a
-            pszichológus által felvett, standardizált intelligenciavizsgálatot, és orvosi vagy munkaügyi döntés alapjául nem szolgálhat. A
-            számítás részletei a{" "}
-            <Link href="/modszertan" className="text-iris-soft underline decoration-iris/40 underline-offset-4 hover:decoration-iris">
-              Módszertan
-            </Link>{" "}
-            oldalon olvashatók.
+            <Rich text={s.disclaimer} em="font-medium text-haze" links={{ method: path(lang, "method") }} />
           </Reveal>
         </div>
       </section>

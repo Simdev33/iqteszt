@@ -3,7 +3,10 @@
 import { motion } from "motion/react";
 import Gauge from "@/components/charts/Gauge";
 import { Reveal, SplitLines, TiltCard } from "@/components/ui/motion";
-import { DOMAINS, PRICE_LABEL } from "@/lib/meta";
+import Rich from "@/components/i18n/Rich";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, ordinal } from "@/lib/i18n/config";
+import { DOMAINS } from "@/lib/meta";
 
 const SAMPLE = [
   { d: "matrix", pct: 0.86 },
@@ -12,14 +15,9 @@ const SAMPLE = [
   { d: "logic", pct: 0.6 },
 ] as const;
 
-const POINTS = [
-  { t: "IQ-becslés és percentilis", d: "Hol állsz a népességhez képest – egyetlen, érthető számmal." },
-  { t: "Területenkénti bontás", d: "Mintázat, számok, szavak, logika: látod, mi az erősséged." },
-  { t: "Megoldások magyarázattal", d: "Mind a 30 feladat helyes válasza, levezetéssel." },
-  { t: "Megosztható link", d: "Egy kattintással elküldheted a barátaidnak – ők is kipróbálhatják." },
-];
-
 export default function ResultPreview() {
+  const { lang, t, prices } = useI18n();
+  const s = t.home.preview;
   return (
     <section className="relative overflow-hidden py-24 sm:py-32">
       <div aria-hidden className="absolute top-1/2 left-[20%] -z-10 h-[520px] w-[520px] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(107_85_255/0.22),transparent)]" />
@@ -28,15 +26,15 @@ export default function ResultPreview() {
           <TiltCard max={8} className="group mx-auto max-w-md rounded-[2rem]">
             <div className="glass ring-gradient rounded-[2rem] p-6 sm:p-8">
               <div className="flex items-center justify-between">
-                <span className="eyebrow">Minta-eredmény</span>
-                <span className="chip !py-1 text-xs">Magas · 92. percentilis</span>
+                <span className="eyebrow">{s.sample}</span>
+                <span className="chip !py-1 text-xs">{fmt(s.sampleChip, { band: t.bands.high.label, ord: ordinal(lang, t.ordinal, 92) })}</span>
               </div>
-              <Gauge value={121} label="IQ-becslés" sub="Jobb, mint a népesség 92%-a" className="mx-auto mt-4 max-w-[300px]" />
+              <Gauge value={121} label={t.charts.gaugeLabel} sub={fmt(t.charts.betterThan, { p: 92 })} className="mx-auto mt-4 max-w-[300px]" />
               <div className="mt-2 space-y-3.5">
                 {SAMPLE.map((s, i) => (
                   <div key={s.d}>
                     <div className="flex justify-between text-sm">
-                      <span className="text-haze">{DOMAINS[s.d].name}</span>
+                      <span className="text-haze">{t.domains[s.d].name}</span>
                       <span className="font-mono text-mist">{Math.round(s.pct * 100)}%</span>
                     </div>
                     <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
@@ -58,14 +56,18 @@ export default function ResultPreview() {
 
         <div className="order-1 lg:order-2">
           <Reveal>
-            <p className="eyebrow">Az eredményed</p>
+            <p className="eyebrow">{s.eyebrow}</p>
           </Reveal>
           <SplitLines
             className="mt-5 font-display text-[clamp(2.1rem,5vw,3.8rem)] leading-[1.02] font-semibold tracking-[-0.04em]"
-            lines={[<span key="l1">Nem csak egy szám –</span>, <span key="l2" className="text-gradient">egy teljes profil.</span>]}
+            lines={s.title.map((l, i) => (
+              <span key={i}>
+                <Rich text={l} />
+              </span>
+            ))}
           />
           <ul className="mt-10 space-y-3">
-            {POINTS.map((p, i) => (
+            {s.points.map((p, i) => (
               <Reveal as="li" key={p.t} delay={0.08 * i} className="flex gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
                 <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-iris/15 text-iris-soft">
                   <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
@@ -80,9 +82,8 @@ export default function ResultPreview() {
             ))}
           </ul>
           <Reveal delay={0.3}>
-            <p className="mt-6 text-sm text-mist">
-              A kitöltés ingyenes. A teljes eredmény egyszeri <span className="font-medium text-paper">{PRICE_LABEL}</span> – nincs előfizetés,
-              nincs ismétlődő terhelés.
+            <p className="mt-6 text-sm leading-relaxed text-mist">
+              <Rich text={fmt(s.price, prices)} em="font-medium text-paper" />
             </p>
           </Reveal>
         </div>

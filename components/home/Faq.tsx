@@ -3,28 +3,31 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Reveal, SplitLines } from "@/components/ui/motion";
-import { faq } from "@/lib/site";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt } from "@/lib/i18n/config";
 
 export default function Faq() {
+  const { t, prices } = useI18n();
+  const s = t.home.faq;
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="gyik" className="relative scroll-mt-24 py-24 sm:py-32">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr]">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <Reveal>
-            <p className="eyebrow">GYIK</p>
+            <p className="eyebrow">{s.eyebrow}</p>
           </Reveal>
           <SplitLines
             className="mt-5 font-display text-[clamp(2.1rem,5vw,3.4rem)] leading-[1.04] font-semibold tracking-[-0.04em]"
-            lines={[<span key="l1">Gyakori</span>, <span key="l2">kérdések.</span>]}
+            lines={s.title.map((l, i) => <span key={i}>{l}</span>)}
           />
           <Reveal delay={0.1}>
-            <p className="mt-5 max-w-sm text-haze">Minden, amit a kitöltés előtt tudni érdemes – röviden és őszintén.</p>
+            <p className="mt-5 max-w-sm text-haze">{s.lead}</p>
           </Reveal>
         </div>
 
         <div className="space-y-3">
-          {faq.map((f, i) => {
+          {t.faq.map((f, i) => {
             const isOpen = open === i;
             return (
               <Reveal key={f.q} delay={i * 0.04}>
@@ -55,7 +58,7 @@ export default function Faq() {
                         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="px-5 pb-6 leading-relaxed text-haze sm:px-6">{f.a}</p>
+                        <p className="px-5 pb-6 leading-relaxed text-haze sm:px-6">{fmt(f.a, prices)}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>

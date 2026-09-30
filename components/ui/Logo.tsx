@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, path } from "@/lib/i18n/config";
 import { brand } from "@/lib/site";
 
 /** Logójel: 3×3-as pontrács, a kilencedik helyén egy gyűrű – a mátrixfeladat „kérdőjele”. */
@@ -23,8 +27,9 @@ export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
 }
 
 export default function Logo({ className = "" }: { className?: string }) {
+  const { lang, t } = useI18n();
   return (
-    <Link href="/" className={`group inline-flex items-center gap-2.5 ${className}`} aria-label={`${brand.name} – főoldal`}>
+    <Link href={path(lang, "home")} className={`group inline-flex items-center gap-2.5 ${className}`} aria-label={fmt(t.brand.home, { brand: brand.name })}>
       <LogoMark className="h-8 w-8 transition-transform duration-500 ease-[var(--ease-luxe)] group-hover:rotate-90" />
       <span className="font-display text-[1.02rem] font-semibold tracking-[-0.02em]">
         {brand.name}

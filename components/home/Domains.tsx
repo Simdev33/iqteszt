@@ -6,6 +6,9 @@ import MatrixBoard from "@/components/matrix/MatrixBoard";
 import { DEMOS } from "@/lib/demo-matrices";
 import { DOMAINS, DOMAIN_COUNTS, type Domain } from "@/lib/meta";
 import { Reveal, SplitLines } from "@/components/ui/motion";
+import Rich from "@/components/i18n/Rich";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt } from "@/lib/i18n/config";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -79,20 +82,22 @@ function NumberMini() {
 }
 
 function WordMini() {
-  const words = ["egér", "tej", "cica"];
+  const { t } = useI18n();
+  const wd = t.home.domains.word;
+  const words = wd.tries;
   const { ref, i } = useCycle(4, 1100);
   const w = words[Math.min(i, 2)];
   const ok = i >= 2;
   return (
     <div ref={ref} className="flex flex-col items-center gap-3 font-display text-[0.95rem] sm:text-lg">
       <div className="flex items-center gap-2.5">
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">kutya</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">{wd.a}</span>
         <span className="text-mist">:</span>
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">kölyök</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">{wd.b}</span>
       </div>
       <div className="flex items-center gap-2.5">
         <span className="px-1 text-flame">=</span>
-        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">macska</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5">{wd.c}</span>
         <span className="text-mist">:</span>
         <span
           className={`relative inline-grid min-w-[7.5rem] place-items-center overflow-hidden rounded-full border px-3.5 py-1.5 transition-colors duration-300 ${
@@ -111,12 +116,9 @@ function WordMini() {
 }
 
 function LogicMini() {
-  const people = [
-    { n: "Olivér", age: 1 },
-    { n: "Lili", age: 4 },
-    { n: "Nóra", age: 2 },
-    { n: "Máté", age: 3 },
-  ];
+  const { t } = useI18n();
+  const ages = [1, 4, 2, 3];
+  const people = t.home.domains.people.map((n, k) => ({ n, age: ages[k] }));
   const { ref, i } = useCycle(2, 2200);
   const list = i === 1 ? [...people].sort((a, b) => b.age - a.age) : people;
   return (
@@ -135,7 +137,7 @@ function LogicMini() {
           </motion.div>
         ))}
       </div>
-      <p className="font-mono text-[0.7rem] tracking-[0.18em] text-mist uppercase">{i === 1 ? "idősebb → fiatalabb" : "rendezetlen állítások"}</p>
+      <p className="font-mono text-[0.7rem] tracking-[0.18em] text-mist uppercase">{i === 1 ? t.home.domains.sorted : t.home.domains.unsorted}</p>
     </div>
   );
 }
@@ -153,7 +155,8 @@ function Card({
   delay?: number;
   big?: boolean;
 }) {
-  const d = DOMAINS[domain];
+  const { t } = useI18n();
+  const d = { ...DOMAINS[domain], ...t.domains[domain] };
   return (
     <Reveal delay={delay} className={`group panel relative flex flex-col overflow-hidden rounded-[1.75rem] p-6 sm:p-8 ${className}`}>
       <div
@@ -164,7 +167,7 @@ function Card({
       <div className="relative flex items-center justify-between">
         <span className="chip">
           <span className="h-2 w-2 rounded-full" style={{ background: d.color }} />
-          {DOMAIN_COUNTS[domain]} feladat
+          {fmt(t.home.domains.count, { n: DOMAIN_COUNTS[domain] })}
         </span>
         <span className="font-mono text-xs text-mist">{d.short}</span>
       </div>
@@ -178,29 +181,27 @@ function Card({
 }
 
 export default function Domains() {
+  const { t } = useI18n();
+  const s = t.home.domains;
   return (
     <section id="teruletek" className="relative scroll-mt-24 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-end">
           <div>
             <Reveal>
-              <p className="eyebrow">Mit mér a teszt?</p>
+              <p className="eyebrow">{s.eyebrow}</p>
             </Reveal>
             <SplitLines
               className="mt-5 font-display text-[clamp(2.1rem,5vw,3.8rem)] leading-[1.02] font-semibold tracking-[-0.04em]"
-              lines={[
-                <span key="l1">Négy képesség,</span>,
-                <span key="l2">
-                  <span className="text-gradient">egy szám.</span>
-                </span>,
-              ]}
+              lines={s.title.map((l, i) => (
+                <span key={i}>
+                  <Rich text={l} />
+                </span>
+              ))}
             />
           </div>
           <Reveal delay={0.1}>
-            <p className="max-w-md text-lg leading-relaxed text-haze">
-              A feladatok négy, egymást kiegészítő területet fednek le. A végén nem csak egy IQ-értéket kapsz, hanem azt is látod, melyik
-              terület az erősséged.
-            </p>
+            <p className="max-w-md text-lg leading-relaxed text-haze">{s.lead}</p>
           </Reveal>
         </div>
 

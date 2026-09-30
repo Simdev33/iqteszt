@@ -5,7 +5,7 @@
 /* ------------------------------------------------------------------ */
 
 export const AGE_GROUPS = [
-  { id: "u16", label: "16 év alatt", shift: -0.05 },
+  { id: "u16", label: null, shift: -0.05 },
   { id: "16", label: "16–24", shift: 0 },
   { id: "25", label: "25–34", shift: 0 },
   { id: "35", label: "35–44", shift: -0.01 },
@@ -14,7 +14,12 @@ export const AGE_GROUPS = [
   { id: "65", label: "65+", shift: -0.07 },
 ] as const;
 export type AgeId = (typeof AGE_GROUPS)[number]["id"];
-export const ageLabel = (id: string) => AGE_GROUPS.find((a) => a.id === id)?.label ?? "nincs megadva";
+/** A korcsoport felirata; a „16 alatt” és a „nincs megadva” szövege a szótárból jön. */
+export const ageLabel = (id: string, t: { u16: string; none: string }) => {
+  const g = AGE_GROUPS.find((a) => a.id === id);
+  if (!g) return t.none;
+  return g.label ?? t.u16;
+};
 
 /* ------------------------------------------------------------------ */
 /* Normáleloszlás                                                       */
@@ -38,15 +43,17 @@ export const percentileOf = (iq: number) => normCdf((iq - 100) / 15) * 100;
 /* Besorolás                                                            */
 /* ------------------------------------------------------------------ */
 
+/** Eredmény-sávok; a feliratok és leírások a szótárban (t.bands[id]). */
 export const BANDS = [
-  { min: 130, max: 160, label: "Kiemelkedően magas", short: "Kiemelkedő", tone: "var(--color-aqua)", text: "A népesség nagyjából 2%-a ér el ilyen eredményt. Az elvont szabályokat gyorsan és megbízhatóan ismered fel, még összetett helyzetekben is." },
-  { min: 120, max: 129, label: "Magas", short: "Magas", tone: "var(--color-iris)", text: "Jól az átlag fölött teljesítettél: a bonyolultabb, több szabályt egyszerre követő feladatok is jól mennek neked." },
-  { min: 110, max: 119, label: "Átlag feletti", short: "Átlag feletti", tone: "var(--color-iris)", text: "Az emberek többségénél jobban boldogultál. Az új mintázatokat gyorsan átlátod, és jól tartod fejben a részleteket." },
-  { min: 90, max: 109, label: "Átlagos", short: "Átlagos", tone: "var(--color-sun)", text: "Ebbe a sávba tartozik a népesség fele. Stabil, kiegyensúlyozott gondolkodási profil." },
-  { min: 80, max: 89, label: "Átlag alatti", short: "Átlag alatti", tone: "var(--color-flame)", text: "Egy online teszt eredménye sok mindentől függ – fáradtság, figyelem, időnyomás. Érdemes kipihenten újra próbálni." },
-  { min: 70, max: 79, label: "Alacsony", short: "Alacsony", tone: "var(--color-flame)", text: "Ez az eredmény egy rövid online feladatsoron született, ezért messzemenő következtetést ne vonj le belőle." },
-  { min: 0, max: 69, label: "Nagyon alacsony", short: "Nagyon alacsony", tone: "var(--color-flame)", text: "Egy rövid online feladatsor nem alkalmas diagnózisra. Ha valódi mérésre van szükség, szakember által felvett teszt a megoldás." },
+  { id: "top", min: 130, tone: "var(--color-aqua)" },
+  { id: "high", min: 120, tone: "var(--color-iris)" },
+  { id: "above", min: 110, tone: "var(--color-iris)" },
+  { id: "avg", min: 90, tone: "var(--color-sun)" },
+  { id: "below", min: 80, tone: "var(--color-flame)" },
+  { id: "low", min: 70, tone: "var(--color-flame)" },
+  { id: "vlow", min: 0, tone: "var(--color-flame)" },
 ] as const;
+export type Band = (typeof BANDS)[number];
 export const bandOf = (iq: number) => BANDS.find((b) => iq >= b.min) ?? BANDS[BANDS.length - 1];
 
 /* ------------------------------------------------------------------ */

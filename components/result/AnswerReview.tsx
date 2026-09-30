@@ -6,15 +6,18 @@ import MatrixBoard from "@/components/matrix/MatrixBoard";
 import MatrixCell from "@/components/matrix/MatrixCell";
 import { LETTERS } from "@/components/matrix/OptionButton";
 import { DOMAINS } from "@/lib/meta";
+import { useI18n } from "@/components/i18n/I18nProvider";
 import type { Result } from "@/lib/scoring";
 
 type Filter = "all" | "wrong" | "right";
 
 function Mark({ ok, skipped }: { ok: boolean; skipped: boolean }) {
+  const { t } = useI18n();
+  const r = t.result.review;
   return (
     <span
       className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${ok ? "bg-aqua/15 text-aqua" : skipped ? "bg-white/[0.06] text-mist" : "bg-flame/15 text-flame"}`}
-      aria-label={ok ? "helyes" : skipped ? "kihagyva" : "hibás"}
+      aria-label={ok ? r.ok : skipped ? r.skipped : r.bad}
     >
       <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
         {ok ? (
@@ -30,6 +33,8 @@ function Mark({ ok, skipped }: { ok: boolean; skipped: boolean }) {
 }
 
 export default function AnswerReview({ result }: { result: Result }) {
+  const { t } = useI18n();
+  const r = t.result.review;
   const [filter, setFilter] = useState<Filter>("all");
   const [open, setOpen] = useState<string | null>(null);
   const items = result.perQuestion
@@ -38,9 +43,9 @@ export default function AnswerReview({ result }: { result: Result }) {
   const wrong = result.perQuestion.filter((p) => !p.ok).length;
 
   const tabs: { id: Filter; label: string; n: number }[] = [
-    { id: "all", label: "Összes", n: result.total },
-    { id: "wrong", label: "Hibás / kihagyott", n: wrong },
-    { id: "right", label: "Helyes", n: result.correct },
+    { id: "all", label: r.all, n: result.total },
+    { id: "wrong", label: r.wrong, n: wrong },
+    { id: "right", label: r.right, n: result.correct },
   ];
 
   return (
@@ -78,14 +83,14 @@ export default function AnswerReview({ result }: { result: Result }) {
                   <span className="w-6 font-mono text-sm text-mist">{String(i + 1).padStart(2, "0")}</span>
                   <Mark ok={ok} skipped={skipped} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[0.95rem]">{q.kind === "matrix" ? "Mátrix: " + q.prompt.toLowerCase() : q.sequence ? `${q.prompt} ${q.sequence.join(", ")}` : q.prompt}</span>
+                    <span className="block truncate text-[0.95rem]">{q.kind === "matrix" ? r.matrixItem : q.sequence ? `${q.prompt} ${q.sequence.join(", ")}` : q.prompt}</span>
                     <span className="mt-0.5 flex items-center gap-1.5 text-xs text-mist">
                       <span className="h-1.5 w-1.5 rounded-full" style={{ background: DOMAINS[q.domain].color }} />
-                      {DOMAINS[q.domain].short}
+                      {t.domains[q.domain].short}
                     </span>
                   </span>
                   <span className="hidden font-mono text-xs text-mist sm:block">
-                    te: <span className={ok ? "text-aqua" : skipped ? "" : "text-flame"}>{skipped ? "–" : LETTERS[picked]}</span> · jó: <span className="text-paper">{LETTERS[q.answer]}</span>
+                    {r.you} <span className={ok ? "text-aqua" : skipped ? "" : "text-flame"}>{skipped ? "–" : LETTERS[picked]}</span> · {r.good} <span className="text-paper">{LETTERS[q.answer]}</span>
                   </span>
                   <svg viewBox="0 0 16 16" className={`h-4 w-4 shrink-0 text-mist transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} aria-hidden>
                     <path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />

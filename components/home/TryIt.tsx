@@ -8,8 +8,13 @@ import MatrixCell from "@/components/matrix/MatrixCell";
 import OptionButton from "@/components/matrix/OptionButton";
 import { Reveal, SplitLines } from "@/components/ui/motion";
 import { DEMO } from "@/lib/demo-matrices";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { DOMAIN_COUNTS } from "@/lib/meta";
+import { fmt, path } from "@/lib/i18n/config";
 
 export default function TryIt() {
+  const { lang, t } = useI18n();
+  const s = t.home.tryIt;
   const [picked, setPicked] = useState<number | null>(null);
   const done = picked != null;
   const ok = picked === DEMO.answer;
@@ -20,14 +25,14 @@ export default function TryIt() {
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <Reveal>
-            <p className="eyebrow justify-center">Próbafeladat</p>
+            <p className="eyebrow justify-center">{s.eyebrow}</p>
           </Reveal>
           <SplitLines
             className="mt-5 font-display text-[clamp(2.1rem,5vw,3.6rem)] leading-[1.04] font-semibold tracking-[-0.04em]"
-            lines={[<span key="l1">Melyik ábra illik</span>, <span key="l2">a kérdőjel helyére?</span>]}
+            lines={s.title.map((l, i) => <span key={i}>{l}</span>)}
           />
           <Reveal delay={0.1}>
-            <p className="mt-5 text-lg text-haze">Egy könnyű bemelegítő – ilyen típusú feladatból 14 vár rád a tesztben.</p>
+            <p className="mt-5 text-lg text-haze">{fmt(s.lead, { n: DOMAIN_COUNTS.matrix })}</p>
           </Reveal>
         </div>
 
@@ -69,21 +74,21 @@ export default function TryIt() {
                     transition={{ duration: 0.4 }}
                   >
                     <p className={`font-display text-xl font-semibold ${ok ? "text-aqua" : "text-flame"}`}>
-                      {ok ? "Pontosan! Ez a jó válasz." : `Nem egészen – a helyes válasz a(z) ${String.fromCharCode(65 + DEMO.answer)}.`}
+                      {ok ? s.correct : fmt(s.wrong, { letter: String.fromCharCode(65 + DEMO.answer) })}
                     </p>
-                    <p className="mt-2 leading-relaxed text-haze">{DEMO.explain}</p>
+                    <p className="mt-2 leading-relaxed text-haze">{s.explain}</p>
                     <div className="mt-5 flex flex-wrap gap-3">
-                      <Link href="/teszt" className="btn-primary">
-                        Jöhet a teljes teszt
+                      <Link href={path(lang, "test")} className="btn-primary">
+                        {s.full}
                       </Link>
                       <button type="button" onClick={() => setPicked(null)} className="btn-ghost">
-                        Újra
+                        {s.again}
                       </button>
                     </div>
                   </motion.div>
                 ) : (
                   <motion.p key="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-mist">
-                    Figyeld meg, mi változik soronként és oszloponként – alakzat, méret, kitöltés –, majd válassz egyet a hat lehetőség közül.
+                    {s.hint}
                   </motion.p>
                 )}
               </AnimatePresence>

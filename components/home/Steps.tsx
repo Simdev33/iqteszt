@@ -3,21 +3,19 @@
 import { motion, useScroll, useSpring } from "motion/react";
 import { useRef } from "react";
 import { Reveal, SplitLines } from "@/components/ui/motion";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt } from "@/lib/i18n/config";
 import { TOTAL } from "@/lib/meta";
 
-const STEPS = [
+const ICONS = [
   {
     n: "01",
-    title: "Add meg a korcsoportod",
-    text: "Egyetlen kattintás. Az életkor alapján finomhangoljuk a viszonyítási alapot – regisztráció és felhasználói fiók nem kell.",
     icon: (
       <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     ),
   },
   {
     n: "02",
-    title: `Oldd meg a ${TOTAL} feladatot`,
-    text: "Nincs időkorlát. Billentyűzettel (A–F, nyilak) is haladhatsz, visszaléphetsz, és bármelyik kérdésre ráugorhatsz.",
     icon: (
       <>
         <rect x="4" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
@@ -29,13 +27,14 @@ const STEPS = [
   },
   {
     n: "03",
-    title: "Kapd meg az eredményt",
-    text: "Egyszeri díj után azonnal: IQ-becslés percentilissel, területenkénti bontás és minden feladat megoldása magyarázattal együtt.",
     icon: <path d="M3 19.5h18M4.5 18c2.5 0 3.5-11 7.5-11s5 11 7.5 11M12 7v12.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />,
   },
 ];
 
 export default function Steps() {
+  const { t } = useI18n();
+  const s = t.home.steps;
+  const STEPS = ICONS.map((ic, i) => ({ ...ic, title: fmt(s.items[i].title, { total: TOTAL }), text: s.items[i].text }));
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 75%", "end 55%"] });
   const line = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
@@ -46,11 +45,11 @@ export default function Steps() {
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="max-w-3xl">
           <Reveal>
-            <p className="eyebrow">Hogyan zajlik?</p>
+            <p className="eyebrow">{s.eyebrow}</p>
           </Reveal>
           <SplitLines
             className="mt-5 font-display text-[clamp(2.1rem,5vw,3.8rem)] leading-[1.02] font-semibold tracking-[-0.04em]"
-            lines={[<span key="l1">Három lépés,</span>, <span key="l2">nagyjából tizenkét perc.</span>]}
+            lines={s.title.map((l, i) => <span key={i}>{l}</span>)}
           />
         </div>
 

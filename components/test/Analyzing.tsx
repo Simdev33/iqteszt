@@ -2,11 +2,12 @@
 
 import { animate, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-
-const STEPS = ["Válaszok ellenőrzése", "Nehézségi súlyozás", "Korcsoportos viszonyítás", "Percentilis számítása", "Profil összeállítása"];
+import { useI18n } from "@/components/i18n/I18nProvider";
 
 /** Kiértékelő átvezető: forgó gyűrűk, számláló és pipálódó lépések. */
 export default function Analyzing({ onDone, duration = 3.6 }: { onDone: () => void; duration?: number }) {
+  const { t } = useI18n();
+  const STEPS = t.test.analyzing.steps;
   const [pct, setPct] = useState(0);
   const done = useRef(onDone);
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function Analyzing({ onDone, duration = 3.6 }: { onDone: () => vo
         </div>
       </div>
 
-      <h2 className="mt-8 font-display text-2xl font-semibold tracking-tight">Kiértékelés folyamatban…</h2>
+      <h2 className="mt-8 font-display text-2xl font-semibold tracking-tight">{t.test.analyzing.title}</h2>
       <ul className="mt-6 w-full space-y-2.5 text-left">
         {STEPS.map((s, i) => {
           const done = i < doneSteps;

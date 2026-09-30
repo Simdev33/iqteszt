@@ -5,6 +5,9 @@ import { TOTAL } from "@/lib/meta";
 import type { PublicQuestion as Question } from "@/lib/types";
 import type { Answers } from "@/lib/types";
 import { LETTERS } from "@/components/matrix/OptionButton";
+import Rich from "@/components/i18n/Rich";
+import { useI18n } from "@/components/i18n/I18nProvider";
+import { fmt, plural } from "@/lib/i18n/config";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -19,13 +22,15 @@ export default function Review({
   onJump: (i: number) => void;
   onSubmit: () => void;
 }) {
+  const { t } = useI18n();
+  const s = t.test.review;
   const answered = answers.filter((a) => a != null).length;
   const missing = TOTAL - answered;
 
   return (
     <div className="mx-auto max-w-3xl">
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="eyebrow">
-        Összesítő
+        {s.eyebrow}
       </motion.p>
       <motion.h1
         initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
@@ -33,20 +38,10 @@ export default function Review({
         transition={{ duration: 0.8, ease }}
         className="mt-5 font-display text-[clamp(2rem,5vw,3.2rem)] leading-[1.05] font-semibold tracking-[-0.04em]"
       >
-        {missing === 0 ? (
-          <>
-            Minden kérdésre <span className="text-gradient">válaszoltál.</span>
-          </>
-        ) : (
-          <>
-            Még {missing} kérdés <span className="text-gradient">nyitva van.</span>
-          </>
-        )}
+        <Rich text={missing === 0 ? s.allDone : plural(s.open, missing)} />
       </motion.h1>
       <p className="mt-4 text-lg text-haze">
-        {missing === 0
-          ? "Ha szeretnél, még átnézheted a válaszaidat – egy kattintás a számra."
-          : "A kihagyott kérdések rossz válasznak számítanak. Érdemes tippelni, ha bizonytalan vagy."}
+        {missing === 0 ? s.allDoneText : s.openText}
       </p>
 
       <motion.div
@@ -67,7 +62,7 @@ export default function Review({
               className={`flex aspect-square flex-col items-center justify-center rounded-xl border text-sm transition-colors ${
                 a == null ? "border-flame/50 bg-flame/10 text-flame" : "border-white/10 bg-white/[0.04] hover:border-iris/60"
               }`}
-              aria-label={`${i + 1}. kérdés${a == null ? " – megválaszolatlan" : ` – ${LETTERS[a]} válasz`}`}
+              aria-label={`${fmt(t.test.runner.questionN, { n: i + 1 })}${a == null ? s.unanswered : fmt(s.answerLetter, { l: LETTERS[a] })}`}
             >
               <span className="font-mono text-[0.7rem] text-mist">{i + 1}</span>
               <span className="font-display font-semibold">{a == null ? "–" : LETTERS[a]}</span>
@@ -78,10 +73,10 @@ export default function Review({
 
       <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
         <button type="button" onClick={() => onJump(answers.findIndex((a) => a == null) >= 0 ? answers.findIndex((a) => a == null) : TOTAL - 1)} className="btn-ghost">
-          {missing ? "Kihagyott kérdésekhez" : "Vissza a kérdésekhez"}
+          {missing ? s.toSkipped : s.toQuestions}
         </button>
         <button type="button" onClick={onSubmit} className="btn-primary text-base">
-          Kiértékelés
+          {s.submit}
           <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
             <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
