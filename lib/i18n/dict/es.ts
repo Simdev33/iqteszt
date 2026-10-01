@@ -331,14 +331,14 @@ const es: Dict = {
     summaryTime: " en {t}",
     preview: "Tu resultado",
     cancelled: "El pago se ha interrumpido y no se te ha cobrado nada. Puedes volver a intentarlo cuando quieras.",
-    includes: "El acceso completo de {days} días incluye:",
+    includes: "El acceso completo incluye:",
     perks: [
       { t: "Estimación del CI y percentil", d: "Dónde te sitúas exactamente respecto a la población." },
       { t: "Desglose por áreas", d: "Patrones, números, palabras, lógica: cuál es tu punto fuerte." },
       { t: "La solución de las {total} preguntas", d: "Las respuestas correctas con su razonamiento, junto a tus propias respuestas." },
       { t: "Tests nuevos ilimitados", d: "Mientras dure el acceso, también verás al instante todos tus resultados siguientes." },
     ],
-    accessName: "Acceso completo de {days} días",
+    accessName: "Pago",
     consent:
       "Acepto los [Términos y condiciones](terms) y la [Política de privacidad](privacy), solicito el inicio inmediato del servicio y acepto que con ello pierdo mi derecho de desistimiento de 14 días.",
     consentNeeded: "Para continuar, acepta la declaración anterior.",
@@ -370,7 +370,7 @@ const es: Dict = {
   result: {
     eyebrow: "Tu resultado",
     verdict: { top: "Excepcional", strong: "Fuerte", avg: "Medio", grow: "Mejorable" },
-    shareText: "Mi CI estimado en el test de Elmeszint es {iq}. ¿Y el tuyo?",
+    shareText: "Mi CI estimado en el test de TestMyAbilities es {iq}. ¿Y el tuyo?",
     shareTitle: "Mi resultado de CI",
     copied: "¡Enlace copiado!",
     share: "Compartir resultado",
@@ -523,7 +523,7 @@ const es: Dict = {
   },
 
   stripe: {
-    subName: "Suscripción a Elmeszint",
+    subName: "Suscripción a TestMyAbilities",
     subDesc: "Tests de CI y resultados detallados ilimitados. Se renueva cada mes; puedes cancelarla en cualquier momento.",
     trialName: "Acceso completo de {days} días",
     submitNote:

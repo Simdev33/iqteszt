@@ -33,14 +33,14 @@ export default function Header() {
       >
         <Logo />
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label={t.nav.main}>
+        <nav className="hidden items-center gap-1 lg:flex" aria-label={t.nav.main}>
           {items.map((n) => {
             const active = n.href === pathname;
             return (
               <Link
                 key={n.href}
                 href={n.href}
-                className={`relative rounded-full px-4 py-2 text-sm transition-colors ${active ? "text-paper" : "text-mist hover:text-paper"}`}
+                className={`relative rounded-full px-4 py-2 text-sm whitespace-nowrap transition-colors ${active ? "text-paper" : "text-mist hover:text-paper"}`}
               >
                 {active && <motion.span layoutId="nav-pill" className="absolute inset-0 -z-10 rounded-full bg-white/[0.07]" />}
                 {n.label}
@@ -50,8 +50,8 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LanguageSwitcher className="hidden md:block" />
-          <Link href={path(lang, "test")} className="btn-primary !px-4 !py-2.5 text-sm sm:!px-5">
+          <LanguageSwitcher className="hidden lg:block" />
+          <Link href={path(lang, "test")} className="btn-primary !px-4 !py-2.5 text-sm whitespace-nowrap sm:!px-5">
             <span className="hidden sm:inline">{t.nav.start}</span>
             <span className="sm:hidden">{t.nav.startShort}</span>
             <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
@@ -61,7 +61,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
-            className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] md:hidden"
+            className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] lg:hidden"
             aria-label={open ? t.nav.close : t.nav.open}
             aria-expanded={open}
           >
@@ -80,7 +80,7 @@ export default function Header() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="glass mx-auto mt-2 max-w-6xl rounded-3xl bg-ink-900/90 p-2 md:hidden"
+            className="glass mx-auto mt-2 max-w-6xl rounded-3xl bg-ink-900/90 p-2 lg:hidden"
             aria-label={t.nav.mobile}
           >
             {items.map((n, i) => (

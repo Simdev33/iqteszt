@@ -180,7 +180,7 @@ export default function Paywall({
 
   const priceRow = (today: string) => (
     <div className="flex items-center justify-between gap-4 border-y border-white/[0.08] py-5">
-      <span className="font-semibold">{fmt(s.accessName, { days: prices.days })}</span>
+      <span className="font-semibold">{s.accessName}</span>
       <span className="font-display text-3xl font-semibold tracking-tight whitespace-nowrap">{today}</span>
     </div>
   );
@@ -295,7 +295,7 @@ export default function Paywall({
           })}
         </p>
 
-        <p className="mt-7 text-sm font-semibold">{fmt(s.includes, { days: prices.days })}</p>
+        <p className="mt-7 text-sm font-semibold">{s.includes}</p>
         <ul className="mt-3 space-y-2">
           {s.perks.map((p, i) => (
             <motion.li

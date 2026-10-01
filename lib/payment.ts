@@ -12,7 +12,7 @@ import { PRICING, eurCents, prices } from "./pricing";
 // Egy csomag: 7 napos teljes hozzáférés 3,90 €-ért (azonnal terhelve), a 8. naptól 9,90 €/hó, amíg le nem mondják.
 // A fizetési űrlap Stripe Checkout Elements (ui_mode: elements): a munkamenet a fizetési képernyővel együtt jön
 // létre, az e-mail-mező, az expressz gombok és a kártyaűrlap eleve nyitva vannak (a DoneSignIn mintájára).
-// A Stripe-fiók közös más alkalmazásokkal, ezért minden saját objektum metadata.app = "elmeszint" jelölést kap.
+// A Stripe-fiók közös más alkalmazásokkal, ezért minden saját objektum metadata.app = "testmyabilities" jelölést kap.
 // Az előfizetőt egy aláírt, httpOnly süti (a Stripe ügyfél-azonosítójával) ismeri fel; a későbbi
 // tesztek eredményét a szerver aláírt linkkel adja ki, ha a Stripe szerint az előfizetés aktív.
 //
@@ -24,7 +24,7 @@ export type TestPayload = { k: string; v: string; a: string; t: string };
 const STRIPE_API = "https://api.stripe.com/v1";
 /** Rögzített API-verzió: a Checkout Elements (ui_mode „elements”) ennél a verziónál ezen a néven él. */
 const STRIPE_VERSION = "2026-08-26.dahlia";
-export const APP = "elmeszint";
+export const APP = "testmyabilities";
 const secretKey = () => process.env.STRIPE_SECRET_KEY?.trim() || "";
 
 export const paymentMode = (): "stripe" | "demo" | "off" =>
@@ -242,7 +242,7 @@ export async function subscriptionOf(customer: string): Promise<SubInfo | null> 
 export const isActive = (s: SubInfo | null) => !!s && (s.status === "trialing" || s.status === "active");
 
 /**
- * Van-e már élő Elmeszint-előfizetés ehhez az e-mail-címhez (más eszközön vásárolva) – ilyenkor nem
+ * Van-e már élő TestMyAbilities-előfizetés ehhez az e-mail-címhez (más eszközön vásárolva) – ilyenkor nem
  * engedünk második előfizetést kötni. Más alkalmazások előfizetései nem számítanak.
  */
 export async function emailHasSubscription(email: string): Promise<boolean> {
@@ -267,10 +267,10 @@ let portalConfig: Promise<PortalConfig> | null = null;
 function ensurePortalConfig(origin: string): Promise<PortalConfig> {
   portalConfig ??= (async () => {
     const list = await stripe<{ data: PortalConfig[] }>("/billing_portal/configurations?active=true&limit=100");
-    const found = list.data.find((c) => c.metadata?.app === "elmeszint");
+    const found = list.data.find((c) => c.metadata?.app === APP);
     if (found && found.default_return_url === `${origin}/` && found.login_page?.enabled) return found;
     const body = new URLSearchParams({
-      "business_profile[headline]": "Elmeszint",
+      "business_profile[headline]": "TestMyAbilities",
       default_return_url: `${origin}/`,
       "features[invoice_history][enabled]": "true",
       "features[payment_method_update][enabled]": "true",
@@ -281,7 +281,7 @@ function ensurePortalConfig(origin: string): Promise<PortalConfig> {
       "features[subscription_cancel][cancellation_reason][options][1]": "unused",
       "features[subscription_cancel][cancellation_reason][options][2]": "other",
       "login_page[enabled]": "true",
-      "metadata[app]": "elmeszint",
+      "metadata[app]": APP,
     });
     if (origin.startsWith("https://")) {
       body.set("business_profile[privacy_policy_url]", `${origin}${path("en", "privacy")}`);

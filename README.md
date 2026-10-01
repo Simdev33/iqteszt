@@ -1,4 +1,4 @@
-# Elmeszint – online IQ-teszt
+# TestMyAbilities – online IQ-teszt (testmyabilities.com)
 
 Next.js 16 + Tailwind v4 + Motion. 90 kérdéses bank, kitöltésenként 30 kérdés; a részletes eredmény
 díj ellenében (Stripe Checkout) oldható fel. Hat nyelven: magyar, angol, német, francia, olasz, spanyol.
@@ -42,7 +42,7 @@ Az árak egy helyen: `lib/pricing.ts`.
 1. Környezeti változók (tárhelyen, pl. Vercel → Environment Variables; helyben `.env.local`):
    - `STRIPE_SECRET_KEY` – `sk_test_…` teszteléshez, `sk_live_…` élesben
    - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` – a hozzá tartozó `pk_test_…` / `pk_live_…` (a beágyazott fizetési űrlaphoz; build előtt kell beállítani)
-   - `SITE_URL` – az oldal nyilvános címe (pl. `https://elmeszint.hu`), ide irányít vissza a Stripe
+   - `SITE_URL` – az oldal nyilvános címe (pl. `https://testmyabilities.com`), ide irányít vissza a Stripe
    - `RESULT_SECRET` – hosszú, véletlen szöveg; ezzel írjuk alá az előfizetői sütit és az eredménylinkeket.
      Ha üres, a Stripe-kulcsból származtatjuk – ekkor kulcscserénél a régi előfizetői linkek érvénytelenné válnak.
 2. Stripe Dashboard, élesítés előtt:
@@ -51,7 +51,7 @@ Az árak egy helyen: `lib/pricing.ts`.
    - *Settings → Billing → Subscriptions and emails*: nyugták és a **próbaidő lejárta előtti emlékeztető e-mail** bekapcsolása.
    - *Settings → Emails*: sikeres fizetésről szóló nyugta e-mail.
 3. Az ügyfélportált (lemondás, kártyacsere, számlák, e-mailes belépés) a kód magától létrehozza / frissíti
-   (`metadata.app = elmeszint`), külön beállítás nem kell.
+   (`metadata.app = testmyabilities`), külön beállítás nem kell.
 
 ### Hogyan működik
 
@@ -59,9 +59,9 @@ Az árak egy helyen: `lib/pricing.ts`.
   pontozás a szerveren maradnak (`lib/questions.ts`, `lib/matrix.ts`, `lib/scoring.ts` – `server-only`).
 - A fizetési képernyő megnyitásakor a `/api/checkout` Checkout Session-t nyit (`ui_mode: elements`, előfizetés,
   7 nap próbaidő + 3,90 €-s első tétel); a válaszok kódja a munkamenet metaadataiban utazik. Adatbázis nem kell.
-- Fizetés előtt a `/api/checkout/email` megnézi, van-e már élő Elmeszint-előfizetés ehhez az e-mail-címhez
+- Fizetés előtt a `/api/checkout/email` megnézi, van-e már élő TestMyAbilities-előfizetés ehhez az e-mail-címhez
   (más eszközről) – ilyenkor nem enged második előfizetést. A Stripe ügyfélkeresője ~1 perc késéssel frissül.
-- A Stripe-fiók más alkalmazásokkal közös lehet: minden saját objektum `metadata.app = elmeszint`, és a hozzáférés
+- A Stripe-fiók más alkalmazásokkal közös lehet: minden saját objektum `metadata.app = testmyabilities`, és a hozzáférés
   csak a saját előfizetést számolja.
 - Fizetés után a `/api/stripe/return` aláírt, httpOnly sütit (`elm_sub`) tesz a böngészőbe
   a Stripe ügyfél-azonosítóval, majd az eredményoldalra irányít.

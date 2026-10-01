@@ -332,14 +332,14 @@ const en: Dict = {
     summaryTime: " in {t}",
     preview: "Your result",
     cancelled: "The payment was cancelled – you haven't been charged. You can try again anytime.",
-    includes: "The {days}-day full access includes:",
+    includes: "Full access includes:",
     perks: [
       { t: "IQ estimate and percentile", d: "Exactly where you stand compared with the population." },
       { t: "Breakdown by area", d: "Patterns, numbers, words, logic – which one is your strength." },
       { t: "Solutions to all {total} questions", d: "The correct answers with the reasoning, next to your own answers." },
       { t: "Unlimited new tests", d: "While your access is active, you'll see every further result right away too." },
     ],
-    accessName: "{days}-day full access",
+    accessName: "Payment",
     consent:
       "I accept the [Terms and Conditions](terms) and the [Privacy Policy](privacy), request that the service start immediately, and acknowledge that I thereby lose my 14-day right of withdrawal.",
     consentNeeded: "Please accept the statement above to continue.",
@@ -371,7 +371,7 @@ const en: Dict = {
   result: {
     eyebrow: "Your result",
     verdict: { top: "Outstanding", strong: "Strong", avg: "Average", grow: "Room to grow" },
-    shareText: "My IQ estimate on the Elmeszint test is {iq}. What's yours?",
+    shareText: "My IQ estimate on the TestMyAbilities test is {iq}. What's yours?",
     shareTitle: "My IQ result",
     copied: "Link copied!",
     share: "Share result",
@@ -524,7 +524,7 @@ const en: Dict = {
   },
 
   stripe: {
-    subName: "Elmeszint subscription",
+    subName: "TestMyAbilities subscription",
     subDesc: "Unlimited IQ tests and detailed results. Renews monthly, cancel anytime.",
     trialName: "{days}-day full access",
     submitNote:

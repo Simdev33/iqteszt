@@ -1,10 +1,10 @@
 import type { RouteKey } from "./i18n/config";
 
 export const brand = {
-  name: "Elmeszint",
-  domain: "elmeszint.hu",
-  url: "https://elmeszint.hu",
-  email: "hello@elmeszint.hu",
+  name: "TestMyAbilities",
+  domain: "testmyabilities.com",
+  url: "https://testmyabilities.com",
+  email: "hello@testmyabilities.com",
 };
 
 /** Az üzemeltető cég adatai (Szlovák Cégjegyzék / finstat.sk) – az ÁSZF, az adatkezelési tájékoztató és a lábléc használja. */

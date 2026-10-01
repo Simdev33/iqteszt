@@ -343,14 +343,14 @@ const hu = {
     summaryTime: ", {t} alatt",
     preview: "Az eredményed",
     cancelled: "A fizetés megszakadt – nem terheltünk semmit. Bármikor újrapróbálhatod.",
-    includes: "A {days} napos teljes hozzáférés tartalmazza:",
+    includes: "A teljes hozzáférés tartalmazza:",
     perks: [
       { t: "IQ-becslés és percentilis", d: "Pontosan hol állsz a népességhez képest." },
       { t: "Területenkénti bontás", d: "Mintázat, számok, szavak, logika – melyik az erősséged." },
       { t: "Mind a {total} feladat megoldása", d: "A helyes válaszok levezetéssel, a saját válaszaid mellett." },
       { t: "Korlátlan új teszt", d: "A hozzáférés ideje alatt minden további eredményed is azonnal látod." },
     ],
-    accessName: "{days} napos teljes hozzáférés",
+    accessName: "Fizetés",
     consent:
       "Elfogadom az [ÁSZF](terms)-et és az [Adatkezelési tájékoztató](privacy)t, kérem a szolgáltatás azonnali megkezdését, és tudomásul veszem, hogy ezzel elveszítem a 14 napos elállási jogomat.",
     consentNeeded: "A folytatáshoz fogadd el a fenti nyilatkozatot.",
@@ -382,7 +382,7 @@ const hu = {
   result: {
     eyebrow: "Az eredményed",
     verdict: { top: "Kiemelkedő", strong: "Erős", avg: "Átlagos", grow: "Fejleszthető" },
-    shareText: "{iq} lett az IQ-becslésem az Elmeszint tesztjén. Neked mennyi?",
+    shareText: "{iq} lett az IQ-becslésem a TestMyAbilities tesztjén. Neked mennyi?",
     shareTitle: "Az IQ-eredményem",
     copied: "Link másolva!",
     share: "Eredmény megosztása",
@@ -536,7 +536,7 @@ const hu = {
 
   /** A fizetési oldalon (Stripe) megjelenő szövegek. */
   stripe: {
-    subName: "Elmeszint előfizetés",
+    subName: "TestMyAbilities előfizetés",
     subDesc: "Korlátlan IQ-teszt és részletes eredmény. Havonta megújul, bármikor lemondható.",
     trialName: "{days} napos teljes hozzáférés",
     submitNote:

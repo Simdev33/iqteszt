@@ -344,14 +344,14 @@ const de: Dict = {
     summaryTime: ", in {t}",
     preview: "Dein Ergebnis",
     cancelled: "Die Zahlung wurde abgebrochen – es wurde nichts abgebucht. Du kannst es jederzeit erneut versuchen.",
-    includes: "Der {days}-tägige Vollzugang umfasst:",
+    includes: "Der volle Zugang umfasst:",
     perks: [
       { t: "IQ-Schätzung und Perzentil", d: "Wo genau du im Vergleich zur Bevölkerung stehst." },
       { t: "Auswertung nach Bereichen", d: "Muster, Zahlen, Wörter, Logik – wo liegt deine Stärke?" },
       { t: "Lösungen aller {total} Aufgaben", d: "Die richtigen Antworten mit Herleitung, neben deinen eigenen Antworten." },
       { t: "Unbegrenzt neue Tests", d: "Solange dein Zugang läuft, siehst du auch jedes weitere Ergebnis sofort." },
     ],
-    accessName: "{days}-tägiger Vollzugang",
+    accessName: "Zahlung",
     consent:
       "Ich akzeptiere die [AGB](terms) und die [Datenschutzerklärung](privacy), verlange den sofortigen Beginn der Leistung und nehme zur Kenntnis, dass ich dadurch mein 14-tägiges Widerrufsrecht verliere.",
     consentNeeded: "Bitte bestätige die obige Erklärung, um fortzufahren.",
@@ -383,7 +383,7 @@ const de: Dict = {
   result: {
     eyebrow: "Dein Ergebnis",
     verdict: { top: "Herausragend", strong: "Stark", avg: "Durchschnittlich", grow: "Ausbaufähig" },
-    shareText: "Meine IQ-Schätzung beim Elmeszint-Test: {iq}. Wie hoch ist deiner?",
+    shareText: "Meine IQ-Schätzung beim TestMyAbilities-Test: {iq}. Wie hoch ist deiner?",
     shareTitle: "Mein IQ-Ergebnis",
     copied: "Link kopiert!",
     share: "Ergebnis teilen",
@@ -536,7 +536,7 @@ const de: Dict = {
   },
 
   stripe: {
-    subName: "Elmeszint-Abo",
+    subName: "TestMyAbilities-Abo",
     subDesc: "Unbegrenzt IQ-Tests und ausführliche Ergebnisse. Verlängert sich monatlich, jederzeit kündbar.",
     trialName: "{days}-tägiger Vollzugang",
     submitNote:

@@ -58,6 +58,6 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  // API, Next-belső fájlok és kiterjesztéses (statikus) fájlok kimaradnak
-  matcher: ["/((?!api|_next|.*\\..*).*)"],
+  // API, Next-belső fájlok, kiterjesztéses (statikus) fájlok és a generált iOS-ikon (/apple-icon) kimaradnak
+  matcher: ["/((?!api|_next|apple-icon|.*\\..*).*)"],
 };

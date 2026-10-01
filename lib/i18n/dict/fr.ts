@@ -332,14 +332,14 @@ const fr: Dict = {
     summaryTime: " en {t}",
     preview: "Ton résultat",
     cancelled: "Le paiement a été interrompu – rien n'a été débité. Tu peux réessayer à tout moment.",
-    includes: "L'accès complet de {days} jours comprend :",
+    includes: "L'accès complet comprend :",
     perks: [
       { t: "Estimation du QI et centile", d: "Où tu te situes exactement par rapport à la population." },
       { t: "Détail par domaine", d: "Motifs, nombres, mots, logique – lequel est ton point fort." },
       { t: "La solution des {total} questions", d: "Les bonnes réponses avec le raisonnement, à côté de tes propres réponses." },
       { t: "Nouveaux tests illimités", d: "Pendant toute la durée de l'accès, tu vois aussi immédiatement chacun de tes résultats suivants." },
     ],
-    accessName: "Accès complet de {days} jours",
+    accessName: "Paiement",
     consent:
       "J'accepte les [CGV](terms) et la [politique de confidentialité](privacy), je demande le démarrage immédiat du service et je reconnais perdre ainsi mon droit de rétractation de 14 jours.",
     consentNeeded: "Pour continuer, accepte la déclaration ci-dessus.",
@@ -371,7 +371,7 @@ const fr: Dict = {
   result: {
     eyebrow: "Ton résultat",
     verdict: { top: "Exceptionnel", strong: "Solide", avg: "Moyen", grow: "À développer" },
-    shareText: "Mon QI estimé au test Elmeszint : {iq}. Et toi ?",
+    shareText: "Mon QI estimé au test TestMyAbilities : {iq}. Et toi ?",
     shareTitle: "Mon résultat de QI",
     copied: "Lien copié !",
     share: "Partager le résultat",
@@ -524,7 +524,7 @@ const fr: Dict = {
   },
 
   stripe: {
-    subName: "Abonnement Elmeszint",
+    subName: "Abonnement TestMyAbilities",
     subDesc: "Tests de QI et résultats détaillés illimités. Renouvellement mensuel, résiliable à tout moment.",
     trialName: "Accès complet de {days} jours",
     submitNote:

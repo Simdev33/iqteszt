@@ -20,7 +20,7 @@ function limited(key: string, max = 20, windowMs = 15 * 60_000) {
 }
 
 /**
- * Fizetés előtti ellenőrzés: ha ehhez az e-mail-címhez már tartozik élő Elmeszint-előfizetés,
+ * Fizetés előtti ellenőrzés: ha ehhez az e-mail-címhez már tartozik élő TestMyAbilities-előfizetés,
  * nem engedünk második előfizetést kötni (409, „alreadySubscribed”).
  */
 export async function POST(request: Request) {
