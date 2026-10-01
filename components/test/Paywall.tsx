@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Rich from "@/components/i18n/Rich";
 import { useI18n } from "@/components/i18n/I18nProvider";
 import { fmt, path } from "@/lib/i18n/config";
 import { DOMAINS, DOMAIN_KEYS, TOTAL } from "@/lib/meta";
 import { formatDuration } from "@/lib/norms";
 import type { Pending } from "./pending";
+import StripeCheckout, { stripeConfigured, type CheckoutPrices } from "./StripeCheckout";
 
 const ease = [0.22, 1, 0.36, 1] as const;
-const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
 
 /** Zárolt, elmosott mérőóra – valódi érték nélkül, csak jelzi, hogy az eredmény kész. */
 function LockedGauge() {
@@ -78,33 +77,19 @@ export default function Paywall({
   const { lang, t, prices } = useI18n();
   const s = t.paywall;
   const [consent, setConsent] = useState(false);
+  const [consentWarning, setConsentWarning] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailWarning, setEmailWarning] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** Már előfizető ezzel a címmel – nem terheljük újra. */
+  const [already, setAlready] = useState(false);
   const [member, setMember] = useState(false);
-  /** A beágyazott Stripe fizetési űrlap nyitva van. */
-  const [open, setOpen] = useState(false);
-  const mountRef = useRef<HTMLDivElement>(null);
-  const checkoutRef = useRef<StripeEmbeddedCheckout | null>(null);
-
-  // Aktív előfizetőnek nem kell újra fizetnie – a szerver a sütije alapján dönt.
-  useEffect(() => {
-    let alive = true;
-    fetch("/api/subscription", { cache: "no-store" })
-      .then((r) => r.json() as Promise<{ active?: boolean }>)
-      .then((j) => alive && setMember(!!j.active))
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  const closeCheckout = useCallback(() => {
-    checkoutRef.current?.destroy();
-    checkoutRef.current = null;
-    setOpen(false);
-    setBusy(false);
-  }, []);
-  useEffect(() => () => checkoutRef.current?.destroy(), []);
+  /** A Stripe Checkout munkamenet titka (a fizetési űrlaphoz), vagy fejlesztői módban a szimulált fizetés címe. */
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [demoUrl, setDemoUrl] = useState<string | null>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const requested = useRef(false);
 
   const request = async (plan: "sub" | "member") => {
     const res = await fetch("/api/checkout", {
@@ -117,26 +102,64 @@ export default function Paywall({
     return json;
   };
 
-  /** Fizetés: a Stripe űrlapja az oldalon belül nyílik meg (fejlesztői módban a szimulált oldalra visz). */
-  const pay = async () => {
-    if (!consent || busy || open) return;
-    setBusy(true);
+  // Aktív előfizetőnek nem kell újra fizetnie (a szerver a sütije alapján dönt). Mindenki másnak a fizetés
+  // rögtön látszik: a Checkout Session a képernyővel együtt jön létre (StrictMode alatt is csak egyszer).
+  useEffect(() => {
+    if (requested.current) return;
+    requested.current = true;
+    (async () => {
+      const active = await fetch("/api/subscription", { cache: "no-store" })
+        .then((r) => r.json() as Promise<{ active?: boolean }>)
+        .then((j) => !!j.active)
+        .catch(() => false);
+      if (active) return setMember(true);
+      try {
+        const json = await request("sub");
+        if (json.clientSecret) setClientSecret(json.clientSecret);
+        else if (json.url) setDemoUrl(json.url);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : s.unknownError);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const checkEmail = async (address: string) => {
     setError(null);
+    setAlready(false);
     try {
-      const json = await request("sub");
-      if (json.url) return window.location.assign(json.url);
-      const stripe = await loadStripe(PUBLISHABLE_KEY, { locale: lang });
-      if (!stripe || !mountRef.current) throw new Error(s.unknownError);
-      setOpen(true);
-      const checkout = await stripe.createEmbeddedCheckoutPage({ clientSecret: json.clientSecret });
-      checkoutRef.current = checkout;
-      checkout.mount(mountRef.current);
-      setBusy(false);
-      mountRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    } catch (e) {
-      closeCheckout();
-      setError(e instanceof Error ? e.message : s.unknownError);
+      const res = await fetch("/api/checkout/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: address, lang }),
+      });
+      if (res.ok) return true;
+      const json = (await res.json().catch(() => ({}))) as { code?: string; error?: string };
+      if (json.code === "alreadySubscribed") setAlready(true);
+      else if (json.code === "invalidEmail") setEmailWarning(true);
+      else setError(json.error ?? s.unknownError);
+      return false;
+    } catch {
+      // Hálózati hiba esetén nem tartjuk fel a fizetést – a Stripe úgyis ellenőriz.
+      return true;
     }
+  };
+
+  const emailMissing = () => {
+    setEmailWarning(true);
+    emailRef.current?.focus();
+  };
+
+  /** Sikeres fizetés: a visszatérési útvonal beállítja az előfizetői sütit, és az eredményre irányít. */
+  const paid = (sessionId: string) => {
+    // Teljes oldalbetöltés kell: az API-útvonal sütit állít, majd átirányít.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.assign(`/api/stripe/return?lang=${lang}&session_id=${encodeURIComponent(sessionId)}`);
+  };
+
+  const payDemo = () => {
+    if (!consent) return setConsentWarning(true);
+    if (demoUrl) window.location.assign(demoUrl);
   };
 
   const openAsMember = async () => {
@@ -154,6 +177,63 @@ export default function Paywall({
 
   const seconds = Number(pending.t) || 0;
   const links = { terms: path(lang, "terms"), privacy: path(lang, "privacy"), subscription: path(lang, "subscription") };
+
+  const priceRow = (today: string) => (
+    <div className="flex items-center justify-between gap-4 border-y border-white/[0.08] py-5">
+      <span className="font-semibold">{fmt(s.accessName, { days: prices.days })}</span>
+      <span className="font-display text-3xl font-semibold tracking-tight whitespace-nowrap">{today}</span>
+    </div>
+  );
+
+  /** Az ár sora, az e-mail-mező, a nyilatkozat és a „Fizetési mód” felirat – az űrlap fölött. */
+  const header = (p: CheckoutPrices, withEmail = true) => (
+    <>
+      {priceRow(p.today)}
+      {withEmail && (
+        <label className="block space-y-1.5 pt-3">
+          <span className="text-[0.8rem] font-medium text-haze">{s.email}</span>
+          <input
+            ref={emailRef}
+            type="email"
+            autoComplete="email"
+            inputMode="email"
+            placeholder={s.emailPlaceholder}
+            value={email}
+            aria-invalid={emailWarning}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setEmailWarning(false);
+              setAlready(false);
+            }}
+            className={`h-12 w-full rounded-xl border bg-ink-850 px-4 text-[0.95rem] text-paper placeholder:text-mist/60 focus:border-iris/70 focus:outline-none ${
+              emailWarning ? "border-flame/60" : "border-white/[0.12]"
+            }`}
+          />
+          <span className={`block text-xs ${emailWarning ? "text-flame" : "text-mist"}`}>{emailWarning ? s.invalidEmail : s.emailHint}</span>
+        </label>
+      )}
+      <label
+        className={`mt-1 flex cursor-pointer gap-3 rounded-2xl border p-4 text-sm leading-snug text-haze ${
+          consentWarning && !consent ? "border-flame/50 bg-flame/[0.06]" : "border-white/[0.08] bg-white/[0.03]"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => {
+            setConsent(e.target.checked);
+            setConsentWarning(false);
+          }}
+          className="mt-0.5 h-4.5 w-4.5 shrink-0 cursor-pointer accent-[var(--color-iris)]"
+        />
+        <span>
+          <Rich text={s.consent} links={links} />
+        </span>
+      </label>
+      {consentWarning && !consent && <p className="text-sm text-flame">{s.consentNeeded}</p>}
+      <p className="pt-2 font-mono text-[0.7rem] tracking-[0.18em] text-mist uppercase">{s.methodLabel}</p>
+    </>
+  );
 
   return (
     <div className="mx-auto grid max-w-5xl items-start gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
@@ -251,56 +331,41 @@ export default function Paywall({
           </div>
         ) : (
           <div className="mt-6">
-            <div className="flex items-center justify-between gap-4 border-y border-white/[0.08] py-5">
-              <span className="font-semibold">{fmt(s.accessName, { days: prices.days })}</span>
-              <span className="font-display text-3xl font-semibold tracking-tight whitespace-nowrap">{prices.trial}</span>
-            </div>
+            {already && (
+              <p className="mb-4 rounded-2xl border border-aqua/30 bg-aqua/[0.08] p-4 text-sm leading-relaxed text-paper">
+                <Rich text={s.alreadySubscribed} links={links} />
+              </p>
+            )}
 
-            <label
-              className={`mt-5 flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 text-sm leading-snug text-haze ${
-                open ? "opacity-70" : "cursor-pointer"
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={consent}
-                disabled={open}
-                onChange={(e) => setConsent(e.target.checked)}
-                className="mt-0.5 h-4.5 w-4.5 shrink-0 cursor-pointer accent-[var(--color-iris)]"
+            {clientSecret && stripeConfigured() ? (
+              <StripeCheckout
+                clientSecret={clientSecret}
+                consent={consent}
+                onConsentMissing={() => setConsentWarning(true)}
+                email={email}
+                onEmailMissing={emailMissing}
+                checkEmail={checkEmail}
+                onPaid={paid}
+                renderHeader={header}
               />
-              <span>
-                <Rich text={s.consent} links={links} />
-              </span>
-            </label>
-
-            <p className="mt-6 font-mono text-[0.7rem] tracking-[0.18em] text-mist uppercase">{s.methodLabel}</p>
-            {!open && (
-              <button type="button" onClick={pay} disabled={!consent || busy} className="btn-primary mt-3 w-full text-base">
-                {busy ? (
-                  <>
+            ) : demoUrl ? (
+              <>
+                {header({ today: prices.trial, monthly: prices.monthly }, false)}
+                <button type="button" onClick={payDemo} className="btn-primary mt-3 w-full text-base">
+                  {fmt(s.pay, { amount: prices.trial })}
+                </button>
+              </>
+            ) : (
+              <>
+                {priceRow(prices.trial)}
+                {!error && (
+                  <p className="flex items-center gap-2 py-6 text-sm text-mist">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
                     {s.loading}
-                  </>
-                ) : (
-                  <>
-                    <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" aria-hidden>
-                      <rect x="3" y="5.5" width="18" height="13" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.7" />
-                      <path d="M3 10h18" stroke="currentColor" strokeWidth="1.7" />
-                    </svg>
-                    {s.card}
-                  </>
+                  </p>
                 )}
-              </button>
+              </>
             )}
-            {!open && !consent && <p className="mt-2 text-center text-xs text-mist">{s.consentNeeded}</p>}
-
-            {/* A beágyazott Stripe fizetési űrlap helye */}
-            <div className={open ? "mt-3" : "hidden"}>
-              <div ref={mountRef} className="min-h-[24rem] scroll-mt-24 overflow-hidden rounded-2xl bg-white" />
-              <button type="button" onClick={closeCheckout} className="mt-3 w-full text-center text-sm text-mist underline decoration-white/20 underline-offset-4 hover:text-paper">
-                {s.close}
-              </button>
-            </div>
             {error && <p className="mt-3 rounded-xl border border-flame/40 bg-flame/10 px-3 py-2 text-sm text-paper">{error}</p>}
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/[0.08] pt-5 text-xs text-mist">

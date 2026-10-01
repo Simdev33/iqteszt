@@ -32,7 +32,8 @@ folyamat kipróbálható. Éles módban kulcs nélkül a fizetés le van tiltva.
 
 Egy csomag a kitöltés után: **7 napos teljes hozzáférés 3,90 €-ért** (azonnal terhelve), amely – ha az első
 7 napban nem mondják le – a 8. naptól **9,90 €/hó** előfizetésként folytatódik. A hozzáférés ideje alatt korlátlan
-teszt és eredmény jár. A fizetési űrlap a Stripe beágyazott Checkoutja: az oldalon belül jelenik meg, nincs átirányítás.
+teszt és eredmény jár. A fizetési űrlap Stripe Checkout Elements (a DoneSignIn mintájára): a fizetési képernyőn
+eleve nyitva van – e-mail-mező, expressz gombok (Apple Pay, Google Pay, Link) és a kártyaűrlap –, nincs átirányítás.
 
 Az árak egy helyen: `lib/pricing.ts`.
 
@@ -56,8 +57,12 @@ Az árak egy helyen: `lib/pricing.ts`.
 
 - A böngésző csak a kérdéseket kapja meg (`publicSlots()`); a helyes válaszok, a magyarázatok és a
   pontozás a szerveren maradnak (`lib/questions.ts`, `lib/matrix.ts`, `lib/scoring.ts` – `server-only`).
-- A kitöltés végén a `/api/checkout` beágyazott Stripe Checkout munkamenetet nyit (előfizetés, 7 nap próbaidő +
-  3,90 €-s első tétel); a válaszok kódja a munkamenet metaadataiban utazik. Adatbázis nem kell.
+- A fizetési képernyő megnyitásakor a `/api/checkout` Checkout Session-t nyit (`ui_mode: elements`, előfizetés,
+  7 nap próbaidő + 3,90 €-s első tétel); a válaszok kódja a munkamenet metaadataiban utazik. Adatbázis nem kell.
+- Fizetés előtt a `/api/checkout/email` megnézi, van-e már élő Elmeszint-előfizetés ehhez az e-mail-címhez
+  (más eszközről) – ilyenkor nem enged második előfizetést. A Stripe ügyfélkeresője ~1 perc késéssel frissül.
+- A Stripe-fiók más alkalmazásokkal közös lehet: minden saját objektum `metadata.app = elmeszint`, és a hozzáférés
+  csak a saját előfizetést számolja.
 - Fizetés után a `/api/stripe/return` aláírt, httpOnly sütit (`elm_sub`) tesz a böngészőbe
   a Stripe ügyfél-azonosítóval, majd az eredményoldalra irányít.
 - Az eredményoldal (`/{lang}/…?session_id=…`) a Stripe-tól kérdezi le, hogy a munkamenet ki van-e fizetve,

@@ -10,7 +10,9 @@ import { PRICING, eurCents, prices } from "./pricing";
 // a Stripe-tól kérdezi le, hogy a munkamenet tényleg ki van-e fizetve.
 //
 // Egy csomag: 7 napos teljes hozzáférés 3,90 €-ért (azonnal terhelve), a 8. naptól 9,90 €/hó, amíg le nem mondják.
-// A fizetési űrlap a Stripe beágyazott Checkoutja (ui_mode: embedded) – az oldalon belül jelenik meg.
+// A fizetési űrlap Stripe Checkout Elements (ui_mode: elements): a munkamenet a fizetési képernyővel együtt jön
+// létre, az e-mail-mező, az expressz gombok és a kártyaűrlap eleve nyitva vannak (a DoneSignIn mintájára).
+// A Stripe-fiók közös más alkalmazásokkal, ezért minden saját objektum metadata.app = "elmeszint" jelölést kap.
 // Az előfizetőt egy aláírt, httpOnly süti (a Stripe ügyfél-azonosítójával) ismeri fel; a későbbi
 // tesztek eredményét a szerver aláírt linkkel adja ki, ha a Stripe szerint az előfizetés aktív.
 //
@@ -20,6 +22,9 @@ import { PRICING, eurCents, prices } from "./pricing";
 export type TestPayload = { k: string; v: string; a: string; t: string };
 
 const STRIPE_API = "https://api.stripe.com/v1";
+/** Rögzített API-verzió: a Checkout Elements (ui_mode „elements”) ennél a verziónál ezen a néven él. */
+const STRIPE_VERSION = "2026-08-26.dahlia";
+export const APP = "elmeszint";
 const secretKey = () => process.env.STRIPE_SECRET_KEY?.trim() || "";
 
 export const paymentMode = (): "stripe" | "demo" | "off" =>
@@ -30,6 +35,7 @@ async function stripe<T>(p: string, init?: { method?: string; body?: URLSearchPa
     method: init?.method ?? "GET",
     headers: {
       Authorization: `Bearer ${secretKey()}`,
+      "Stripe-Version": STRIPE_VERSION,
       ...(init?.body ? { "Content-Type": "application/x-www-form-urlencoded" } : {}),
     },
     body: init?.body,
@@ -118,17 +124,19 @@ type Session = {
 };
 
 /**
- * Beágyazott Stripe Checkout munkamenet: a 7 napos hozzáférés díja az első (próbaidős) számlán azonnal
- * terhelődik, utána havidíj. A böngésző a visszakapott client_secret-tel jeleníti meg az űrlapot.
+ * Stripe Checkout munkamenet a saját fizetési felülethez (Checkout Elements): a 7 napos hozzáférés díja az első
+ * (próbaidős) számlán azonnal terhelődik, utána havidíj. A fizetési képernyő megnyitásakor jön létre, ügyfél
+ * nélkül – az e-mail-címet a fizetés gombja adja át, az ügyfelet a Stripe hozza létre.
  */
 export async function createCheckout(payload: TestPayload, lang: Locale, t: Dict, origin: string, customer?: string | null) {
   const p = prices(lang);
   const body = new URLSearchParams({
     mode: "subscription",
-    ui_mode: "embedded",
-    locale: lang,
-    "payment_method_types[0]": "card",
+    ui_mode: "elements",
+    billing_address_collection: "auto",
+    // Csak akkor használja, ha egy fizetési mód átirányítást kér (pl. 3D Secure banki oldal).
     return_url: `${origin}/api/stripe/return?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
+    "metadata[app]": APP,
     "metadata[k]": payload.k,
     "metadata[v]": payload.v,
     "metadata[a]": payload.a,
@@ -148,7 +156,7 @@ export async function createCheckout(payload: TestPayload, lang: Locale, t: Dict
     "line_items[1][price_data][product_data][name]": fmt(t.stripe.trialName, { days: p.days }),
     "subscription_data[trial_period_days]": String(PRICING.trialDays),
     "subscription_data[metadata][lang]": lang,
-    "custom_text[submit][message]": fmt(t.stripe.submitNote, p),
+    "subscription_data[metadata][app]": APP,
   });
   if (customer && customer !== "demo") body.set("customer", customer);
 
@@ -189,6 +197,7 @@ type StripeSub = {
   cancel_at_period_end: boolean;
   cancel_at: number | null;
   current_period_end?: number;
+  metadata?: Record<string, string> | null;
   items: { data: { current_period_end?: number; price?: { unit_amount: number | null; currency: string } }[] };
 };
 
@@ -213,7 +222,9 @@ export async function subscriptionOf(customer: string): Promise<SubInfo | null> 
   }
   if (paymentMode() !== "stripe") return null;
   const list = await stripe<{ data: StripeSub[] }>(`/subscriptions?customer=${encodeURIComponent(customer)}&status=all&limit=20`);
-  const subs = [...list.data].sort((a, b) => Number(LIVE.includes(b.status)) - Number(LIVE.includes(a.status)) || b.created - a.created);
+  // Közös Stripe-fiók: csak a saját előfizetés számít (a jelölés nélküliek a jelölés bevezetése előttiek).
+  const own = list.data.filter((x) => !x.metadata?.app || x.metadata.app === APP);
+  const subs = [...own].sort((a, b) => Number(LIVE.includes(b.status)) - Number(LIVE.includes(a.status)) || b.created - a.created);
   const s = subs[0];
   if (!s) return null;
   const item = s.items?.data?.[0];
@@ -229,6 +240,18 @@ export async function subscriptionOf(customer: string): Promise<SubInfo | null> 
 
 /** Jár-e most hozzáférés (próbaidőben vagy fizetve; lemondva is a periódus végéig). */
 export const isActive = (s: SubInfo | null) => !!s && (s.status === "trialing" || s.status === "active");
+
+/**
+ * Van-e már élő Elmeszint-előfizetés ehhez az e-mail-címhez (más eszközön vásárolva) – ilyenkor nem
+ * engedünk második előfizetést kötni. Más alkalmazások előfizetései nem számítanak.
+ */
+export async function emailHasSubscription(email: string): Promise<boolean> {
+  if (paymentMode() !== "stripe") return false;
+  const q = `email:'${email.replace(/'/g, "\\'")}'`;
+  const found = await stripe<{ data: { id: string }[] }>(`/customers/search?query=${encodeURIComponent(q)}&limit=10`);
+  for (const c of found.data) if (isActive(await subscriptionOf(c.id))) return true;
+  return false;
+}
 
 /* ---------------- Ügyfélportál ---------------- */
 
