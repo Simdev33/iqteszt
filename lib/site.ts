@@ -4,7 +4,7 @@ export const brand = {
   name: "TestMyAbilities",
   domain: "testmyabilities.com",
   url: "https://testmyabilities.com",
-  email: "hello@testmyabilities.com",
+  email: "help@testmyabilities.com",
 };
 
 /** Az üzemeltető cég adatai (Szlovák Cégjegyzék / finstat.sk) – az ÁSZF, az adatkezelési tájékoztató és a lábléc használja. */
