@@ -363,7 +363,6 @@ const hu = {
     invalidEmail: "Adj meg egy érvényes e-mail-címet.",
     pay: "Fizetés: {amount}",
     processing: "A fizetés feldolgozása…",
-    alreadySubscribed: "Ezzel az e-mail-címmel már van aktív előfizetésed, ezért nem terhelünk újra. Az előfizetésed az [Előfizetés kezelése](subscription) oldalon éred el.",
     close: "Mégse",
     busy: "Átirányítás…",
     trust: ["256 bites SSL", "Fizetés a Stripe-on", "Bármikor lemondható"],
@@ -505,9 +504,7 @@ const hu = {
     none: "Ezen az eszközön nincs aktív előfizetés.",
     manage: "Előfizetés kezelése / lemondása",
     manageHint: "A Stripe biztonságos ügyfélportálja nyílik meg: itt mondhatod le az előfizetést, cserélhetsz kártyát, és letöltheted a számláidat.",
-    noDevice:
-      "Ha másik eszközön vagy böngészőben fizettél elő, lépj be az ügyfélportálra azzal az e-mail-címmel, amelyet a fizetésnél megadtál – egy egyszer használatos kódot küldünk rá, és ott lemondhatod az előfizetést.",
-    portalLogin: "Belépés az ügyfélportálra e-mail-címmel",
+    noDevice: "Másik eszközön vagy böngészőben fizettél elő? Lépj be azzal az e-mail-címmel, amelyet a fizetésnél megadtál – küldünk rá egy 6 jegyű kódot, és itt is megnyílnak az eredményeid.",
     help: "Kérdésed van, vagy nem sikerül a lemondás? Írj nekünk: {email}",
     portalError: "Az ügyfélportál most nem érhető el. Próbáld újra egy perc múlva, vagy írj nekünk: {email}",
     demoNote: "Fejlesztői mód: nincs beállítva Stripe-kulcs, ezért itt nincs valódi előfizetés.",
@@ -541,6 +538,40 @@ const hu = {
     trialName: "{days} napos teljes hozzáférés",
     submitNote:
       "Ma {trial} kerül terhelésre a {days} napos teljes hozzáférésért. Ha az első {days} napban nem mondod le, a {nextDay}. naptól havi {monthly} automatikusan terhelődik, amíg le nem mondod. Lemondani bármikor lehet a weboldal alján, az „Előfizetés kezelése / lemondása” linknél.",
+  },
+
+  auth: {
+    title: "Belépés",
+    intro: "Add meg az előfizetésedhez tartozó e-mail-címet, és küldünk rá egy 6 jegyű belépési kódot.",
+    email: "E-mail-cím",
+    sendCode: "Kód küldése",
+    sent: "Ha a(z) {email} címhez tartozik előfizetés, elküldtük rá a kódot. Nézd meg a spam mappát is.",
+    code: "Belépési kód",
+    verify: "Belépés",
+    resend: "Új kód kérése",
+    otherEmail: "Másik e-mail-cím",
+    haveAccount: "Már előfizető vagy?",
+    login: "Lépj be",
+    backToPay: "Vissza a fizetéshez",
+    alreadyNote: "Ehhez az e-mail-címhez már tartozik előfizetés, ezért nem terhelünk újra. Elküldtük rá a belépési kódot – lépj be vele, és megnyílik az eredményed.",
+    signedIn: "Be vagy jelentkezve ezen az eszközön.",
+    logout: "Kijelentkezés",
+    errors: {
+      invalidEmail: "Adj meg egy érvényes e-mail-címet.",
+      rateLimited: "Túl sok próbálkozás. Várj néhány percet, és próbáld újra.",
+      emailFailed: "Nem sikerült elküldeni az e-mailt. Próbáld újra egy perc múlva.",
+      unavailable: "A belépés most nem érhető el. Próbáld újra egy perc múlva.",
+      codeInvalid: "Hibás kód. Ellenőrizd, és próbáld újra.",
+      codeExpired: "A kód lejárt. Kérj újat.",
+      codeLocked: "Túl sok hibás próbálkozás. Kérj új kódot.",
+    },
+  },
+
+  email: {
+    subject: "{code} – belépési kódod ({site})",
+    intro: "Ezzel a kóddal léphetsz be ide: {site}",
+    validity: "A kód {minutes} percig érvényes.",
+    ignore: "Ha nem te kérted, nyugodtan hagyd figyelmen kívül ezt a levelet.",
   },
 
   api: {

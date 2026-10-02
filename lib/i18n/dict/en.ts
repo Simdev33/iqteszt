@@ -352,7 +352,6 @@ const en: Dict = {
     invalidEmail: "Please enter a valid email address.",
     pay: "Pay {amount}",
     processing: "Processing your payment…",
-    alreadySubscribed: "This email address already has an active subscription, so we won't charge you again. You can find it on the [Manage subscription](subscription) page.",
     close: "Cancel",
     busy: "Redirecting…",
     trust: ["256-bit SSL", "Payment via Stripe", "Cancel anytime"],
@@ -494,9 +493,7 @@ const en: Dict = {
     none: "There's no active subscription on this device.",
     manage: "Manage / cancel subscription",
     manageHint: "Stripe's secure customer portal will open: there you can cancel your subscription, change your card and download your invoices.",
-    noDevice:
-      "If you subscribed on another device or browser, log in to the customer portal with the email address you gave when paying – we'll send a one-time code to it, and you can cancel your subscription there.",
-    portalLogin: "Log in to the customer portal with your email",
+    noDevice: "Subscribed on another device or browser? Sign in with the email address you used at checkout – we'll send you a 6-digit code, and your results will open here too.",
     help: "Got a question, or can't manage to cancel? Email us: {email}",
     portalError: "The customer portal isn't available right now. Please try again in a minute, or email us: {email}",
     demoNote: "Developer mode: no Stripe key is configured, so there's no real subscription here.",
@@ -529,6 +526,40 @@ const en: Dict = {
     trialName: "{days}-day full access",
     submitNote:
       "Today you'll be charged {trial} for the {days}-day full access. If you don't cancel within the first {days} days, {monthly} per month will be charged automatically from day {nextDay} until you cancel. You can cancel anytime via the “Manage / cancel subscription” link at the bottom of the website.",
+  },
+
+  auth: {
+    title: "Sign in",
+    intro: "Enter the email address linked to your subscription and we'll send you a 6-digit sign-in code.",
+    email: "Email address",
+    sendCode: "Send code",
+    sent: "If there's a subscription linked to {email}, we've sent the code there. Check your spam folder too.",
+    code: "Sign-in code",
+    verify: "Sign in",
+    resend: "Request a new code",
+    otherEmail: "Use a different email address",
+    haveAccount: "Already a subscriber?",
+    login: "Sign in",
+    backToPay: "Back to payment",
+    alreadyNote: "This email address already has a subscription, so we won't charge you again. We've sent a sign-in code to it – sign in and your result will open.",
+    signedIn: "You're signed in on this device.",
+    logout: "Sign out",
+    errors: {
+      invalidEmail: "Please enter a valid email address.",
+      rateLimited: "Too many attempts. Wait a few minutes and try again.",
+      emailFailed: "We couldn't send the email. Please try again in a minute.",
+      unavailable: "Sign-in isn't available right now. Please try again in a minute.",
+      codeInvalid: "That code isn't right. Check it and try again.",
+      codeExpired: "The code has expired. Request a new one.",
+      codeLocked: "Too many wrong attempts. Request a new code.",
+    },
+  },
+
+  email: {
+    subject: "{code} – your sign-in code ({site})",
+    intro: "Use this code to sign in to {site}:",
+    validity: "The code is valid for {minutes} minutes.",
+    ignore: "If you didn't request this, you can safely ignore this email.",
   },
 
   api: {

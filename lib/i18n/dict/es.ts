@@ -351,7 +351,6 @@ const es: Dict = {
     invalidEmail: "Introduce un correo electrónico válido.",
     pay: "Pagar {amount}",
     processing: "Procesando el pago…",
-    alreadySubscribed: "Este correo ya tiene una suscripción activa, así que no te cobraremos de nuevo. La encontrarás en la página [Gestionar suscripción](subscription).",
     close: "Cancelar",
     busy: "Redirigiendo…",
     trust: ["SSL de 256 bits", "Pago a través de Stripe", "Cancela cuando quieras"],
@@ -493,9 +492,7 @@ const es: Dict = {
     none: "No hay ninguna suscripción activa en este dispositivo.",
     manage: "Gestionar / cancelar suscripción",
     manageHint: "Se abrirá el portal de cliente seguro de Stripe: allí puedes cancelar la suscripción, cambiar de tarjeta y descargar tus facturas.",
-    noDevice:
-      "Si te suscribiste desde otro dispositivo o navegador, entra en el portal de cliente con la dirección de correo electrónico que indicaste al pagar: te enviaremos un código de un solo uso y allí podrás cancelar la suscripción.",
-    portalLogin: "Entrar en el portal de cliente con tu correo electrónico",
+    noDevice: "¿Te suscribiste en otro dispositivo o navegador? Inicia sesión con el correo que usaste al pagar: te enviaremos un código de 6 dígitos y tus resultados también se abrirán aquí.",
     help: "¿Tienes alguna pregunta o no consigues cancelar? Escríbenos a {email}",
     portalError: "El portal de cliente no está disponible ahora mismo. Vuelve a intentarlo dentro de un minuto o escríbenos a {email}",
     demoNote: "Modo de desarrollo: no hay ninguna clave de Stripe configurada, así que aquí no hay ninguna suscripción real.",
@@ -528,6 +525,40 @@ const es: Dict = {
     trialName: "Acceso completo de {days} días",
     submitNote:
       "Hoy se te cobrará {trial} por el acceso completo de {days} días. Si no cancelas durante los primeros {days} días, a partir del día {nextDay} se te cobrarán automáticamente {monthly} al mes hasta que canceles. Puedes cancelar en cualquier momento desde el enlace «Gestionar / cancelar suscripción», al final de la página web.",
+  },
+
+  auth: {
+    title: "Iniciar sesión",
+    intro: "Introduce el correo vinculado a tu suscripción y te enviaremos un código de acceso de 6 dígitos.",
+    email: "Correo electrónico",
+    sendCode: "Enviar código",
+    sent: "Si hay una suscripción vinculada a {email}, te hemos enviado el código. Revisa también la carpeta de spam.",
+    code: "Código de acceso",
+    verify: "Iniciar sesión",
+    resend: "Pedir un código nuevo",
+    otherEmail: "Usar otro correo",
+    haveAccount: "¿Ya tienes suscripción?",
+    login: "Inicia sesión",
+    backToPay: "Volver al pago",
+    alreadyNote: "Este correo ya tiene una suscripción, así que no te cobraremos de nuevo. Te hemos enviado un código de acceso: inicia sesión y se abrirá tu resultado.",
+    signedIn: "Has iniciado sesión en este dispositivo.",
+    logout: "Cerrar sesión",
+    errors: {
+      invalidEmail: "Introduce un correo electrónico válido.",
+      rateLimited: "Demasiados intentos. Espera unos minutos y vuelve a intentarlo.",
+      emailFailed: "No hemos podido enviar el correo. Inténtalo de nuevo en un minuto.",
+      unavailable: "El inicio de sesión no está disponible ahora. Inténtalo de nuevo en un minuto.",
+      codeInvalid: "El código no es correcto. Revísalo y vuelve a intentarlo.",
+      codeExpired: "El código ha caducado. Pide uno nuevo.",
+      codeLocked: "Demasiados intentos fallidos. Pide un código nuevo.",
+    },
+  },
+
+  email: {
+    subject: "{code} – tu código de acceso ({site})",
+    intro: "Usa este código para iniciar sesión en {site}:",
+    validity: "El código es válido durante {minutes} minutos.",
+    ignore: "Si no lo has solicitado tú, puedes ignorar este correo.",
   },
 
   api: {

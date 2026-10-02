@@ -352,7 +352,6 @@ const fr: Dict = {
     invalidEmail: "Saisis une adresse e-mail valide.",
     pay: "Payer {amount}",
     processing: "Traitement du paiement…",
-    alreadySubscribed: "Cette adresse e-mail a déjà un abonnement actif : nous ne te débiterons pas une seconde fois. Tu le retrouves sur la page [Gérer l'abonnement](subscription).",
     close: "Annuler",
     busy: "Redirection…",
     trust: ["SSL 256 bits", "Paiement via Stripe", "Résiliable à tout moment"],
@@ -494,9 +493,7 @@ const fr: Dict = {
     none: "Aucun abonnement actif sur cet appareil.",
     manage: "Gérer / résilier l'abonnement",
     manageHint: "Le portail client sécurisé de Stripe s'ouvre : tu peux y résilier l'abonnement, changer de carte et télécharger tes factures.",
-    noDevice:
-      "Si tu t'es abonné sur un autre appareil ou navigateur, connecte-toi au portail client avec l'adresse e-mail indiquée lors du paiement – nous y enverrons un code à usage unique, et tu pourras y résilier l'abonnement.",
-    portalLogin: "Se connecter au portail client par e-mail",
+    noDevice: "Abonné sur un autre appareil ou navigateur ? Connecte-toi avec l'adresse e-mail utilisée lors du paiement : nous t'enverrons un code à 6 chiffres, et tes résultats s'ouvriront aussi ici.",
     help: "Une question, ou la résiliation ne fonctionne pas ? Écris-nous : {email}",
     portalError: "Le portail client est indisponible pour le moment. Réessaie dans une minute ou écris-nous : {email}",
     demoNote: "Mode développement : aucune clé Stripe n'est configurée, il n'y a donc pas de véritable abonnement ici.",
@@ -529,6 +526,40 @@ const fr: Dict = {
     trialName: "Accès complet de {days} jours",
     submitNote:
       "Aujourd'hui, {trial} est débité pour l'accès complet de {days} jours. Si tu ne résilies pas au cours des {days} premiers jours, {monthly} par mois sera prélevé automatiquement à partir du {nextDay}e jour, jusqu'à ce que tu résilies. Tu peux résilier à tout moment via le lien « Gérer / résilier l'abonnement » en bas du site.",
+  },
+
+  auth: {
+    title: "Connexion",
+    intro: "Saisis l'adresse e-mail liée à ton abonnement : nous t'enverrons un code de connexion à 6 chiffres.",
+    email: "Adresse e-mail",
+    sendCode: "Envoyer le code",
+    sent: "Si un abonnement est lié à {email}, nous y avons envoyé le code. Pense à vérifier tes spams.",
+    code: "Code de connexion",
+    verify: "Se connecter",
+    resend: "Demander un nouveau code",
+    otherEmail: "Utiliser une autre adresse",
+    haveAccount: "Déjà abonné ?",
+    login: "Se connecter",
+    backToPay: "Retour au paiement",
+    alreadyNote: "Cette adresse e-mail a déjà un abonnement : nous ne te débiterons pas une seconde fois. Nous t'avons envoyé un code de connexion – connecte-toi et ton résultat s'ouvrira.",
+    signedIn: "Tu es connecté sur cet appareil.",
+    logout: "Se déconnecter",
+    errors: {
+      invalidEmail: "Saisis une adresse e-mail valide.",
+      rateLimited: "Trop de tentatives. Patiente quelques minutes et réessaie.",
+      emailFailed: "Impossible d'envoyer l'e-mail. Réessaie dans une minute.",
+      unavailable: "La connexion est indisponible pour le moment. Réessaie dans une minute.",
+      codeInvalid: "Ce code est incorrect. Vérifie-le et réessaie.",
+      codeExpired: "Le code a expiré. Demandes-en un nouveau.",
+      codeLocked: "Trop de tentatives erronées. Demande un nouveau code.",
+    },
+  },
+
+  email: {
+    subject: "{code} – ton code de connexion ({site})",
+    intro: "Utilise ce code pour te connecter à {site} :",
+    validity: "Le code est valable {minutes} minutes.",
+    ignore: "Si tu n'es pas à l'origine de cette demande, ignore simplement cet e-mail.",
   },
 
   api: {

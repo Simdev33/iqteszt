@@ -45,6 +45,8 @@ Az árak egy helyen: `lib/pricing.ts`.
    - `SITE_URL` – az oldal nyilvános címe (pl. `https://testmyabilities.com`), ide irányít vissza a Stripe
    - `RESULT_SECRET` – hosszú, véletlen szöveg; ezzel írjuk alá az előfizetői sütit és az eredménylinkeket.
      Ha üres, a Stripe-kulcsból származtatjuk – ekkor kulcscserénél a régi előfizetői linkek érvénytelenné válnak.
+   - `RESEND_API_KEY` és `EMAIL_FROM` (pl. `TestMyAbilities <no-reply@testmyabilities.com>`) – a belépési kód
+     e-mailhez. A feladó domainjét a Resendben igazolni kell (DNS-rekordok).
 2. Stripe Dashboard, élesítés előtt:
    - *Settings → Public details*: a cégnév / megjelenített név (ez látszik a fizetési űrlapon és a számlákon).
    - *Settings → Branding*: a fizetési űrlap színei (hogy illeszkedjen az oldalhoz).
@@ -69,5 +71,9 @@ Az árak egy helyen: `lib/pricing.ts`.
   és csak akkor számolja ki és mutatja meg az eredményt.
 - Aktív előfizetőnek a fizetőfal „Eredmény megnyitása” gombot mutat: a szerver a Stripe-tól ellenőrzi az
   előfizetést, és aláírt eredménylinket ad (`?r=…`).
-- Lemondás: az „Előfizetés kezelése” oldal (`/hu/elofizetes`) → Stripe ügyfélportál. Más eszközön vett
-  előfizetéshez e-mailes belépés az ügyfélportálra.
+- Lemondás: az „Előfizetés kezelése” oldal (`/hu/elofizetes`) → Stripe ügyfélportál.
+- Más eszközön: kódos belépés (a DoneSignIn mintájára) – e-mail → 6 jegyű kód Resenddel (`/api/auth/request`,
+  `/api/auth/verify`). Csak élő előfizetéssel lehet belépni; a kód lenyomata, lejárata (10 perc) és a próbálkozások
+  száma (max. 5) a Stripe-ügyfél metaadataiban van, így ehhez sem kell adatbázis. Siker után ugyanaz az előfizetői
+  süti kerül a böngészőbe, mint fizetés után. Ha valaki a fizetésnél már előfizetőhöz tartozó címet ad meg, második
+  előfizetés helyett automatikusan kódot kap, és belép. Kijelentkezés: `/api/auth/logout`.

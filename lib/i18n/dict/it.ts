@@ -355,7 +355,6 @@ const it: Dict = {
     invalidEmail: "Inserisci un indirizzo e-mail valido.",
     pay: "Paga {amount}",
     processing: "Elaborazione del pagamento…",
-    alreadySubscribed: "Questo indirizzo e-mail ha già un abbonamento attivo, quindi non ti addebiteremo di nuovo. Lo trovi nella pagina [Gestisci l'abbonamento](subscription).",
     close: "Annulla",
     busy: "Reindirizzamento…",
     trust: ["SSL a 256 bit", "Pagamento tramite Stripe", "Disdici quando vuoi"],
@@ -497,9 +496,7 @@ const it: Dict = {
     none: "Su questo dispositivo non c'è alcun abbonamento attivo.",
     manage: "Gestisci / disdici l'abbonamento",
     manageHint: "Si apre il portale clienti sicuro di Stripe: lì puoi disdire l'abbonamento, cambiare carta e scaricare le tue fatture.",
-    noDevice:
-      "Se ti sei abbonato da un altro dispositivo o browser, accedi al portale clienti con l'indirizzo e-mail che hai indicato durante il pagamento: ti invieremo un codice monouso e lì potrai disdire l'abbonamento.",
-    portalLogin: "Accedi al portale clienti con l'e-mail",
+    noDevice: "Ti sei abbonato su un altro dispositivo o browser? Accedi con l'indirizzo e-mail usato al pagamento: ti invieremo un codice di 6 cifre e i tuoi risultati si apriranno anche qui.",
     help: "Hai domande o la disdetta non va a buon fine? Scrivici: {email}",
     portalError: "Il portale clienti non è disponibile al momento. Riprova tra un minuto, oppure scrivici: {email}",
     demoNote: "Modalità sviluppatore: nessuna chiave Stripe configurata, quindi qui non esiste un vero abbonamento.",
@@ -532,6 +529,40 @@ const it: Dict = {
     trialName: "Accesso completo di {days} giorni",
     submitNote:
       "Oggi ti viene addebitato l'importo di {trial} per l'accesso completo di {days} giorni. Se non disdici entro i primi {days} giorni, dal {nextDay}° giorno ti verrà addebitato automaticamente l'importo di {monthly} al mese, fino alla disdetta. Puoi disdire in qualsiasi momento tramite il link «Gestisci / disdici l'abbonamento» in fondo al sito.",
+  },
+
+  auth: {
+    title: "Accedi",
+    intro: "Inserisci l'indirizzo e-mail collegato al tuo abbonamento: ti invieremo un codice di accesso di 6 cifre.",
+    email: "Indirizzo e-mail",
+    sendCode: "Invia il codice",
+    sent: "Se a {email} è collegato un abbonamento, ti abbiamo inviato il codice. Controlla anche lo spam.",
+    code: "Codice di accesso",
+    verify: "Accedi",
+    resend: "Richiedi un nuovo codice",
+    otherEmail: "Usa un altro indirizzo",
+    haveAccount: "Sei già abbonato?",
+    login: "Accedi",
+    backToPay: "Torna al pagamento",
+    alreadyNote: "Questo indirizzo e-mail ha già un abbonamento, quindi non ti addebiteremo di nuovo. Ti abbiamo inviato un codice di accesso: accedi e il tuo risultato si aprirà.",
+    signedIn: "Hai effettuato l'accesso su questo dispositivo.",
+    logout: "Esci",
+    errors: {
+      invalidEmail: "Inserisci un indirizzo e-mail valido.",
+      rateLimited: "Troppi tentativi. Attendi qualche minuto e riprova.",
+      emailFailed: "Non è stato possibile inviare l'e-mail. Riprova tra un minuto.",
+      unavailable: "L'accesso non è disponibile al momento. Riprova tra un minuto.",
+      codeInvalid: "Il codice non è corretto. Controllalo e riprova.",
+      codeExpired: "Il codice è scaduto. Richiedine uno nuovo.",
+      codeLocked: "Troppi tentativi errati. Richiedi un nuovo codice.",
+    },
+  },
+
+  email: {
+    subject: "{code} – il tuo codice di accesso ({site})",
+    intro: "Usa questo codice per accedere a {site}:",
+    validity: "Il codice è valido per {minutes} minuti.",
+    ignore: "Se non l'hai richiesto tu, puoi ignorare questa e-mail.",
   },
 
   api: {

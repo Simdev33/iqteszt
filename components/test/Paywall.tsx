@@ -10,6 +10,7 @@ import { DOMAINS, DOMAIN_KEYS, TOTAL } from "@/lib/meta";
 import { formatDuration } from "@/lib/norms";
 import type { Pending } from "./pending";
 import StripeCheckout, { stripeConfigured, type CheckoutPrices } from "./StripeCheckout";
+import LoginForm, { requestLoginCode } from "@/components/account/LoginForm";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -82,8 +83,8 @@ export default function Paywall({
   const [emailWarning, setEmailWarning] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  /** Már előfizető ezzel a címmel – nem terheljük újra. */
-  const [already, setAlready] = useState(false);
+  /** Fizetés helyett belépés (előfizetőnek); a megjegyzés a „már előfizető” esetet magyarázza. */
+  const [login, setLogin] = useState<{ email: string; codeSent: boolean; note: boolean } | null>(null);
   const [member, setMember] = useState(false);
   /** A Stripe Checkout munkamenet titka (a fizetési űrlaphoz), vagy fejlesztői módban a szimulált fizetés címe. */
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -126,7 +127,6 @@ export default function Paywall({
 
   const checkEmail = async (address: string) => {
     setError(null);
-    setAlready(false);
     try {
       const res = await fetch("/api/checkout/email", {
         method: "POST",
@@ -135,7 +135,11 @@ export default function Paywall({
       });
       if (res.ok) return true;
       const json = (await res.json().catch(() => ({}))) as { code?: string; error?: string };
-      if (json.code === "alreadySubscribed") setAlready(true);
+      if (json.code === "alreadySubscribed") {
+        // Ezzel a címmel már fizet: második előfizetés helyett belépési kódot küldünk, és belép.
+        const sent = await requestLoginCode(address, lang).then(() => true, () => false);
+        setLogin({ email: address, codeSent: sent, note: true });
+      }
       else if (json.code === "invalidEmail") setEmailWarning(true);
       else setError(json.error ?? s.unknownError);
       return false;
@@ -203,7 +207,6 @@ export default function Paywall({
             onChange={(e) => {
               setEmail(e.target.value);
               setEmailWarning(false);
-              setAlready(false);
             }}
             className={`h-12 w-full rounded-xl border bg-ink-850 px-4 text-[0.95rem] text-paper placeholder:text-mist/60 focus:border-iris/70 focus:outline-none ${
               emailWarning ? "border-flame/60" : "border-white/[0.12]"
@@ -331,12 +334,21 @@ export default function Paywall({
           </div>
         ) : (
           <div className="mt-6">
-            {already && (
-              <p className="mb-4 rounded-2xl border border-aqua/30 bg-aqua/[0.08] p-4 text-sm leading-relaxed text-paper">
-                <Rich text={s.alreadySubscribed} links={links} />
-              </p>
+            {login && (
+              <div className="space-y-4">
+                {priceRow(prices.trial)}
+                {login.note && (
+                  <p className="rounded-2xl border border-aqua/30 bg-aqua/[0.08] p-4 text-sm leading-relaxed text-paper">{t.auth.alreadyNote}</p>
+                )}
+                <LoginForm initialEmail={login.email} codeSent={login.codeSent} onSuccess={() => void openAsMember()} />
+                <button type="button" className="text-sm text-iris-soft hover:underline" onClick={() => setLogin(null)}>
+                  {t.auth.backToPay}
+                </button>
+              </div>
             )}
 
+            {/* Belépés közben is csatolva marad, hogy a „Vissza a fizetéshez” ugyanazt a fizetést mutassa. */}
+            <div hidden={!!login}>
             {clientSecret && stripeConfigured() ? (
               <StripeCheckout
                 clientSecret={clientSecret}
@@ -366,6 +378,15 @@ export default function Paywall({
                 )}
               </>
             )}
+            {stripeConfigured() && (
+              <p className="mt-4 text-center text-sm text-mist">
+                {t.auth.haveAccount}{" "}
+                <button type="button" className="font-medium text-iris-soft hover:underline" onClick={() => setLogin({ email: email.trim(), codeSent: false, note: false })}>
+                  {t.auth.login}
+                </button>
+              </p>
+            )}
+            </div>
             {error && <p className="mt-3 rounded-xl border border-flame/40 bg-flame/10 px-3 py-2 text-sm text-paper">{error}</p>}
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/[0.08] pt-5 text-xs text-mist">

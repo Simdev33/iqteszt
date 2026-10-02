@@ -56,12 +56,14 @@ function signingSecret() {
 }
 const b64 = (s: string) => Buffer.from(s).toString("base64url");
 const sign = (data: string) => createHmac("sha256", signingSecret()).update(data).digest("base64url");
+/** Kulcsolt lenyomat (pl. a belépési kódé) – visszafejthetetlen, és csak a mi kulcsunkkal ellenőrizhető. */
+export const keyedHash = (value: string) => sign(`hash:${value}`);
 
-function signToken(obj: object) {
+export function signToken(obj: object) {
   const data = b64(JSON.stringify(obj));
   return `${data}.${sign(data)}`;
 }
-function readToken<T>(token: string | undefined): T | null {
+export function readToken<T>(token: string | undefined): T | null {
   if (!token) return null;
   const [data, sig] = token.split(".");
   if (!data || !sig) return null;
@@ -246,11 +248,33 @@ export const isActive = (s: SubInfo | null) => !!s && (s.status === "trialing" |
  * engedünk második előfizetést kötni. Más alkalmazások előfizetései nem számítanak.
  */
 export async function emailHasSubscription(email: string): Promise<boolean> {
-  if (paymentMode() !== "stripe") return false;
+  return (await activeCustomerFor(email)) !== null;
+}
+
+/** Az e-mail-címhez tartozó Stripe-ügyfél, akinek élő TestMyAbilities-előfizetése van (különben null). */
+export async function activeCustomerFor(email: string): Promise<string | null> {
+  if (paymentMode() !== "stripe") return null;
   const q = `email:'${email.replace(/'/g, "\\'")}'`;
   const found = await stripe<{ data: { id: string }[] }>(`/customers/search?query=${encodeURIComponent(q)}&limit=10`);
-  for (const c of found.data) if (isActive(await subscriptionOf(c.id))) return true;
-  return false;
+  for (const c of found.data) if (isActive(await subscriptionOf(c.id))) return c.id;
+  return null;
+}
+
+/* ---------------- Ügyfél-metaadatok (a belépési kódhoz) ---------------- */
+
+export type CustomerMeta = { id: string; email: string | null; deleted?: boolean; metadata: Record<string, string> };
+
+export async function getCustomer(id: string): Promise<CustomerMeta | null> {
+  if (paymentMode() !== "stripe" || !/^cus_[A-Za-z0-9]+$/.test(id)) return null;
+  const c = await stripe<CustomerMeta>(`/customers/${id}`);
+  return c.deleted ? null : c;
+}
+
+/** Metaadatok írása; üres szöveg törli a kulcsot. */
+export async function setCustomerMeta(id: string, meta: Record<string, string>) {
+  const body = new URLSearchParams();
+  for (const [k, v] of Object.entries(meta)) body.set(`metadata[${k}]`, v);
+  await stripe(`/customers/${id}`, { method: "POST", body });
 }
 
 /* ---------------- Ügyfélportál ---------------- */

@@ -364,7 +364,6 @@ const de: Dict = {
     invalidEmail: "Bitte gib eine gültige E-Mail-Adresse ein.",
     pay: "{amount} bezahlen",
     processing: "Zahlung wird verarbeitet …",
-    alreadySubscribed: "Für diese E-Mail-Adresse besteht bereits ein aktives Abo, daher buchen wir nicht erneut ab. Du findest es auf der Seite [Abo verwalten](subscription).",
     close: "Abbrechen",
     busy: "Weiterleitung …",
     trust: ["256-Bit-SSL", "Zahlung über Stripe", "Jederzeit kündbar"],
@@ -506,9 +505,7 @@ const de: Dict = {
     none: "Auf diesem Gerät gibt es kein aktives Abo.",
     manage: "Abo verwalten / kündigen",
     manageHint: "Das sichere Kundenportal von Stripe öffnet sich: Dort kannst du das Abo kündigen, die Karte wechseln und deine Rechnungen herunterladen.",
-    noDevice:
-      "Wenn du auf einem anderen Gerät oder in einem anderen Browser abonniert hast, melde dich im Kundenportal mit der E-Mail-Adresse an, die du bei der Zahlung angegeben hast – wir schicken dir einen Einmalcode, und dort kannst du das Abo kündigen.",
-    portalLogin: "Mit E-Mail-Adresse im Kundenportal anmelden",
+    noDevice: "Auf einem anderen Gerät oder in einem anderen Browser abonniert? Melde dich mit der E-Mail-Adresse an, die du bei der Zahlung angegeben hast – wir schicken dir einen 6-stelligen Code, und deine Ergebnisse öffnen sich auch hier.",
     help: "Hast du eine Frage, oder klappt die Kündigung nicht? Schreib uns: {email}",
     portalError: "Das Kundenportal ist gerade nicht erreichbar. Versuch es in einer Minute noch einmal oder schreib uns: {email}",
     demoNote: "Entwicklermodus: Es ist kein Stripe-Schlüssel eingerichtet, daher gibt es hier kein echtes Abo.",
@@ -541,6 +538,40 @@ const de: Dict = {
     trialName: "{days}-tägiger Vollzugang",
     submitNote:
       "Heute werden {trial} für den {days}-tägigen Vollzugang abgebucht. Wenn du nicht innerhalb der ersten {days} Tage kündigst, werden ab dem {nextDay}. Tag automatisch monatlich {monthly} abgebucht, bis du kündigst. Kündigen kannst du jederzeit unten auf der Website über den Link „Abo verwalten / kündigen“.",
+  },
+
+  auth: {
+    title: "Anmelden",
+    intro: "Gib die E-Mail-Adresse deines Abos ein – wir schicken dir einen 6-stelligen Anmeldecode.",
+    email: "E-Mail-Adresse",
+    sendCode: "Code senden",
+    sent: "Falls zu {email} ein Abo gehört, haben wir den Code dorthin geschickt. Schau auch im Spam-Ordner nach.",
+    code: "Anmeldecode",
+    verify: "Anmelden",
+    resend: "Neuen Code anfordern",
+    otherEmail: "Andere E-Mail-Adresse verwenden",
+    haveAccount: "Schon Abonnent?",
+    login: "Anmelden",
+    backToPay: "Zurück zur Zahlung",
+    alreadyNote: "Für diese E-Mail-Adresse besteht bereits ein Abo, daher buchen wir nicht erneut ab. Wir haben dir einen Anmeldecode geschickt – melde dich an, und dein Ergebnis öffnet sich.",
+    signedIn: "Du bist auf diesem Gerät angemeldet.",
+    logout: "Abmelden",
+    errors: {
+      invalidEmail: "Bitte gib eine gültige E-Mail-Adresse ein.",
+      rateLimited: "Zu viele Versuche. Warte ein paar Minuten und versuch es erneut.",
+      emailFailed: "Die E-Mail konnte nicht gesendet werden. Versuch es in einer Minute erneut.",
+      unavailable: "Die Anmeldung ist gerade nicht verfügbar. Versuch es in einer Minute erneut.",
+      codeInvalid: "Der Code stimmt nicht. Prüf ihn und versuch es erneut.",
+      codeExpired: "Der Code ist abgelaufen. Fordere einen neuen an.",
+      codeLocked: "Zu viele falsche Versuche. Fordere einen neuen Code an.",
+    },
+  },
+
+  email: {
+    subject: "{code} – dein Anmeldecode ({site})",
+    intro: "Mit diesem Code meldest du dich bei {site} an:",
+    validity: "Der Code ist {minutes} Minuten gültig.",
+    ignore: "Falls du das nicht angefordert hast, kannst du diese E-Mail einfach ignorieren.",
   },
 
   api: {

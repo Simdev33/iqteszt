@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import Rich from "@/components/i18n/Rich";
+import AccountAccess from "@/components/account/AccountAccess";
 import { LOCALE_TAGS, fmt, type Locale } from "@/lib/i18n/config";
 import { getDict, langOf } from "@/lib/i18n/server";
-import { memberCustomer, paymentMode, portalLoginUrl, requestOrigin, subscriptionOf, type SubInfo } from "@/lib/payment";
+import { memberCustomer, paymentMode, subscriptionOf, type SubInfo } from "@/lib/payment";
 import { money, prices } from "@/lib/pricing";
 import { brand } from "@/lib/site";
 
@@ -35,7 +36,6 @@ export default async function SubscriptionPage({ params, searchParams }: PagePro
   const customer = await memberCustomer();
   const sub = customer ? await subscriptionOf(customer).catch(() => null) : null;
   const status = statusText(lang, sub);
-  const loginUrl = await portalLoginUrl(await requestOrigin());
   const canManage = !!customer && customer !== "demo" && mode === "stripe" && !!sub;
   const mail = `[${brand.email}](mail)`;
   const links = { mail: `mailto:${brand.email}` };
@@ -70,11 +70,10 @@ export default async function SubscriptionPage({ params, searchParams }: PagePro
           </div>
 
           <div className="panel rounded-[2rem] p-6 sm:p-8">
-            <p className="leading-relaxed text-haze">{t.noDevice}</p>
-            {loginUrl && (
-              <a href={loginUrl} className="btn-ghost mt-5 w-full sm:w-auto" rel="noopener">
-                {t.portalLogin}
-              </a>
+            {mode === "stripe" ? (
+              <AccountAccess signedIn={!!customer && customer !== "demo"} intro={t.noDevice} />
+            ) : (
+              <p className="leading-relaxed text-haze">{t.noDevice}</p>
             )}
             <p className="mt-6 text-sm text-mist">
               <Rich text={fmt(t.help, { email: mail })} links={links} />
