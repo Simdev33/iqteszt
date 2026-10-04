@@ -154,7 +154,7 @@ export default function Paywall({
     emailRef.current?.focus();
   };
 
-  /** Sikeres fizetés: a visszatérési útvonal beállítja az előfizetői sütit, és az eredményre irányít. */
+  /** Sikeres fizetés: a visszatérési útvonal beállítja az előfizetői sütit, és a köszönőoldalra (/thank-you) irányít. */
   const paid = (sessionId: string) => {
     // Teljes oldalbetöltés kell: az API-útvonal sütit állít, majd átirányít.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination

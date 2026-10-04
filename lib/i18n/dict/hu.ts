@@ -31,6 +31,7 @@ const hu = {
     privacyTitle: "Adatkezelési tájékoztató",
     subscriptionTitle: "Előfizetés kezelése",
     demoTitle: "Fizetés (fejlesztői szimuláció)",
+    thankYouTitle: "Sikeres fizetés",
   },
 
   brand: {
@@ -517,6 +518,24 @@ const hu = {
     item: "IQ-teszt eredmény",
     pay: "Sikeres fizetés szimulálása",
     cancel: "Fizetés megszakítása",
+  },
+
+  /** Köszönőoldal sikeres fizetés után (/thank-you). */
+  thankYou: {
+    title: "Köszönjük!",
+    lead: "A fizetés sikeres volt.",
+    unlocked: "A teljes eredményed feloldva – nézd meg, hol állsz.",
+    cta: "Megnézem az eredményem",
+    cancel: "Az előfizetésed bármikor lemondhatod, egy kattintással, az [Előfizetés kezelése](subscription) oldalon.",
+  },
+
+  /** Süti-sáv és a lábléc „Süti-beállítások” gombja. */
+  cookies: {
+    title: "Sütik",
+    text: "A belépéshez és a választott nyelv megjegyzéséhez szükséges sütiket használunk. Hozzájárulásoddal analitikai és hirdetési sütiket is, hogy lássuk, hogyan használják az oldalt, és mennyire eredményesek a hirdetéseink. [Adatkezelési tájékoztató](privacy)",
+    accept: "Elfogadom",
+    reject: "Elutasítom",
+    settings: "Süti-beállítások",
   },
 
   notFound: {

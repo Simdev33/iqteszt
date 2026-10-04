@@ -25,6 +25,7 @@ const en: Dict = {
     privacyTitle: "Privacy Policy",
     subscriptionTitle: "Manage subscription",
     demoTitle: "Payment (developer simulation)",
+    thankYouTitle: "Payment successful",
   },
 
   brand: {
@@ -506,6 +507,22 @@ const en: Dict = {
     item: "IQ test result",
     pay: "Simulate successful payment",
     cancel: "Cancel payment",
+  },
+
+  thankYou: {
+    title: "Thank you!",
+    lead: "Your payment was successful.",
+    unlocked: "Your full result is now unlocked – see where you stand.",
+    cta: "See my result",
+    cancel: "You can cancel your subscription at any time, in one click, on the [Manage subscription](subscription) page.",
+  },
+
+  cookies: {
+    title: "Cookies",
+    text: "We use essential cookies to keep you signed in and remember your language. With your consent, we also use analytics and advertising cookies to understand how the site is used and how well our ads work. [Privacy Policy](privacy)",
+    accept: "Accept",
+    reject: "Reject",
+    settings: "Cookie settings",
   },
 
   notFound: {

@@ -176,15 +176,17 @@ export async function getSession(sessionId: string): Promise<Session | null> {
   }
 }
 
+/** Lezárt és kifizetett-e a munkamenet (előfizetésnél a 0 €-s első számla is annak számít). */
+export const sessionPaid = (s: Session) =>
+  s.status === "complete" && (s.payment_status === "paid" || (s.mode === "subscription" && s.payment_status === "no_payment_required"));
+
 /** A kifizetett munkamenet kitöltés-adatai. */
 export async function paidPayload(
   sessionId: string,
 ): Promise<{ status: "paid"; payload: TestPayload; subscription: boolean } | { status: "unpaid" | "invalid" }> {
   const s = await getSession(sessionId);
   if (!s) return { status: "invalid" };
-  const paid =
-    s.status === "complete" && (s.payment_status === "paid" || (s.mode === "subscription" && s.payment_status === "no_payment_required"));
-  if (!paid) return { status: "unpaid" };
+  if (!sessionPaid(s)) return { status: "unpaid" };
   const m = s.metadata ?? {};
   return { status: "paid", payload: { k: m.k ?? "", v: m.v ?? "", a: m.a ?? "", t: m.t ?? "0" }, subscription: s.mode === "subscription" };
 }

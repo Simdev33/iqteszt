@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Unbounded } from "next/font/google";
 import "../globals.css";
 import { MatrixDefs } from "@/components/matrix/MatrixCell";
 import { I18nProvider } from "@/components/i18n/I18nProvider";
+import CookieBanner from "@/components/ui/CookieBanner";
+import GoogleTag from "@/components/ui/GoogleTag";
 import { LOCALES, LOCALE_TAGS, path } from "@/lib/i18n/config";
 import { getDict, langOf } from "@/lib/i18n/server";
 import { prices } from "@/lib/pricing";
@@ -67,6 +69,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
         <MatrixDefs />
         <I18nProvider lang={lang} t={getDict(lang)} prices={prices(lang)}>
           {children}
+          <CookieBanner />
+          <GoogleTag />
         </I18nProvider>
       </body>
     </html>

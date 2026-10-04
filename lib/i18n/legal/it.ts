@@ -135,6 +135,7 @@ const it: LegalTexts = {
           "Utilizziamo esclusivamente cookie e archiviazione locale necessari al funzionamento; per questi non è richiesto il consenso. Non utilizziamo cookie analitici, pubblicitari o di tracciamento.",
           "- *lang* – la lingua scelta (1 anno)",
           "- *elm_sub* – riconoscimento dell'abbonamento, solo per gli abbonati (al massimo 400 giorni o fino alla cancellazione)",
+          "- *tma_consent* – ricorda la tua scelta sui cookie (180 giorni)",
           "- *localStorage* – lo stato del test, le domande già viste e il risultato non ancora sbloccato (nel tuo browser, finché non lo cancelli)",
         ],
       },

@@ -1,10 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { DEFAULT_LOCALE, LOCALES, LOCALE_COOKIE, ROUTES, isLocale, path, routeOfDir, routeOfSlug, type Locale } from "@/lib/i18n/config";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_OPTIONS,
+  ROUTES,
+  isLocale,
+  path,
+  routeOfDir,
+  routeOfSlug,
+  type Locale,
+} from "@/lib/i18n/config";
+import { THANK_YOU } from "@/lib/thank-you";
 
 // Nyelvkezelés:
 //  • előtag nélküli cím (/, /teszt, régi linkek) → a választott / böngésző szerinti nyelvre irányít;
 //  • lokalizált cím (/en/result) → a belső mappára írja át (/en/eredmeny), a böngészőben a szép cím marad;
-//  • más nyelv belső címe (/en/eredmeny) → a lokalizált címre irányít.
+//  • más nyelv belső címe (/en/eredmeny) → a lokalizált címre irányít;
+//  • a köszönőoldal minden nyelven a /thank-you címen él (a Google Ads egyetlen URL-t figyel): a nyelvet a süti
+//    (vagy a böngésző nyelve) adja, a /hu/thank-you stb. ide irányít, és a sütit is beállítja.
 
 function detect(req: NextRequest): Locale {
   const saved = req.cookies.get(LOCALE_COOKIE)?.value;
@@ -26,6 +40,21 @@ function detect(req: NextRequest): Locale {
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  if (pathname === THANK_YOU) {
+    const url = req.nextUrl.clone();
+    url.pathname = `/${detect(req)}${THANK_YOU}`;
+    return NextResponse.rewrite(url);
+  }
+  const prefixed = LOCALES.find((l) => pathname === `/${l}${THANK_YOU}`);
+  if (prefixed) {
+    const url = req.nextUrl.clone();
+    url.pathname = THANK_YOU;
+    const res = NextResponse.redirect(url, 308);
+    res.cookies.set(LOCALE_COOKIE, prefixed, LOCALE_COOKIE_OPTIONS);
+    return res;
+  }
+
   const parts = pathname.split("/");
   const seg = parts[1];
   const rest = parts.slice(2).join("/").replace(/\/+$/, "");

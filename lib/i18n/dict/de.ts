@@ -26,6 +26,7 @@ const de: Dict = {
     privacyTitle: "Datenschutzerklärung",
     subscriptionTitle: "Abo verwalten",
     demoTitle: "Zahlung (Entwicklersimulation)",
+    thankYouTitle: "Zahlung erfolgreich",
   },
 
   brand: {
@@ -518,6 +519,22 @@ const de: Dict = {
     item: "IQ-Test-Ergebnis",
     pay: "Erfolgreiche Zahlung simulieren",
     cancel: "Zahlung abbrechen",
+  },
+
+  thankYou: {
+    title: "Danke!",
+    lead: "Deine Zahlung war erfolgreich.",
+    unlocked: "Dein vollständiges Ergebnis ist jetzt freigeschaltet – sieh nach, wo du stehst.",
+    cta: "Mein Ergebnis ansehen",
+    cancel: "Du kannst dein Abo jederzeit mit einem Klick auf der Seite [Abo verwalten](subscription) kündigen.",
+  },
+
+  cookies: {
+    title: "Cookies",
+    text: "Wir verwenden notwendige Cookies, damit du angemeldet bleibst und deine Sprache gespeichert wird. Mit deiner Einwilligung nutzen wir auch Analyse- und Werbe-Cookies, um zu verstehen, wie die Website genutzt wird und wie gut unsere Anzeigen funktionieren. [Datenschutzerklärung](privacy)",
+    accept: "Akzeptieren",
+    reject: "Ablehnen",
+    settings: "Cookie-Einstellungen",
   },
 
   notFound: {

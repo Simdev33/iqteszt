@@ -135,6 +135,7 @@ const hu: LegalTexts = {
           "Kizárólag a működéshez szükséges sütiket és helyi tárolást használunk; ezekhez nem kell hozzájárulás. Analitikai, reklám- vagy követő sütit nem használunk.",
           "- *lang* – a választott nyelv (1 év)",
           "- *elm_sub* – előfizetés felismerése, csak előfizetőknél (legfeljebb 400 nap vagy a törléséig)",
+          "- *tma_consent* – a sütikkel kapcsolatos döntésed megjegyzése (180 nap)",
           "- *localStorage* – a teszt állapota, a már látott feladatok és a még fel nem oldott eredmény (a böngésződben, amíg nem törlöd)",
         ],
       },

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "./Logo";
+import { CookieSettingsButton } from "./CookieBanner";
 import { path, type Locale } from "@/lib/i18n/config";
 import { getDict } from "@/lib/i18n/server";
 import { brand, company, nav } from "@/lib/site";
@@ -51,6 +52,9 @@ export default function Footer({ lang }: { lang: Locale }) {
               <Link href={path(lang, "subscription")} className={link}>
                 {f.subscription}
               </Link>
+            </li>
+            <li>
+              <CookieSettingsButton className={link} />
             </li>
             <li>
               <a href={`mailto:${brand.email}`} className={link}>

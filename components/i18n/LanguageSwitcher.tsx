@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import { LOCALES, LOCALE_COOKIE, LOCALE_NAMES, isLocale, path, routeOfSlug, type Locale } from "@/lib/i18n/config";
+import { THANK_YOU } from "@/lib/thank-you";
 
 /** Az aktuális oldal címe egy másik nyelven (a lekérdezés és a horgony megmarad). */
 export function localizedHref(pathname: string, to: Locale) {
+  // A köszönőoldal címe nyelvfüggetlen: a nyelvet a (váltáskor beállított) süti adja.
+  if (pathname === THANK_YOU) return THANK_YOU;
   const [, seg, ...rest] = pathname.split("/");
   const from = isLocale(seg) ? seg : null;
   const key = from ? routeOfSlug(from, rest.join("/")) : null;

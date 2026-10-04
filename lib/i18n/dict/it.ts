@@ -28,6 +28,7 @@ const it: Dict = {
     privacyTitle: "Informativa sulla privacy",
     subscriptionTitle: "Gestione abbonamento",
     demoTitle: "Pagamento (simulazione per sviluppatori)",
+    thankYouTitle: "Pagamento riuscito",
   },
 
   brand: {
@@ -509,6 +510,22 @@ const it: Dict = {
     item: "Risultato del test del QI",
     pay: "Simula un pagamento riuscito",
     cancel: "Annulla il pagamento",
+  },
+
+  thankYou: {
+    title: "Grazie!",
+    lead: "Il pagamento è andato a buon fine.",
+    unlocked: "Il tuo risultato completo è ora sbloccato: scopri dove ti collochi.",
+    cta: "Vedi il mio risultato",
+    cancel: "Puoi disdire l'abbonamento in qualsiasi momento, con un clic, nella pagina [Gestisci l'abbonamento](subscription).",
+  },
+
+  cookies: {
+    title: "Cookie",
+    text: "Usiamo i cookie necessari per mantenere l'accesso e ricordare la lingua scelta. Con il tuo consenso usiamo anche cookie analitici e pubblicitari, per capire come viene usato il sito e quanto funzionano i nostri annunci. [Informativa sulla privacy](privacy)",
+    accept: "Accetta",
+    reject: "Rifiuta",
+    settings: "Impostazioni cookie",
   },
 
   notFound: {

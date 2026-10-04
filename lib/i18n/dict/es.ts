@@ -24,6 +24,7 @@ const es: Dict = {
     privacyTitle: "Política de privacidad",
     subscriptionTitle: "Gestionar suscripción",
     demoTitle: "Pago (simulación de desarrollo)",
+    thankYouTitle: "Pago realizado",
   },
 
   brand: {
@@ -505,6 +506,22 @@ const es: Dict = {
     item: "Resultado del test de CI",
     pay: "Simular un pago correcto",
     cancel: "Cancelar el pago",
+  },
+
+  thankYou: {
+    title: "¡Gracias!",
+    lead: "Tu pago se ha realizado correctamente.",
+    unlocked: "Tu resultado completo ya está desbloqueado: descubre dónde te sitúas.",
+    cta: "Ver mi resultado",
+    cancel: "Puedes cancelar tu suscripción en cualquier momento, con un clic, en la página [Gestionar suscripción](subscription).",
+  },
+
+  cookies: {
+    title: "Cookies",
+    text: "Usamos cookies necesarias para mantener tu sesión iniciada y recordar tu idioma. Con tu consentimiento, también usamos cookies analíticas y publicitarias para entender cómo se usa el sitio y medir la eficacia de nuestros anuncios. [Política de privacidad](privacy)",
+    accept: "Aceptar",
+    reject: "Rechazar",
+    settings: "Configuración de cookies",
   },
 
   notFound: {

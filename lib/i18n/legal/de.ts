@@ -135,6 +135,7 @@ const de: LegalTexts = {
           "Wir verwenden ausschließlich technisch notwendige Cookies und lokale Speicherung; dafür ist keine Einwilligung erforderlich. Analyse-, Werbe- oder Tracking-Cookies verwenden wir nicht.",
           "- *lang* – die gewählte Sprache (1 Jahr)",
           "- *elm_sub* – Erkennung des Abonnements, nur bei Abonnenten (höchstens 400 Tage oder bis zur Löschung)",
+          "- *tma_consent* – speichert deine Cookie-Auswahl (180 Tage)",
           "- *localStorage* – der Stand des Tests, die bereits gesehenen Aufgaben und das noch nicht freigeschaltete Ergebnis (in deinem Browser, bis du es löschst)",
         ],
       },

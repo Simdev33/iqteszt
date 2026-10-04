@@ -18,6 +18,15 @@ export const company = {
   capital: "5 000 €",
 };
 
+/**
+ * Google-címkék (Ads-konverziómérés, Analytics). Amíg mindkettő üres, a GoogleTag semmit nem tölt be; a valódi
+ * azonosítókkal együtt az adatkezelési tájékoztatót is ki kell egészíteni.
+ */
+export const tracking = {
+  googleAdsId: "",
+  googleAnalyticsId: "",
+};
+
 /** A fő navigáció: oldal + opcionális horgony; a feliratok a szótárban (t.nav). */
 export const nav: { key: "test" | "scale" | "method" | "faq"; route: RouteKey; hash?: string }[] = [
   { key: "test", route: "home", hash: "teruletek" },

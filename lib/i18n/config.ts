@@ -4,6 +4,8 @@ export const LOCALES = ["hu", "en", "de", "fr", "it", "es"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "hu";
 export const LOCALE_COOKIE = "lang";
+/** A nyelvi süti beállításai, ha a szerver írja (a nyelvválasztó ugyanígy, böngészőből állítja). */
+export const LOCALE_COOKIE_OPTIONS = { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" as const };
 
 export const isLocale = (s: string | undefined | null): s is Locale => !!s && (LOCALES as readonly string[]).includes(s);
 
