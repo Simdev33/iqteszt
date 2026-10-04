@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CONSENT_EVENT, readConsent, type Consent } from "@/lib/consent";
 import { tracking } from "@/lib/site";
+import { GTAG_READY_EVENT } from "@/lib/thank-you";
 
 type Gtag = (...args: unknown[]) => void;
 declare global {
@@ -68,7 +69,8 @@ window.gtag = gtag;
 gtag('consent', 'default', ${JSON.stringify(DENIED)});
 gtag('consent', 'update', ${JSON.stringify(GRANTED)});
 gtag('js', new Date());
-${configs}`}
+${configs}
+window.dispatchEvent(new Event(${JSON.stringify(GTAG_READY_EVENT)}));`}
       </Script>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ADS_ID || GA_ID)}`} strategy="afterInteractive" />
     </>

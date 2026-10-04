@@ -132,11 +132,13 @@ const en: LegalTexts = {
       {
         h: "3. Cookies and local storage",
         p: [
-          "We only use cookies and local storage that are strictly necessary for the website to work; these do not require consent. We do not use analytics, advertising or tracking cookies.",
+          "Strictly necessary cookies and local storage (listed below) do not require consent. Analytics and advertising cookies are only used if you consent to them (see below).",
           "- *lang* – the selected language (1 year)",
           "- *elm_sub* – recognising your subscription, for subscribers only (up to 400 days or until deleted)",
           "- *tma_consent* – remembers your cookie choice (180 days)",
           "- *localStorage* – the state of the test, the questions you have already seen and any result not yet unlocked (in your browser, until you delete it)",
+          "- *sessionStorage* – after payment, the link to your result for the thank-you page (until you close the tab)",
+          "*Analytics and advertising cookies – only with your consent.* If you click “Accept” in the cookie banner, we load the Google tag of Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Ireland) for two purposes: Google Analytics shows us how visitors use the website, and Google Ads conversion measurement shows whether our ads lead to purchases. Google then sets its own cookies (for example _ga and _ga_… for up to 2 years, _gcl_au for up to 90 days) and receives your IP address, browser and device data, the addresses of the pages you visit, the identifier of the ad click if you arrived from an ad and, for a purchase, its amount and the payment's transaction ID. Legal basis: your consent (Art. 6(1)(a) GDPR). Without your consent, the Google tag is not loaded at all. You can give or withdraw your consent at any time with the “Cookie settings” link in the footer; withdrawal does not affect the lawfulness of earlier processing. Google may also transfer data to the United States (EU–US Data Privacy Framework); its privacy policy: https://policies.google.com/privacy.",
         ],
       },
       {
@@ -144,7 +146,8 @@ const en: LegalTexts = {
         p: [
           "- *Stripe Payments Europe, Ltd.* (1 Grand Canal Street Lower, Dublin 2, Ireland) – payment, subscription and invoicing. Stripe may also transfer certain data to the United States; this is based on the EU–US Data Privacy Framework and the European Commission's standard contractual clauses.",
           "- *Hosting provider* – operation of the website, as a processor.",
-          "We do not sell data, and we do not pass it on to third parties for marketing purposes. We only disclose data to authorities where required to do so by law.",
+          "- *Google Ireland Limited* (Gordon House, Barrow Street, Dublin 4, Ireland) – Google Analytics and Google Ads conversion measurement, only with your consent (see section 3).",
+          "We do not sell data. Apart from the consent-based Google measurement described in section 3, we do not pass data on to third parties for marketing purposes. We only disclose data to authorities where required to do so by law.",
         ],
       },
       {

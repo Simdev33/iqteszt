@@ -132,11 +132,13 @@ const fr: LegalTexts = {
       {
         h: "3. Cookies et stockage local",
         p: [
-          "Nous utilisons uniquement les cookies et le stockage local nécessaires au fonctionnement du site ; ceux-ci ne requièrent pas de consentement. Nous n'utilisons aucun cookie d'analyse, publicitaire ou de suivi.",
+          "Les cookies et le stockage local strictement nécessaires (voir ci-dessous) ne requièrent pas de consentement. Nous n'utilisons des cookies d'analyse et publicitaires qu'avec votre consentement (voir ci-dessous).",
           "- *lang* – la langue choisie (1 an)",
           "- *elm_sub* – reconnaissance de l'abonnement, uniquement pour les abonnés (400 jours au maximum ou jusqu'à sa suppression)",
           "- *tma_consent* – mémorise votre choix concernant les cookies (180 jours)",
           "- *localStorage* – l'état du test, les questions déjà vues et le résultat non encore débloqué (dans votre navigateur, jusqu'à ce que vous les supprimiez)",
+          "- *sessionStorage* – après le paiement, le lien vers votre résultat pour la page de remerciement (jusqu'à la fermeture de l'onglet)",
+          "*Cookies d'analyse et publicitaires – uniquement avec votre consentement.* Si vous cliquez sur « Accepter » dans le bandeau cookies, nous chargeons la balise Google de Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irlande) à deux fins : Google Analytics nous montre comment les visiteurs utilisent le site, et la mesure des conversions Google Ads indique si nos annonces mènent à des achats. Google dépose alors ses propres cookies (par exemple _ga et _ga_… pendant 2 ans au plus, _gcl_au pendant 90 jours au plus) et reçoit votre adresse IP, des données sur votre navigateur et votre appareil, l'adresse des pages consultées, l'identifiant du clic sur l'annonce si vous venez d'une annonce et, en cas d'achat, son montant et l'identifiant de transaction du paiement. Base juridique : votre consentement (art. 6, par. 1, point a) du RGPD). Sans votre consentement, la balise Google n'est pas chargée du tout. Vous pouvez donner ou retirer votre consentement à tout moment grâce au lien « Paramètres des cookies » en bas de page ; le retrait ne remet pas en cause la licéité du traitement effectué auparavant. Google peut également transférer des données vers les États-Unis (cadre de protection des données UE–États-Unis) ; sa politique de confidentialité : https://policies.google.com/privacy.",
         ],
       },
       {
@@ -144,7 +146,8 @@ const fr: LegalTexts = {
         p: [
           "- *Stripe Payments Europe, Ltd.* (1 Grand Canal Street Lower, Dublin 2, Irlande) – paiement, abonnement et facturation. Stripe peut également transférer certaines données aux États-Unis ; ce transfert repose sur le cadre de protection des données UE–États-Unis et sur les clauses contractuelles types de la Commission européenne.",
           "- *Hébergeur* – exploitation du site, en qualité de sous-traitant.",
-          "Nous ne vendons aucune donnée et ne transmettons aucune donnée à des tiers à des fins de marketing. Nous ne communiquons de données aux autorités qu'en vertu d'une obligation légale.",
+          "- *Google Ireland Limited* (Gordon House, Barrow Street, Dublin 4, Irlande) – Google Analytics et mesure des conversions Google Ads, uniquement avec votre consentement (voir section 3).",
+          "Nous ne vendons aucune donnée. En dehors de la mesure Google fondée sur votre consentement décrite à la section 3, nous ne transmettons aucune donnée à des tiers à des fins de marketing. Nous ne communiquons de données aux autorités qu'en vertu d'une obligation légale.",
         ],
       },
       {

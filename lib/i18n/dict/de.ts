@@ -531,7 +531,7 @@ const de: Dict = {
 
   cookies: {
     title: "Cookies",
-    text: "Wir verwenden notwendige Cookies, damit du angemeldet bleibst und deine Sprache gespeichert wird. Mit deiner Einwilligung nutzen wir auch Analyse- und Werbe-Cookies, um zu verstehen, wie die Website genutzt wird und wie gut unsere Anzeigen funktionieren. [Datenschutzerklärung](privacy)",
+    text: "Wir verwenden notwendige Cookies, damit du angemeldet bleibst und deine Sprache gespeichert wird. Mit deiner Einwilligung nutzen wir auch Analyse- und Werbe-Cookies (Google Analytics, Google Ads), um zu verstehen, wie die Website genutzt wird und wie gut unsere Anzeigen funktionieren. [Datenschutzerklärung](privacy)",
     accept: "Akzeptieren",
     reject: "Ablehnen",
     settings: "Cookie-Einstellungen",

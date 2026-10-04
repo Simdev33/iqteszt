@@ -522,7 +522,7 @@ const it: Dict = {
 
   cookies: {
     title: "Cookie",
-    text: "Usiamo i cookie necessari per mantenere l'accesso e ricordare la lingua scelta. Con il tuo consenso usiamo anche cookie analitici e pubblicitari, per capire come viene usato il sito e quanto funzionano i nostri annunci. [Informativa sulla privacy](privacy)",
+    text: "Usiamo i cookie necessari per mantenere l'accesso e ricordare la lingua scelta. Con il tuo consenso usiamo anche cookie analitici e pubblicitari (Google Analytics, Google Ads), per capire come viene usato il sito e quanto funzionano i nostri annunci. [Informativa sulla privacy](privacy)",
     accept: "Accetta",
     reject: "Rifiuta",
     settings: "Impostazioni cookie",

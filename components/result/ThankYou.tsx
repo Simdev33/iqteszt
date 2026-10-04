@@ -6,7 +6,7 @@ import Rich from "@/components/i18n/Rich";
 import { useI18n } from "@/components/i18n/I18nProvider";
 import { loadPending } from "@/components/test/pending";
 import { isLocale, path, routeOfSlug, type Locale } from "@/lib/i18n/config";
-import { RESULT_URL_KEY } from "@/lib/thank-you";
+import { RESULT_URL_KEY, reportPurchase } from "@/lib/thank-you";
 
 /**
  * A fizetés után tárolt eredménycím (lásd app/api/stripe/return), az aktuális nyelven – ha a köszönőoldalon
@@ -51,8 +51,15 @@ export default function ThankYou() {
 
   useEffect(() => {
     // A sessionStorage és a localStorage csak a böngészőben olvasható.
+    const stored = storedResult(lang);
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHref(storedResult(lang) ?? (loadPending() ? path(lang, "test") : path(lang, "home")));
+    setHref(stored ?? (loadPending() ? path(lang, "test") : path(lang, "home")));
+    // Konverzió csak fizetésből érkezve: a tárolt eredménylinkben ott a fizetés azonosítója.
+    if (stored) {
+      const params = new URL(stored, window.location.origin).searchParams;
+      const transactionId = params.get("session_id") ?? params.get("r");
+      if (transactionId) reportPurchase(transactionId);
+    }
   }, [lang]);
 
   return (

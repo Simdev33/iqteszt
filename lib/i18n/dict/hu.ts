@@ -532,7 +532,7 @@ const hu = {
   /** Süti-sáv és a lábléc „Süti-beállítások” gombja. */
   cookies: {
     title: "Sütik",
-    text: "A belépéshez és a választott nyelv megjegyzéséhez szükséges sütiket használunk. Hozzájárulásoddal analitikai és hirdetési sütiket is, hogy lássuk, hogyan használják az oldalt, és mennyire eredményesek a hirdetéseink. [Adatkezelési tájékoztató](privacy)",
+    text: "A belépéshez és a választott nyelv megjegyzéséhez szükséges sütiket használunk. Hozzájárulásoddal analitikai és hirdetési sütiket is (Google Analytics, Google Ads), hogy lássuk, hogyan használják az oldalt, és mennyire eredményesek a hirdetéseink. [Adatkezelési tájékoztató](privacy)",
     accept: "Elfogadom",
     reject: "Elutasítom",
     settings: "Süti-beállítások",

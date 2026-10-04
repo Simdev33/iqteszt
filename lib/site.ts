@@ -19,12 +19,13 @@ export const company = {
 };
 
 /**
- * Google-címkék (Ads-konverziómérés, Analytics). Amíg mindkettő üres, a GoogleTag semmit nem tölt be; a valódi
- * azonosítókkal együtt az adatkezelési tájékoztatót is ki kell egészíteni.
+ * Google-címkék (Ads-konverziómérés, Analytics) — csak a süti-sávban adott hozzájárulás után töltődnek be.
+ * A `googleAdsPurchase` a „Purchase” konverzió címkéje: a köszönőoldal küldi, fizetésenként egyszer.
  */
 export const tracking = {
-  googleAdsId: "",
-  googleAnalyticsId: "",
+  googleAdsId: "AW-18493960626",
+  googleAnalyticsId: "G-DMCPT8X95H",
+  googleAdsPurchase: "AW-18493960626/6mCKCPeE6pAdELLjzfJE",
 };
 
 /** A fő navigáció: oldal + opcionális horgony; a feliratok a szótárban (t.nav). */

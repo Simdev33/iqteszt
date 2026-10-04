@@ -519,7 +519,7 @@ const fr: Dict = {
 
   cookies: {
     title: "Cookies",
-    text: "Nous utilisons des cookies nécessaires pour te garder connecté et mémoriser ta langue. Avec ton accord, nous utilisons aussi des cookies d'analyse et publicitaires, pour comprendre comment le site est utilisé et mesurer l'efficacité de nos annonces. [Politique de confidentialité](privacy)",
+    text: "Nous utilisons des cookies nécessaires pour te garder connecté et mémoriser ta langue. Avec ton accord, nous utilisons aussi des cookies d'analyse et publicitaires (Google Analytics, Google Ads), pour comprendre comment le site est utilisé et mesurer l'efficacité de nos annonces. [Politique de confidentialité](privacy)",
     accept: "Accepter",
     reject: "Refuser",
     settings: "Paramètres des cookies",

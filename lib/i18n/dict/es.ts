@@ -518,7 +518,7 @@ const es: Dict = {
 
   cookies: {
     title: "Cookies",
-    text: "Usamos cookies necesarias para mantener tu sesión iniciada y recordar tu idioma. Con tu consentimiento, también usamos cookies analíticas y publicitarias para entender cómo se usa el sitio y medir la eficacia de nuestros anuncios. [Política de privacidad](privacy)",
+    text: "Usamos cookies necesarias para mantener tu sesión iniciada y recordar tu idioma. Con tu consentimiento, también usamos cookies analíticas y publicitarias (Google Analytics, Google Ads) para entender cómo se usa el sitio y medir la eficacia de nuestros anuncios. [Política de privacidad](privacy)",
     accept: "Aceptar",
     reject: "Rechazar",
     settings: "Configuración de cookies",

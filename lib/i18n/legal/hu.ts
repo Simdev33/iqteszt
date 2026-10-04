@@ -132,11 +132,13 @@ const hu: LegalTexts = {
       {
         h: "3. Sütik és helyi tárolás",
         p: [
-          "Kizárólag a működéshez szükséges sütiket és helyi tárolást használunk; ezekhez nem kell hozzájárulás. Analitikai, reklám- vagy követő sütit nem használunk.",
+          "A működéshez szükséges sütikhez és helyi tároláshoz (lásd lent) nem kell hozzájárulás. Analitikai és hirdetési sütit csak a hozzájárulásoddal használunk (lásd lent).",
           "- *lang* – a választott nyelv (1 év)",
           "- *elm_sub* – előfizetés felismerése, csak előfizetőknél (legfeljebb 400 nap vagy a törléséig)",
           "- *tma_consent* – a sütikkel kapcsolatos döntésed megjegyzése (180 nap)",
           "- *localStorage* – a teszt állapota, a már látott feladatok és a még fel nem oldott eredmény (a böngésződben, amíg nem törlöd)",
+          "- *sessionStorage* – fizetés után az eredményed linkje a köszönőoldalhoz (amíg be nem zárod a fület)",
+          "*Analitikai és hirdetési sütik – csak a hozzájárulásoddal.* Ha a süti-sávban az „Elfogadom” gombra kattintasz, betöltjük a Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Írország) Google-címkéjét két célra: a Google Analytics megmutatja, hogyan használják a látogatók a weboldalt, a Google Ads konverziómérés pedig azt, hogy a hirdetéseink vezetnek-e vásárláshoz. A Google ilyenkor saját sütiket helyez el (például _ga és _ga_… legfeljebb 2 évig, _gcl_au legfeljebb 90 napig), és megkapja az IP-címedet, a böngésződ és az eszközöd adatait, a meglátogatott oldalak címét, hirdetésről érkezve a hirdetéskattintás azonosítóját, vásárlásnál pedig annak összegét és a fizetés tranzakcióazonosítóját. Jogalap: a hozzájárulásod (GDPR 6. cikk (1) a)). Hozzájárulás nélkül a Google-címke egyáltalán nem töltődik be. A hozzájárulásodat bármikor megadhatod vagy visszavonhatod a lábléc „Süti-beállítások” linkjével; a visszavonás nem érinti a korábbi adatkezelés jogszerűségét. A Google az adatokat az Egyesült Államokba is továbbíthatja (EU–USA adatvédelmi keretrendszer); adatvédelmi tájékoztatója: https://policies.google.com/privacy.",
         ],
       },
       {
@@ -144,7 +146,8 @@ const hu: LegalTexts = {
         p: [
           "- *Stripe Payments Europe, Ltd.* (1 Grand Canal Street Lower, Dublin 2, Írország) – fizetés, előfizetés és számlázás. A Stripe egyes adatokat az Egyesült Államokba is továbbíthat; ennek alapja az EU–USA adatvédelmi keretrendszer (Data Privacy Framework) és az Európai Bizottság által elfogadott általános adatvédelmi kikötések (standard szerződési feltételek).",
           "- *Tárhelyszolgáltató* – a weboldal üzemeltetése, adatfeldolgozóként.",
-          "Adatot nem adunk el, és marketingcélra nem adunk át harmadik félnek. Hatóság részére csak jogszabályi kötelezettség alapján adunk ki adatot.",
+          "- *Google Ireland Limited* (Gordon House, Barrow Street, Dublin 4, Írország) – Google Analytics és Google Ads konverziómérés, csak a hozzájárulásoddal (lásd 3. pont).",
+          "Adatot nem adunk el. A 3. pontban leírt, hozzájáruláson alapuló Google-mérésen kívül marketingcélra nem adunk át adatot harmadik félnek. Hatóság részére csak jogszabályi kötelezettség alapján adunk ki adatot.",
         ],
       },
       {

@@ -132,11 +132,13 @@ const it: LegalTexts = {
       {
         h: "3. Cookie e archiviazione locale",
         p: [
-          "Utilizziamo esclusivamente cookie e archiviazione locale necessari al funzionamento; per questi non è richiesto il consenso. Non utilizziamo cookie analitici, pubblicitari o di tracciamento.",
+          "Per i cookie e l'archiviazione locale strettamente necessari (vedi sotto) non è richiesto il consenso. Utilizziamo cookie analitici e pubblicitari solo con il tuo consenso (vedi sotto).",
           "- *lang* – la lingua scelta (1 anno)",
           "- *elm_sub* – riconoscimento dell'abbonamento, solo per gli abbonati (al massimo 400 giorni o fino alla cancellazione)",
           "- *tma_consent* – ricorda la tua scelta sui cookie (180 giorni)",
           "- *localStorage* – lo stato del test, le domande già viste e il risultato non ancora sbloccato (nel tuo browser, finché non lo cancelli)",
+          "- *sessionStorage* – dopo il pagamento, il link al tuo risultato per la pagina di ringraziamento (finché non chiudi la scheda)",
+          "*Cookie analitici e pubblicitari – solo con il tuo consenso.* Se nel banner dei cookie fai clic su «Accetta», carichiamo il tag Google di Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irlanda) per due finalità: Google Analytics ci mostra come i visitatori usano il sito, mentre la misurazione delle conversioni di Google Ads indica se i nostri annunci portano ad acquisti. Google imposta quindi i propri cookie (ad esempio _ga e _ga_… fino a 2 anni, _gcl_au fino a 90 giorni) e riceve il tuo indirizzo IP, dati sul browser e sul dispositivo, gli indirizzi delle pagine visitate, l'identificativo del clic sull'annuncio se arrivi da un annuncio e, in caso di acquisto, il relativo importo e l'ID della transazione di pagamento. Base giuridica: il tuo consenso (art. 6, par. 1, lett. a) GDPR). Senza il tuo consenso il tag Google non viene caricato affatto. Puoi dare o revocare il consenso in qualsiasi momento con il link «Impostazioni cookie» nel piè di pagina; la revoca non pregiudica la liceità del trattamento precedente. Google può trasferire dati anche negli Stati Uniti (EU-U.S. Data Privacy Framework); la sua informativa sulla privacy: https://policies.google.com/privacy.",
         ],
       },
       {
@@ -144,7 +146,8 @@ const it: LegalTexts = {
         p: [
           "- *Stripe Payments Europe, Ltd.* (1 Grand Canal Street Lower, Dublin 2, Irlanda) – pagamenti, abbonamenti e fatturazione. Stripe può trasferire alcuni dati anche negli Stati Uniti; il trasferimento si basa sul quadro UE-USA per la protezione dei dati (EU-U.S. Data Privacy Framework) e sulle clausole contrattuali tipo della Commissione europea.",
           "- *Fornitore di hosting* – gestione del sito web, in qualità di responsabile del trattamento.",
-          "Non vendiamo i dati e non li cediamo a terzi per finalità di marketing. Comunichiamo dati alle autorità solo in adempimento di un obbligo di legge.",
+          "- *Google Ireland Limited* (Gordon House, Barrow Street, Dublin 4, Irlanda) – Google Analytics e misurazione delle conversioni di Google Ads, solo con il tuo consenso (vedi punto 3).",
+          "Non vendiamo i dati. A parte la misurazione Google basata sul tuo consenso descritta al punto 3, non cediamo dati a terzi per finalità di marketing. Comunichiamo dati alle autorità solo in adempimento di un obbligo di legge.",
         ],
       },
       {
