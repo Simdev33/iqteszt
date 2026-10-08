@@ -356,17 +356,12 @@ const de: Dict = {
     consent:
       "Ich akzeptiere die [AGB](terms) und die [Datenschutzerklärung](privacy), verlange den sofortigen Beginn der Leistung und nehme zur Kenntnis, dass ich dadurch mein 14-tägiges Widerrufsrecht verliere.",
     consentNeeded: "Bitte bestätige die obige Erklärung, um fortzufahren.",
-    methodLabel: "Zahlungsart",
     card: "Debit- oder Kreditkarte",
-    loading: "Zahlungsformular wird geladen …",
-    email: "E-Mail-Adresse",
-    emailPlaceholder: "name@beispiel.de",
-    emailHint: "Hierhin schicken wir deine Quittung – damit kannst du auch dein Abo verwalten.",
-    invalidEmail: "Bitte gib eine gültige E-Mail-Adresse ein.",
-    pay: "{amount} bezahlen",
-    processing: "Zahlung wird verarbeitet …",
+    loading: "Einen Moment …",
     close: "Abbrechen",
     busy: "Weiterleitung …",
+    continue: "Weiter zur Zahlung",
+    hostedNote: "Im nächsten Schritt gibst du deine Zahlungsdaten auf der sicheren Zahlungsseite von Stripe ein – deine Kartendaten erreichen uns nie.",
     trust: ["256-Bit-SSL", "Zahlung über Stripe", "Jederzeit kündbar"],
     renewal:
       "Wenn du nicht innerhalb der ersten {days} Tage kündigst, läuft dein Abo ab dem {nextDay}. Tag für {monthly} pro Monat weiter, bis du kündigst. Kündigen kannst du jederzeit mit einem Klick auf der Seite [Abo verwalten](subscription).",
@@ -570,7 +565,6 @@ const de: Dict = {
     haveAccount: "Schon Abonnent?",
     login: "Anmelden",
     backToPay: "Zurück zur Zahlung",
-    alreadyNote: "Für diese E-Mail-Adresse besteht bereits ein Abo, daher buchen wir nicht erneut ab. Wir haben dir einen Anmeldecode geschickt – melde dich an, und dein Ergebnis öffnet sich.",
     signedIn: "Du bist auf diesem Gerät angemeldet.",
     logout: "Abmelden",
     errors: {

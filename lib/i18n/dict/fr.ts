@@ -344,17 +344,12 @@ const fr: Dict = {
     consent:
       "J'accepte les [CGV](terms) et la [politique de confidentialité](privacy), je demande le démarrage immédiat du service et je reconnais perdre ainsi mon droit de rétractation de 14 jours.",
     consentNeeded: "Pour continuer, accepte la déclaration ci-dessus.",
-    methodLabel: "Moyen de paiement",
     card: "Carte bancaire",
-    loading: "Chargement du formulaire de paiement…",
-    email: "Adresse e-mail",
-    emailPlaceholder: "nom@exemple.fr",
-    emailHint: "Nous t'y enverrons ton reçu – elle te sert aussi à gérer ton abonnement.",
-    invalidEmail: "Saisis une adresse e-mail valide.",
-    pay: "Payer {amount}",
-    processing: "Traitement du paiement…",
+    loading: "Un instant…",
     close: "Annuler",
     busy: "Redirection…",
+    continue: "Continuer vers le paiement",
+    hostedNote: "À l'étape suivante, tu saisiras tes données de paiement sur la page de paiement sécurisée de Stripe – tes données de carte ne nous parviennent jamais.",
     trust: ["SSL 256 bits", "Paiement via Stripe", "Résiliable à tout moment"],
     renewal:
       "Si tu ne résilies pas au cours des {days} premiers jours, ton abonnement se poursuit à partir du {nextDay}e jour au tarif de {monthly} par mois, jusqu'à ce que tu le résilies. Tu peux résilier à tout moment, en un clic, sur la page [Gérer l'abonnement](subscription).",
@@ -558,7 +553,6 @@ const fr: Dict = {
     haveAccount: "Déjà abonné ?",
     login: "Se connecter",
     backToPay: "Retour au paiement",
-    alreadyNote: "Cette adresse e-mail a déjà un abonnement : nous ne te débiterons pas une seconde fois. Nous t'avons envoyé un code de connexion – connecte-toi et ton résultat s'ouvrira.",
     signedIn: "Tu es connecté sur cet appareil.",
     logout: "Se déconnecter",
     errors: {

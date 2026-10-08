@@ -17,8 +17,9 @@ function validate(body: Record<string, unknown>): TestPayload | null {
 }
 
 /**
- * A kész teszt feloldása. plan: „sub” (7 napos hozzáférés – beágyazott Stripe űrlap client_secret-je)
- * vagy „member” (aktív előfizető – fizetés nélkül, aláírt eredménylinkkel).
+ * A kész teszt feloldása; a válasz mindig egy cím, ahová a böngésző továbblép. plan: „sub” (7 napos hozzáférés –
+ * a Stripe hosztolt fizetési oldala, fejlesztői módban a szimuláció) vagy „member” (aktív előfizető – fizetés
+ * nélkül, aláírt eredménylinkkel).
  */
 export async function POST(request: Request) {
   const raw = ((await request.json().catch(() => null)) ?? {}) as Record<string, unknown>;
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
 
   if (mode === "stripe") {
     try {
-      return Response.json({ clientSecret: await createCheckout(payload, lang, t, siteOrigin(request), customer) });
+      return Response.json({ url: await createCheckout(payload, lang, t, siteOrigin(request), customer) });
     } catch (e) {
       console.error("Stripe Checkout hiba:", e);
       return Response.json({ error: t.api.unavailable }, { status: 502 });

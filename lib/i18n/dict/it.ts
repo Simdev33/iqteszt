@@ -347,17 +347,12 @@ const it: Dict = {
     consent:
       "Accetto i [Termini e condizioni](terms) e l'[Informativa sulla privacy](privacy), chiedo l'avvio immediato del servizio e prendo atto che in tal modo perdo il diritto di recesso di 14 giorni.",
     consentNeeded: "Per continuare, accetta la dichiarazione qui sopra.",
-    methodLabel: "Metodo di pagamento",
     card: "Carta di debito o di credito",
-    loading: "Caricamento del modulo di pagamento…",
-    email: "Indirizzo e-mail",
-    emailPlaceholder: "nome@esempio.it",
-    emailHint: "Qui ti invieremo la ricevuta – con questo indirizzo puoi anche gestire l'abbonamento.",
-    invalidEmail: "Inserisci un indirizzo e-mail valido.",
-    pay: "Paga {amount}",
-    processing: "Elaborazione del pagamento…",
+    loading: "Un momento…",
     close: "Annulla",
     busy: "Reindirizzamento…",
+    continue: "Continua al pagamento",
+    hostedNote: "Nel passaggio successivo inserirai i tuoi dati di pagamento nella pagina di pagamento sicura di Stripe: i dati della tua carta non arrivano mai a noi.",
     trust: ["SSL a 256 bit", "Pagamento tramite Stripe", "Disdici quando vuoi"],
     renewal:
       "Se non disdici entro i primi {days} giorni, dal {nextDay}° giorno il tuo abbonamento prosegue a {monthly} al mese fino alla disdetta. Puoi disdire in qualsiasi momento, con un clic, nella pagina [Gestisci l'abbonamento](subscription).",
@@ -561,7 +556,6 @@ const it: Dict = {
     haveAccount: "Sei già abbonato?",
     login: "Accedi",
     backToPay: "Torna al pagamento",
-    alreadyNote: "Questo indirizzo e-mail ha già un abbonamento, quindi non ti addebiteremo di nuovo. Ti abbiamo inviato un codice di accesso: accedi e il tuo risultato si aprirà.",
     signedIn: "Hai effettuato l'accesso su questo dispositivo.",
     logout: "Esci",
     errors: {

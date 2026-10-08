@@ -16,12 +16,12 @@ async function post(url: string, body: object) {
   return json;
 }
 
-/** Kódkérés (a fizetési képernyő is hívja, ha a cím már előfizetőé). */
-export const requestLoginCode = (email: string, lang: string) => post("/api/auth/request", { email, lang });
+/** Belépési kód kérése az e-mail-címre. */
+const requestLoginCode = (email: string, lang: string) => post("/api/auth/request", { email, lang });
 
 /**
  * Jelszó nélküli belépés: e-mail → 6 jegyű kód. `codeSent` esetén rögtön a kódlépéssel indul
- * (a hívó már kért kódot, pl. a fizetésnél).
+ * (a hívó már kért kódot).
  */
 export default function LoginForm({
   initialEmail = "",

@@ -355,17 +355,12 @@ const hu = {
     consent:
       "Elfogadom az [ÁSZF](terms)-et és az [Adatkezelési tájékoztató](privacy)t, kérem a szolgáltatás azonnali megkezdését, és tudomásul veszem, hogy ezzel elveszítem a 14 napos elállási jogomat.",
     consentNeeded: "A folytatáshoz fogadd el a fenti nyilatkozatot.",
-    methodLabel: "Fizetési mód",
     card: "Bankkártya",
-    loading: "A fizetési űrlap betöltése…",
-    email: "E-mail-cím",
-    emailPlaceholder: "nev@pelda.hu",
-    emailHint: "Ide küldjük a nyugtát – az előfizetésedet is ezzel kezelheted.",
-    invalidEmail: "Adj meg egy érvényes e-mail-címet.",
-    pay: "Fizetés: {amount}",
-    processing: "A fizetés feldolgozása…",
+    loading: "Egy pillanat…",
     close: "Mégse",
     busy: "Átirányítás…",
+    continue: "Tovább a fizetéshez",
+    hostedNote: "A fizetési adataidat a következő lépésben a Stripe biztonságos fizetési oldalán adod meg – a kártyaadataid hozzánk nem jutnak el.",
     trust: ["256 bites SSL", "Fizetés a Stripe-on", "Bármikor lemondható"],
     renewal:
       "Ha az első {days} napban nem mondod le, az előfizetésed a {nextDay}. naptól havi {monthly} díjjal folytatódik, amíg le nem mondod. Lemondani bármikor lehet, egy kattintással, az [Előfizetés kezelése](subscription) oldalon.",
@@ -572,7 +567,6 @@ const hu = {
     haveAccount: "Már előfizető vagy?",
     login: "Lépj be",
     backToPay: "Vissza a fizetéshez",
-    alreadyNote: "Ehhez az e-mail-címhez már tartozik előfizetés, ezért nem terhelünk újra. Elküldtük rá a belépési kódot – lépj be vele, és megnyílik az eredményed.",
     signedIn: "Be vagy jelentkezve ezen az eszközön.",
     logout: "Kijelentkezés",
     errors: {

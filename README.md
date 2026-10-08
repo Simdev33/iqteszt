@@ -32,8 +32,8 @@ folyamat kipróbálható. Éles módban kulcs nélkül a fizetés le van tiltva.
 
 Egy csomag a kitöltés után: **7 napos teljes hozzáférés 3,90 €-ért** (azonnal terhelve), amely – ha az első
 7 napban nem mondják le – a 8. naptól **9,90 €/hó** előfizetésként folytatódik. A hozzáférés ideje alatt korlátlan
-teszt és eredmény jár. A fizetési űrlap Stripe Checkout Elements (a DoneSignIn mintájára): a fizetési képernyőn
-eleve nyitva van – e-mail-mező, expressz gombok (Apple Pay, Google Pay, Link) és a kártyaűrlap –, nincs átirányítás.
+teszt és eredmény jár. A fizetési adatokat a Stripe saját, hosztolt fizetési oldalán (Stripe Checkout) adják meg:
+a fizetőfalon csak az ár, a tartalom, a kötelező nyilatkozat és a „Tovább a fizetéshez” gomb van, ami átirányít.
 
 Az árak egy helyen: `lib/pricing.ts`.
 
@@ -41,15 +41,14 @@ Az árak egy helyen: `lib/pricing.ts`.
 
 1. Környezeti változók (tárhelyen, pl. Vercel → Environment Variables; helyben `.env.local`):
    - `STRIPE_SECRET_KEY` – `sk_test_…` teszteléshez, `sk_live_…` élesben
-   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` – a hozzá tartozó `pk_test_…` / `pk_live_…` (a beágyazott fizetési űrlaphoz; build előtt kell beállítani)
    - `SITE_URL` – az oldal nyilvános címe (pl. `https://testmyabilities.com`), ide irányít vissza a Stripe
    - `RESULT_SECRET` – hosszú, véletlen szöveg; ezzel írjuk alá az előfizetői sütit és az eredménylinkeket.
      Ha üres, a Stripe-kulcsból származtatjuk – ekkor kulcscserénél a régi előfizetői linkek érvénytelenné válnak.
    - `RESEND_API_KEY` és `EMAIL_FROM` (pl. `TestMyAbilities <no-reply@testmyabilities.com>`) – a belépési kód
      e-mailhez. A feladó domainjét a Resendben igazolni kell (DNS-rekordok).
 2. Stripe Dashboard, élesítés előtt:
-   - *Settings → Public details*: a cégnév / megjelenített név (ez látszik a fizetési űrlapon és a számlákon).
-   - *Settings → Branding*: a fizetési űrlap színei (hogy illeszkedjen az oldalhoz).
+   - *Settings → Public details*: a cégnév / megjelenített név (ez látszik a fizetési oldalon és a számlákon).
+   - *Settings → Branding*: a fizetési oldal logója és színei (hogy illeszkedjen az oldalhoz).
    - *Settings → Billing → Subscriptions and emails*: nyugták és a **próbaidő lejárta előtti emlékeztető e-mail** bekapcsolása.
    - *Settings → Emails*: sikeres fizetésről szóló nyugta e-mail.
 3. Az ügyfélportált (lemondás, kártyacsere, számlák, e-mailes belépés) a kód magától létrehozza / frissíti
@@ -59,14 +58,15 @@ Az árak egy helyen: `lib/pricing.ts`.
 
 - A böngésző csak a kérdéseket kapja meg (`publicSlots()`); a helyes válaszok, a magyarázatok és a
   pontozás a szerveren maradnak (`lib/questions.ts`, `lib/matrix.ts`, `lib/scoring.ts` – `server-only`).
-- A fizetési képernyő megnyitásakor a `/api/checkout` Checkout Session-t nyit (`ui_mode: elements`, előfizetés,
-  7 nap próbaidő + 3,90 €-s első tétel); a válaszok kódja a munkamenet metaadataiban utazik. Adatbázis nem kell.
-- Fizetés előtt a `/api/checkout/email` megnézi, van-e már élő TestMyAbilities-előfizetés ehhez az e-mail-címhez
-  (más eszközről) – ilyenkor nem enged második előfizetést. A Stripe ügyfélkeresője ~1 perc késéssel frissül.
+- A „Tovább a fizetéshez” gombra (a nyilatkozat elfogadása után) a `/api/checkout` Checkout Session-t nyit a Stripe
+  hosztolt fizetési oldalához (előfizetés, 7 nap próbaidő + 3,90 €-s első tétel, az oldal nyelvén), és a böngésző
+  a válaszban kapott `url`-re lép. A válaszok kódja a munkamenet metaadataiban utazik, adatbázis nem kell. Az
+  e-mail-címet a Stripe kéri be. Megszakításkor a Stripe a tesztre hoz vissza (`?canceled=1`): a ki nem fizetett
+  kitöltés a böngészőben (localStorage) vár, és újra a fizetőfal jelenik meg.
 - A Stripe-fiók más alkalmazásokkal közös lehet: minden saját objektum `metadata.app = testmyabilities`, és a hozzáférés
   csak a saját előfizetést számolja.
-- Fizetés után a `/api/stripe/return` aláírt, httpOnly sütit (`elm_sub`) tesz a böngészőbe
-  a Stripe ügyfél-azonosítóval, majd az eredményoldalra irányít.
+- Fizetés után a Stripe a `/api/stripe/return`-re irányít (success_url), ami aláírt, httpOnly sütit (`elm_sub`) tesz a
+  böngészőbe a Stripe ügyfél-azonosítóval, majd a köszönőoldalra (`/thank-you`) visz, ahonnan az eredmény nyílik.
 - Az eredményoldal (`/{lang}/…?session_id=…`) a Stripe-tól kérdezi le, hogy a munkamenet ki van-e fizetve,
   és csak akkor számolja ki és mutatja meg az eredményt.
 - Aktív előfizetőnek a fizetőfal „Eredmény megnyitása” gombot mutat: a szerver a Stripe-tól ellenőrzi az
@@ -75,5 +75,5 @@ Az árak egy helyen: `lib/pricing.ts`.
 - Más eszközön: kódos belépés (a DoneSignIn mintájára) – e-mail → 6 jegyű kód Resenddel (`/api/auth/request`,
   `/api/auth/verify`). Csak élő előfizetéssel lehet belépni; a kód lenyomata, lejárata (10 perc) és a próbálkozások
   száma (max. 5) a Stripe-ügyfél metaadataiban van, így ehhez sem kell adatbázis. Siker után ugyanaz az előfizetői
-  süti kerül a böngészőbe, mint fizetés után. Ha valaki a fizetésnél már előfizetőhöz tartozó címet ad meg, második
-  előfizetés helyett automatikusan kódot kap, és belép. Kijelentkezés: `/api/auth/logout`.
+  süti kerül a böngészőbe, mint fizetés után. A fizetőfalon a „Már előfizető vagy? Lépj be” link vezet ide.
+  Kijelentkezés: `/api/auth/logout`.

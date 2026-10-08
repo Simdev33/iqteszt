@@ -343,17 +343,12 @@ const es: Dict = {
     consent:
       "Acepto los [Términos y condiciones](terms) y la [Política de privacidad](privacy), solicito el inicio inmediato del servicio y acepto que con ello pierdo mi derecho de desistimiento de 14 días.",
     consentNeeded: "Para continuar, acepta la declaración anterior.",
-    methodLabel: "Método de pago",
     card: "Tarjeta de débito o crédito",
-    loading: "Cargando el formulario de pago…",
-    email: "Correo electrónico",
-    emailPlaceholder: "nombre@ejemplo.es",
-    emailHint: "Te enviaremos aquí el recibo; también te sirve para gestionar tu suscripción.",
-    invalidEmail: "Introduce un correo electrónico válido.",
-    pay: "Pagar {amount}",
-    processing: "Procesando el pago…",
+    loading: "Un momento…",
     close: "Cancelar",
     busy: "Redirigiendo…",
+    continue: "Continuar al pago",
+    hostedNote: "En el siguiente paso introducirás tus datos de pago en la página de pago segura de Stripe; los datos de tu tarjeta nunca llegan a nosotros.",
     trust: ["SSL de 256 bits", "Pago a través de Stripe", "Cancela cuando quieras"],
     renewal:
       "Si no cancelas durante los primeros {days} días, tu suscripción continúa a partir del día {nextDay} por {monthly} al mes hasta que la canceles. Puedes cancelarla en cualquier momento, con un clic, en la página [Gestionar suscripción](subscription).",
@@ -557,7 +552,6 @@ const es: Dict = {
     haveAccount: "¿Ya tienes suscripción?",
     login: "Inicia sesión",
     backToPay: "Volver al pago",
-    alreadyNote: "Este correo ya tiene una suscripción, así que no te cobraremos de nuevo. Te hemos enviado un código de acceso: inicia sesión y se abrirá tu resultado.",
     signedIn: "Has iniciado sesión en este dispositivo.",
     logout: "Cerrar sesión",
     errors: {

@@ -344,17 +344,12 @@ const en: Dict = {
     consent:
       "I accept the [Terms and Conditions](terms) and the [Privacy Policy](privacy), request that the service start immediately, and acknowledge that I thereby lose my 14-day right of withdrawal.",
     consentNeeded: "Please accept the statement above to continue.",
-    methodLabel: "Payment method",
     card: "Debit or credit card",
-    loading: "Loading the payment form…",
-    email: "Email address",
-    emailPlaceholder: "name@example.com",
-    emailHint: "We'll send your receipt here – you can also manage your subscription with it.",
-    invalidEmail: "Please enter a valid email address.",
-    pay: "Pay {amount}",
-    processing: "Processing your payment…",
+    loading: "One moment…",
     close: "Cancel",
     busy: "Redirecting…",
+    continue: "Continue to payment",
+    hostedNote: "In the next step, you'll enter your payment details on Stripe's secure payment page – your card details never reach us.",
     trust: ["256-bit SSL", "Payment via Stripe", "Cancel anytime"],
     renewal:
       "If you don't cancel within the first {days} days, your subscription continues from day {nextDay} at {monthly} per month until you cancel. You can cancel at any time, in one click, on the [Manage subscription](subscription) page.",
@@ -558,7 +553,6 @@ const en: Dict = {
     haveAccount: "Already a subscriber?",
     login: "Sign in",
     backToPay: "Back to payment",
-    alreadyNote: "This email address already has a subscription, so we won't charge you again. We've sent a sign-in code to it – sign in and your result will open.",
     signedIn: "You're signed in on this device.",
     logout: "Sign out",
     errors: {

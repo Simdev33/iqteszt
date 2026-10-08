@@ -32,8 +32,8 @@ function thankYou(lang: Locale, resultUrl: string) {
 }
 
 /**
- * Visszatérés a fizetésből – a beágyazott űrlap sikeres fizetés után ide navigál, az átirányításos fizetési módok
- * (pl. banki oldal) a Stripe return_url-jén érkeznek ide. Előfizetésnél itt kapja meg a böngésző az előfizetői sütit
+ * Visszatérés a fizetésből – a Stripe hosztolt fizetési oldala sikeres fizetés után ide irányít (success_url),
+ * fejlesztői módban a szimulált fizetés gombja. Előfizetésnél itt kapja meg a böngésző az előfizetői sütit
  * (a Stripe ügyfél-azonosítójával), hogy a későbbi tesztek eredményét is lássa; utána a köszönőoldal jön.
  * Ki nem fizetett munkamenetnél az eredményoldal mondja meg, mi a helyzet (ott sincs eredmény fizetés nélkül).
  */

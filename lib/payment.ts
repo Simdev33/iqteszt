@@ -10,8 +10,9 @@ import { PRICING, eurCents, prices } from "./pricing";
 // a Stripe-tól kérdezi le, hogy a munkamenet tényleg ki van-e fizetve.
 //
 // Egy csomag: 7 napos teljes hozzáférés 3,90 €-ért (azonnal terhelve), a 8. naptól 9,90 €/hó, amíg le nem mondják.
-// A fizetési űrlap Stripe Checkout Elements (ui_mode: elements): a munkamenet a fizetési képernyővel együtt jön
-// létre, az e-mail-mező, az expressz gombok és a kártyaűrlap eleve nyitva vannak (a DoneSignIn mintájára).
+// A fizetési adatokat a Stripe saját, hosztolt fizetési oldalán (Stripe Checkout) adja meg a látogató: a fizetőfal
+// „Tovább a fizetéshez” gombja nyitja a munkamenetet, és átirányít; siker után a /api/stripe/return, megszakításkor
+// a teszt oldala (?canceled=1) jön, ahol a böngészőben tárolt, még ki nem fizetett kitöltés újra feloldható.
 // A Stripe-fiók közös más alkalmazásokkal, ezért minden saját objektum metadata.app = "testmyabilities" jelölést kap.
 // Az előfizetőt egy aláírt, httpOnly süti (a Stripe ügyfél-azonosítójával) ismeri fel; a későbbi
 // tesztek eredményét a szerver aláírt linkkel adja ki, ha a Stripe szerint az előfizetés aktív.
@@ -22,7 +23,7 @@ import { PRICING, eurCents, prices } from "./pricing";
 export type TestPayload = { k: string; v: string; a: string; t: string };
 
 const STRIPE_API = "https://api.stripe.com/v1";
-/** Rögzített API-verzió: a Checkout Elements (ui_mode „elements”) ennél a verziónál ezen a néven él. */
+/** Rögzített API-verzió, hogy a Stripe későbbi változásai ne módosítsák csendben a válaszokat. */
 const STRIPE_VERSION = "2026-08-26.dahlia";
 export const APP = "testmyabilities";
 const secretKey = () => process.env.STRIPE_SECRET_KEY?.trim() || "";
@@ -117,7 +118,8 @@ export async function memberCustomer(): Promise<string | null> {
 
 type Session = {
   id: string;
-  client_secret: string | null;
+  /** A hosztolt fizetési oldal címe (csak nyitott munkamenetnél). */
+  url: string | null;
   mode: "payment" | "subscription";
   status: "open" | "complete" | "expired";
   payment_status: "paid" | "unpaid" | "no_payment_required";
@@ -125,19 +127,27 @@ type Session = {
   metadata: Partial<TestPayload> | null;
 };
 
+/** A Stripe Checkout felületének nyelve – mind a hat nyelvünket ismeri; ami nem, annál a böngészőé („auto”). */
+const CHECKOUT_LOCALES: Record<Locale, string> = { hu: "hu", en: "en", de: "de", fr: "fr", it: "it", es: "es" };
+
 /**
- * Stripe Checkout munkamenet a saját fizetési felülethez (Checkout Elements): a 7 napos hozzáférés díja az első
- * (próbaidős) számlán azonnal terhelődik, utána havidíj. A fizetési képernyő megnyitásakor jön létre, ügyfél
- * nélkül – az e-mail-címet a fizetés gombja adja át, az ügyfelet a Stripe hozza létre.
+ * Stripe Checkout munkamenet a hosztolt fizetési oldalhoz: a 7 napos hozzáférés díja az első (próbaidős) számlán
+ * azonnal terhelődik, utána havidíj. A „Tovább a fizetéshez” gombra jön létre; az e-mail-címet a Stripe kéri be,
+ * és ő hozza létre az ügyfelet (ha a böngészőben már van előfizetői süti, annak ügyfelét kapja). Visszaadja a
+ * fizetési oldal címét, ahová a böngészőt irányítjuk.
  */
 export async function createCheckout(payload: TestPayload, lang: Locale, t: Dict, origin: string, customer?: string | null) {
   const p = prices(lang);
   const body = new URLSearchParams({
     mode: "subscription",
-    ui_mode: "elements",
+    locale: CHECKOUT_LOCALES[lang] ?? "auto",
     billing_address_collection: "auto",
-    // Csak akkor használja, ha egy fizetési mód átirányítást kér (pl. 3D Secure banki oldal).
-    return_url: `${origin}/api/stripe/return?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
+    // A Stripe a {CHECKOUT_SESSION_ID} helyére maga írja be a munkamenet azonosítóját.
+    success_url: `${origin}/api/stripe/return?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
+    // Megszakításkor vissza a tesztre: a kitöltés a böngészőben vár, a fizetőfal újra megjelenik.
+    cancel_url: `${origin}${path(lang, "test", { canceled: "1" })}`,
+    // A Stripe fizető gombja alatt: mennyi megy le ma, és mikortól jön a havidíj.
+    "custom_text[submit][message]": fmt(t.stripe.submitNote, p),
     "metadata[app]": APP,
     "metadata[k]": payload.k,
     "metadata[v]": payload.v,
@@ -163,8 +173,8 @@ export async function createCheckout(payload: TestPayload, lang: Locale, t: Dict
   if (customer && customer !== "demo") body.set("customer", customer);
 
   const session = await stripe<Session>("/checkout/sessions", { method: "POST", body });
-  if (!session.client_secret) throw new Error("A Stripe nem adott vissza fizetési űrlapot.");
-  return session.client_secret;
+  if (!session.url) throw new Error("A Stripe nem adott vissza fizetési oldalt.");
+  return session.url;
 }
 
 export async function getSession(sessionId: string): Promise<Session | null> {
@@ -246,14 +256,9 @@ export async function subscriptionOf(customer: string): Promise<SubInfo | null> 
 export const isActive = (s: SubInfo | null) => !!s && (s.status === "trialing" || s.status === "active");
 
 /**
- * Van-e már élő TestMyAbilities-előfizetés ehhez az e-mail-címhez (más eszközön vásárolva) – ilyenkor nem
- * engedünk második előfizetést kötni. Más alkalmazások előfizetései nem számítanak.
+ * Az e-mail-címhez tartozó Stripe-ügyfél, akinek élő TestMyAbilities-előfizetése van (különben null) – a kódos
+ * belépéshez. Más alkalmazások előfizetései nem számítanak.
  */
-export async function emailHasSubscription(email: string): Promise<boolean> {
-  return (await activeCustomerFor(email)) !== null;
-}
-
-/** Az e-mail-címhez tartozó Stripe-ügyfél, akinek élő TestMyAbilities-előfizetése van (különben null). */
 export async function activeCustomerFor(email: string): Promise<string | null> {
   if (paymentMode() !== "stripe") return null;
   const q = `email:'${email.replace(/'/g, "\\'")}'`;

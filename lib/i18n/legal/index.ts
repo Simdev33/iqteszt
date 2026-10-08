@@ -14,7 +14,7 @@ import es from "./es";
 const LEGAL: Record<Locale, LegalTexts> = { hu, en, de, fr, it, es };
 
 /** A jogi szövegek hatálybalépésének napja. */
-export const LEGAL_UPDATED = "2026-10-04";
+export const LEGAL_UPDATED = "2026-10-08";
 
 /** A jogi dokumentum a cégadatokkal és az árakkal behelyettesítve. */
 export function legalDoc(lang: Locale, which: keyof LegalTexts): LegalDoc {
